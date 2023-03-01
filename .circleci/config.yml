@@ -1,0 +1,47 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: cimg/openjdk:19.0.2
+      - image: cimg/postgres:15.1
+        environment:
+          POSTGRES_USER: postgres
+
+
+    working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: gradle dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      # run tests!
+      - run:
+          name: Running test
+          command: gradle test -PspringProfiles=circleci
+
+      # Upload test coverage
+      - run:
+          name: Generate test coverage
+          command: gradle jacocoTestReport
+
+      # Upload test coverage
+      - run:
+          name: Upload test coverage
+          command: bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
