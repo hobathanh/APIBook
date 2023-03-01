@@ -6,6 +6,7 @@
 
 ## Test coverage
 
+[![codecov](https://codecov.io/gh/hobathanh/APIBook/branch/master/graph/badge.svg?token=2ATX52JL18)](https://codecov.io/gh/hobathanh/APIBook)
 
 ---
 ## Introduction
