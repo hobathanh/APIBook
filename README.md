@@ -2,6 +2,7 @@
 
 ## Build status
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/hobathanh/APIBook/tree/setup.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/hobathanh/APIBook/tree/setup)
 
 ## Test coverage
 
