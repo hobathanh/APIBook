@@ -14,7 +14,7 @@ CREATE TABLE users
 );
 
 INSERT INTO users (username, password, firstName, lastName, enabled, avatar, role_id)
-VALUES ('admin', '123456', 'admin', 'admin', true, 'avatar1.jpg', (SELECT id FROM roles WHERE name = 'Admin'));
+VALUES ('admin', '123456', 'admin', 'admin', true, 'avatar1.jpg', (SELECT id FROM roles WHERE name = 'ADMIN'));
 
 INSERT INTO users (username, password, firstName, lastName, enabled, avatar, role_id)
-VALUES ('thanh', '123456', 'ba', 'thanh', true, 'avatar2.jpg', (SELECT id FROM roles WHERE name = 'Contributor'));
+VALUES ('thanh', '123456', 'ba', 'thanh', true, 'avatar2.jpg', (SELECT id FROM roles WHERE name = 'CONTRIBUTOR'));

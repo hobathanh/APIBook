@@ -7,5 +7,5 @@ CREATE TABLE roles
 );
 
 INSERT INTO roles(name)
-VALUES ('Admin'),
-       ('Contributor');
+VALUES ('ADMIN'),
+       ('CONTRIBUTOR');
