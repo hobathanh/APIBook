@@ -20,6 +20,12 @@ test {
     systemProperty("spring.profiles.active", project.properties.get("springProfiles"))
 }
 
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/bookstore?searchpath=public'
+    user = 'postgres'
+    password = 'postgres'
+    locations = ['classpath:db/migration/COMMON', 'classpath:db/migration/DEV']
+}
 
 repositories {
     mavenCentral()
@@ -44,6 +50,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {
