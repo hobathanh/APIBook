@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:12.6
+    command: postgres -c 'max_connections=300'
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: bookstore
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
