@@ -26,7 +26,7 @@ class UserStoreTest {
     private UserStore userStore;
 
     @Test
-    void findAllUsers_Ok() {
+    void findAllUsers_OK() {
         final var expected = buildUserEntities();
 
         when(userRepository.findAll())
@@ -38,7 +38,7 @@ class UserStoreTest {
     }
 
     @Test
-    void findUserById_Ok() {
+    void findUserById_OK() {
         final var user = buildUserEntity();
         final var userOpt = Optional.of(user);
         when(userRepository.findById(user.getId()))
@@ -49,30 +49,30 @@ class UserStoreTest {
     }
 
     @Test
-    void findUserByUserName_Ok() {
+    void findUserByUserName_OK() {
         final var user = buildUserEntity();
         final var userOpt = Optional.of(user);
 
         when(userRepository.findByUsername(user.getUsername()))
                 .thenReturn(userOpt);
 
-        final var actual = userStore.findUserByUserName(user.getUsername()).get();
+        final var actual = userStore.findUserByUsername(user.getUsername()).get();
         final var expected = userOpt.get();
 
         assertEquals(expected.getId().toString(), actual.getId().toString());
         assertEquals(expected.getUsername(), actual.getUsername());
         assertEquals(expected.getPassword(), actual.getPassword());
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getLastName(), actual.getLastName());
+        assertEquals(expected.getFirstname(), actual.getFirstname());
+        assertEquals(expected.getLastname(), actual.getLastname());
         assertEquals(expected.getAvatar(), actual.getAvatar());
         assertEquals(expected.isEnabled(), actual.isEnabled());
-        assertEquals(expected.getRoleId().toString(), actual.getRoleId().toString());
+        assertEquals(expected.getRoleId(), actual.getRoleId());
 
         verify(userRepository).findByUsername(user.getUsername());
     }
 
     @Test
-    void createUser_Ok() {
+    void createUser_OK() {
         final var user = buildUser();
         final var userEntity = buildUserEntity();
 
@@ -84,17 +84,17 @@ class UserStoreTest {
         assertEquals(userEntity.getId().toString(), actual.getId().toString());
         assertEquals(userEntity.getUsername(), actual.getUsername());
         assertEquals(userEntity.getPassword(), actual.getPassword());
-        assertEquals(userEntity.getFirstName(), actual.getFirstName());
-        assertEquals(userEntity.getLastName(), actual.getLastName());
+        assertEquals(userEntity.getFirstname(), actual.getFirstname());
+        assertEquals(userEntity.getLastname(), actual.getLastname());
         assertEquals(userEntity.getAvatar(), actual.getAvatar());
         assertEquals(userEntity.isEnabled(), actual.isEnabled());
-        assertEquals(userEntity.getRoleId().toString(), actual.getRoleId().toString());
+        assertEquals(userEntity.getRoleId(), actual.getRoleId());
 
         verify(userRepository).save(any(UserEntity.class));
     }
 
     @Test
-    void updateUser_Ok() {
+    void updateUser_OK() {
         final var userUpdate = buildUserEntity();
 
         when(userRepository.save(any())).thenReturn(userUpdate);
@@ -104,15 +104,15 @@ class UserStoreTest {
         assertEquals(userUpdate.getId().toString(), actual.getId().toString());
         assertEquals(userUpdate.getUsername(), actual.getUsername());
         assertEquals(userUpdate.getPassword(), actual.getPassword());
-        assertEquals(userUpdate.getFirstName(), actual.getFirstName());
-        assertEquals(userUpdate.getLastName(), actual.getLastName());
+        assertEquals(userUpdate.getFirstname(), actual.getFirstname());
+        assertEquals(userUpdate.getLastname(), actual.getLastname());
         assertEquals(userUpdate.getAvatar(), actual.getAvatar());
         assertEquals(userUpdate.isEnabled(), actual.isEnabled());
-        assertEquals(userUpdate.getRoleId().toString(), actual.getRoleId().toString());
+        assertEquals(userUpdate.getRoleId(), actual.getRoleId());
     }
 
     @Test
-    void deleteUser_Ok() {
+    void deleteUser_OK() {
         final var userId = UUID.randomUUID();
 
         userStore.deleteUser(userId);

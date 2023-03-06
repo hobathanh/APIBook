@@ -1,6 +1,5 @@
 package com.bathanh.apibook.persistence.user;
 
-
 import com.bathanh.apibook.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -27,7 +26,7 @@ public class UserStore {
                 .map(UserEntityMapper::toUser);
     }
 
-    public Optional<User> findUserByUserName(final String username) {
+    public Optional<User> findUserByUsername(final String username) {
         return userRepository.findByUsername(username)
                 .map(UserEntityMapper::toUser);
     }

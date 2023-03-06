@@ -37,97 +37,97 @@ class UserControllerTest {
     private UserService userService;
 
     @Test
-    void findAllUsers_Ok() throws Exception {
+    void findAllUsers_OK() throws Exception {
         final var users = buildUsers();
 
-        when(userService.findAllUsers()).thenReturn(users);
+        when(userService.findAll()).thenReturn(users);
 
-        this.mvc.perform(MockMvcRequestBuilders.get(BASE_URL))
+        mvc.perform(MockMvcRequestBuilders.get(BASE_URL))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(users.size()))
                 .andExpect(jsonPath("$[0].id").value(users.get(0).getId().toString()))
                 .andExpect(jsonPath("$[0].username").value(users.get(0).getUsername()))
                 .andExpect(jsonPath("$[0].password").value(users.get(0).getPassword()))
-                .andExpect(jsonPath("$[0].firstName").value(users.get(0).getFirstName()))
-                .andExpect(jsonPath("$[0].lastName").value(users.get(0).getLastName()))
+                .andExpect(jsonPath("$[0].firstname").value(users.get(0).getFirstname()))
+                .andExpect(jsonPath("$[0].lastname").value(users.get(0).getLastname()))
                 .andExpect(jsonPath("$[0].enabled").value(users.get(0).isEnabled()))
                 .andExpect(jsonPath("$[0].avatar").value(users.get(0).getAvatar()))
                 .andExpect(jsonPath("$[0].roleId").value(users.get(0).getRoleId().toString()));
 
-        verify(userService).findAllUsers();
+        verify(userService).findAll();
     }
 
     @Test
-    void findUserById_Ok() throws Exception {
+    void findUserById_OK() throws Exception {
         final var user = buildUser();
 
-        when(userService.findUserById(user.getId())).thenReturn(user);
+        when(userService.findById(user.getId())).thenReturn(user);
 
-        this.mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + user.getId()))
+        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + user.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId().toString()))
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
                 .andExpect(jsonPath("$.password").value(user.getPassword()))
-                .andExpect(jsonPath("$.firstName").value(user.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$.firstname").value(user.getFirstname()))
+                .andExpect(jsonPath("$.lastname").value(user.getLastname()))
                 .andExpect(jsonPath("$.enabled").value(user.isEnabled()))
                 .andExpect(jsonPath("$.avatar").value(user.getAvatar()))
                 .andExpect(jsonPath("$.roleId").value(user.getRoleId().toString()));
 
-        verify(userService).findUserById(user.getId());
+        verify(userService).findById(user.getId());
     }
 
     @Test
-    void createUser_Ok() throws Exception {
+    void createUser_OK() throws Exception {
         final var user = buildUser();
 
         when(userService.createUser(any(User.class))).thenReturn(user);
 
-        this.mvc.perform(MockMvcRequestBuilders.post(BASE_URL)
+        mvc.perform(MockMvcRequestBuilders.post(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(new ObjectMapper().writeValueAsString(user)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId().toString()))
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
                 .andExpect(jsonPath("$.password").value(user.getPassword()))
-                .andExpect(jsonPath("$.firstName").value(user.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$.firstname").value(user.getFirstname()))
+                .andExpect(jsonPath("$.lastname").value(user.getLastname()))
                 .andExpect(jsonPath("$.enabled").value(user.isEnabled()))
                 .andExpect(jsonPath("$.avatar").value(user.getAvatar()))
                 .andExpect(jsonPath("$.roleId").value(user.getRoleId().toString()));
 
-//        verify(userService).createUser(user);
+        verify(userService).createUser(any(User.class));
     }
 
     @Test
-    void updateUser_Ok() throws Exception {
+    void updateUser_OK() throws Exception {
         final var user = buildUser();
         final var updatedUser = buildUser();
         updatedUser.setId(user.getId());
 
         when(userService.updateUser(any(UUID.class), any(User.class))).thenReturn(updatedUser);
 
-        this.mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/" + user.getId())
+        mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/" + user.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(new ObjectMapper().writeValueAsString(toUserDTO(updatedUser))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedUser.getId().toString()))
                 .andExpect(jsonPath("$.username").value(updatedUser.getUsername()))
                 .andExpect(jsonPath("$.password").value(updatedUser.getPassword()))
-                .andExpect(jsonPath("$.firstName").value(updatedUser.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(updatedUser.getLastName()))
+                .andExpect(jsonPath("$.firstname").value(updatedUser.getFirstname()))
+                .andExpect(jsonPath("$.lastname").value(updatedUser.getLastname()))
                 .andExpect(jsonPath("$.enabled").value(updatedUser.isEnabled()))
                 .andExpect(jsonPath("$.avatar").value(updatedUser.getAvatar()))
                 .andExpect(jsonPath("$.roleId").value(updatedUser.getRoleId().toString()));
 
-//        verify(userService).updateUser(user.getId(), updatedUser);
+        verify(userService).updateUser(any(UUID.class), any(User.class));
     }
 
     @Test
     void deleteUser() throws Exception {
         final var id = randomUUID();
 
-        this.mvc.perform(MockMvcRequestBuilders.delete(BASE_URL + "/" + id))
+        mvc.perform(MockMvcRequestBuilders.delete(BASE_URL + "/" + id))
                 .andExpect(status().isOk());
 
         verify(userService).deleteUser(id);

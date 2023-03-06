@@ -1,6 +1,6 @@
 package com.bathanh.apibook.domain.user;
 
-import com.bathanh.apibook.error.UserAvailableException;
+import com.bathanh.apibook.error.UserAlreadyExistException;
 import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,35 +18,35 @@ public class UserService {
 
     private final UserStore userStore;
 
-    public List<User> findAllUsers() {
+    public List<User> findAll() {
         return userStore.findAllUsers();
     }
 
-    public User findUserById(final UUID id) {
+    public User findById(final UUID id) {
         return userStore.findUserById(id)
                 .orElseThrow(supplyUserNotFound(id));
     }
 
 
-    private void verifyUserAvailable(final User user) {
-        final Optional<User> userOptional = userStore.findUserByUserName(user.getUsername());
+    private void verifyUsernameAvailable(final String username) {
+        final Optional<User> userOptional = userStore.findUserByUsername(username);
         if (userOptional.isPresent()) {
-            throw new UserAvailableException("User Available!");
+            throw new UserAlreadyExistException("Username already exists");
         }
     }
 
     public User createUser(final User user) {
-        verifyUserAvailable(user);
+        verifyUsernameAvailable(user.getUsername());
         return userStore.createUser(user);
     }
 
     public User updateUser(final UUID id, final User updatedUser) {
-        final User user = findUserById(id);
+        final User user = findById(id);
 
         user.setUsername(updatedUser.getUsername());
         user.setPassword(updatedUser.getPassword());
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
+        user.setFirstname(updatedUser.getFirstname());
+        user.setLastname(updatedUser.getLastname());
         user.setEnabled(updatedUser.isEnabled());
         user.setAvatar(updatedUser.getAvatar());
 
@@ -54,7 +54,7 @@ public class UserService {
     }
 
     public void deleteUser(final UUID id) {
-        findUserById(id);
+        findById(id);
         userStore.deleteUser(id);
     }
 }

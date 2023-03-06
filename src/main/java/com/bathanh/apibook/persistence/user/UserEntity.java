@@ -16,8 +16,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserEntity {
 
-    public static final String ID_FIELD = "id";
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -30,10 +28,10 @@ public class UserEntity {
     private String password;
 
     @Column(name = "firstname")
-    private String firstName;
+    private String firstname;
 
     @Column(name = "lastname")
-    private String lastName;
+    private String lastname;
 
     @Column(name = "enabled", nullable = false)
     private boolean enabled;

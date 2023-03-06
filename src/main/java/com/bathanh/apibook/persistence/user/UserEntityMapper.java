@@ -1,6 +1,5 @@
 package com.bathanh.apibook.persistence.user;
 
-
 import com.bathanh.apibook.domain.user.User;
 import lombok.experimental.UtilityClass;
 
@@ -11,14 +10,13 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 @UtilityClass
 public class UserEntityMapper {
 
-
     public static User toUser(final UserEntity userEntity) {
         return User.builder()
                 .id(userEntity.getId())
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
-                .firstName(userEntity.getFirstName())
-                .lastName(userEntity.getLastName())
+                .firstname(userEntity.getFirstname())
+                .lastname(userEntity.getLastname())
                 .enabled(userEntity.isEnabled())
                 .avatar(userEntity.getAvatar())
                 .roleId(userEntity.getRoleId())
@@ -30,14 +28,13 @@ public class UserEntityMapper {
                 .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
                 .enabled(user.isEnabled())
                 .avatar(user.getAvatar())
                 .roleId(user.getRoleId())
                 .build();
     }
-
 
     public static List<User> toUsers(final List<UserEntity> userEntities) {
         return emptyIfNull(userEntities)
