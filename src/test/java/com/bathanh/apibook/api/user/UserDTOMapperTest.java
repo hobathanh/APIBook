@@ -17,7 +17,6 @@ class UserDTOMapperTest {
 
         assertEquals(user.getId(), userDTO.getId());
         assertEquals(user.getUsername(), userDTO.getUsername());
-        assertEquals(user.getPassword(), userDTO.getPassword());
         assertEquals(user.getFirstname(), userDTO.getFirstname());
         assertEquals(user.getLastname(), userDTO.getLastname());
         assertEquals(user.isEnabled(), userDTO.isEnabled());
@@ -32,7 +31,6 @@ class UserDTOMapperTest {
 
         assertEquals(userDTO.getId(), user.getId());
         assertEquals(userDTO.getUsername(), user.getUsername());
-        assertEquals(userDTO.getPassword(), user.getPassword());
         assertEquals(userDTO.getFirstname(), user.getFirstname());
         assertEquals(userDTO.getLastname(), user.getLastname());
         assertEquals(userDTO.isEnabled(), user.isEnabled());

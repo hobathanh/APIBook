@@ -13,6 +13,7 @@ import static com.bathanh.apibook.fakes.UserFakes.*;
 import static com.bathanh.apibook.persistence.user.UserEntityMapper.toUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,6 +36,21 @@ class UserStoreTest {
         assertEquals(expected.size(), userStore.findAllUsers().size());
 
         verify(userRepository).findAll();
+    }
+
+    @Test
+    void searchUsers_OK() {
+        final var expected = buildUserEntities();
+        final var user = buildUserEntity();
+
+        when(userRepository.findAllByFirstnameContainingOrLastnameContainingOrUsernameContaining(anyString(), anyString(), anyString()))
+                .thenReturn(expected);
+
+        final var actual = userStore.searchUsers(user.getUsername());
+
+        assertEquals(expected.size(), actual.size());
+
+        verify(userRepository).findAllByFirstnameContainingOrLastnameContainingOrUsernameContaining(anyString(), anyString(), anyString());
     }
 
     @Test

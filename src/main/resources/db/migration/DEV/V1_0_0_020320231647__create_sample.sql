@@ -1,4 +1,4 @@
-INSERT INTO users (username, password, firstName, lastName, enabled, avatar, role_id)
+INSERT INTO users (username, password, first_name, last_name, enabled, avatar, role_id)
 VALUES ('thanh', '123456', 'ba', 'thanh', true, 'avatar2.jpg', (SELECT id FROM roles WHERE name = 'CONTRIBUTOR'));
 
 INSERT INTO books (title, author, description, created_at, updated_at, image, user_id)

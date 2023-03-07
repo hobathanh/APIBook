@@ -27,10 +27,10 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "firstname")
+    @Column(name = "first_name")
     private String firstname;
 
-    @Column(name = "lastname")
+    @Column(name = "last_name")
     private String lastname;
 
     @Column(name = "enabled", nullable = false)

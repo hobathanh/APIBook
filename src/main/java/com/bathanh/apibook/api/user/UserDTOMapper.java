@@ -14,7 +14,6 @@ public class UserDTOMapper {
         return UserDTO.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .password(user.getPassword())
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .enabled(user.isEnabled())

@@ -61,6 +61,16 @@ class UserServiceTest {
     }
 
     @Test
+    void searchUsers_OK() {
+        final var expected = buildUsers();
+
+        when(userStore.searchUsers(anyString())).thenReturn(expected);
+
+        assertEquals(expected, userService.searchUsers(anyString()));
+        verify(userStore).searchUsers(anyString());
+    }
+
+    @Test
     void findUserById_ThrowEmptyId() {
         final var id = randomUUID();
 

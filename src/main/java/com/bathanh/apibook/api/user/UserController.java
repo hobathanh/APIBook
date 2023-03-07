@@ -24,6 +24,12 @@ public class UserController {
         return toUserDTOs(userService.findAll());
     }
 
+    @Operation(summary = "Search users by keyword")
+    @GetMapping("search")
+    public List<UserDTO> searchUsers(final @RequestParam String keyword) {
+        return toUserDTOs(userService.searchUsers(keyword));
+    }
+
     @Operation(summary = "Find a specific user by id")
     @GetMapping("{id}")
     public UserDTO findUserById(final @PathVariable UUID id) {

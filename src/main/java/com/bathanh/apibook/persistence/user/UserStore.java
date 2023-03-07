@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.bathanh.apibook.persistence.user.UserEntityMapper.*;
 import static org.apache.commons.collections4.IterableUtils.toList;
@@ -19,6 +20,11 @@ public class UserStore {
 
     public List<User> findAllUsers() {
         return toUsers(toList(userRepository.findAll()));
+    }
+
+    public List<User> searchUsers(final String keyWord) {
+        return userRepository.findAllByFirstnameContainingOrLastnameContainingOrUsernameContaining(keyWord, keyWord, keyWord)
+                .stream().map(UserEntityMapper::toUser).collect(Collectors.toList());
     }
 
     public Optional<User> findUserById(final UUID uuid) {
