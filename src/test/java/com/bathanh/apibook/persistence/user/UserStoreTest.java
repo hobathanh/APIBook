@@ -33,7 +33,7 @@ class UserStoreTest {
         when(userRepository.findAll())
                 .thenReturn(expected);
 
-        final var actual = userStore.findAllUsers();
+        final var actual = userStore.findAll();
 
         assertEquals(expected.size(), actual.size());
 
@@ -45,14 +45,14 @@ class UserStoreTest {
         final var expected = buildUserEntities();
         final var user = buildUserEntity();
 
-        when(userRepository.findAllByFirstnameContainingOrLastnameContainingOrUsernameContaining(anyString(), anyString(), anyString()))
+        when(userRepository.findAllByFirstNameOrLastNameOrUsername(anyString()))
                 .thenReturn(expected);
 
-        final var actual = userStore.searchUsers(user.getUsername());
+        final var actual = userStore.search(user.getUsername());
 
         assertEquals(expected.size(), actual.size());
 
-        verify(userRepository).findAllByFirstnameContainingOrLastnameContainingOrUsernameContaining(anyString(), anyString(), anyString());
+        verify(userRepository).findAllByFirstNameOrLastNameOrUsername(anyString());
     }
 
     @Test
@@ -74,14 +74,14 @@ class UserStoreTest {
         when(userRepository.findByUsername(user.getUsername()))
                 .thenReturn(userOptional);
 
-        final var actual = userStore.findUserByUsername(user.getUsername()).get();
+        final var actual = userStore.findByUsername(user.getUsername()).get();
         final var expected = userOptional.get();
 
         assertEquals(expected.getId().toString(), actual.getId().toString());
         assertEquals(expected.getUsername(), actual.getUsername());
         assertEquals(expected.getPassword(), actual.getPassword());
-        assertEquals(expected.getFirstname(), actual.getFirstname());
-        assertEquals(expected.getLastname(), actual.getLastname());
+        assertEquals(expected.getFirstName(), actual.getFirstName());
+        assertEquals(expected.getLastName(), actual.getLastName());
         assertEquals(expected.getAvatar(), actual.getAvatar());
         assertEquals(expected.isEnabled(), actual.isEnabled());
         assertEquals(expected.getRoleId(), actual.getRoleId());
@@ -97,13 +97,13 @@ class UserStoreTest {
         when(userRepository.save(any(UserEntity.class)))
                 .thenReturn(userEntity);
 
-        final var actual = userStore.createUser(user);
+        final var actual = userStore.create(user);
 
         assertEquals(userEntity.getId().toString(), actual.getId().toString());
         assertEquals(userEntity.getUsername(), actual.getUsername());
         assertEquals(userEntity.getPassword(), actual.getPassword());
-        assertEquals(userEntity.getFirstname(), actual.getFirstname());
-        assertEquals(userEntity.getLastname(), actual.getLastname());
+        assertEquals(userEntity.getFirstName(), actual.getFirstName());
+        assertEquals(userEntity.getLastName(), actual.getLastName());
         assertEquals(userEntity.getAvatar(), actual.getAvatar());
         assertEquals(userEntity.isEnabled(), actual.isEnabled());
         assertEquals(userEntity.getRoleId(), actual.getRoleId());
@@ -117,13 +117,13 @@ class UserStoreTest {
 
         when(userRepository.save(any())).thenReturn(userUpdate);
 
-        final var actual = userStore.updateUser(toUser(userUpdate));
+        final var actual = userStore.update(toUser(userUpdate));
 
         assertEquals(userUpdate.getId().toString(), actual.getId().toString());
         assertEquals(userUpdate.getUsername(), actual.getUsername());
         assertEquals(userUpdate.getPassword(), actual.getPassword());
-        assertEquals(userUpdate.getFirstname(), actual.getFirstname());
-        assertEquals(userUpdate.getLastname(), actual.getLastname());
+        assertEquals(userUpdate.getFirstName(), actual.getFirstName());
+        assertEquals(userUpdate.getLastName(), actual.getLastName());
         assertEquals(userUpdate.getAvatar(), actual.getAvatar());
         assertEquals(userUpdate.isEnabled(), actual.isEnabled());
         assertEquals(userUpdate.getRoleId(), actual.getRoleId());
@@ -133,7 +133,7 @@ class UserStoreTest {
     void deleteUser_OK() {
         final var userId = UUID.randomUUID();
 
-        userStore.deleteUser(userId);
+        userStore.delete(userId);
 
         verify(userRepository).deleteById(userId);
     }

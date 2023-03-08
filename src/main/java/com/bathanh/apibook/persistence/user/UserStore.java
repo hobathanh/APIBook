@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.bathanh.apibook.persistence.user.UserEntityMapper.*;
 import static org.apache.commons.collections4.IterableUtils.toList;
@@ -18,34 +17,33 @@ public class UserStore {
 
     private final UserRepository userRepository;
 
-    public List<User> findAllUsers() {
+    public List<User> findAll() {
         return toUsers(toList(userRepository.findAll()));
     }
 
-    public List<User> searchUsers(final String keyword) {
-        return userRepository.findAllByFirstnameContainingOrLastnameContainingOrUsernameContaining(keyword, keyword, keyword)
-                .stream().map(UserEntityMapper::toUser).collect(Collectors.toList());
+    public List<User> search(final String keyword) {
+        return toUsers(userRepository.findAllByFirstNameOrLastNameOrUsername(keyword));
     }
 
-    public Optional<User> findUserById(final UUID uuid) {
+    public Optional<User> findById(final UUID uuid) {
         return userRepository.findById(uuid)
                 .map(UserEntityMapper::toUser);
     }
 
-    public Optional<User> findUserByUsername(final String username) {
+    public Optional<User> findByUsername(final String username) {
         return userRepository.findByUsername(username)
                 .map(UserEntityMapper::toUser);
     }
 
-    public User createUser(final User user) {
+    public User create(final User user) {
         return toUser(userRepository.save(toUserEntity(user)));
     }
 
-    public User updateUser(final User updatedUser) {
-        return toUser(userRepository.save(toUserEntity(updatedUser)));
+    public User update(final User user) {
+        return toUser(userRepository.save(toUserEntity(user)));
     }
 
-    public void deleteUser(final UUID id) {
+    public void delete(final UUID id) {
         userRepository.deleteById(id);
     }
 }

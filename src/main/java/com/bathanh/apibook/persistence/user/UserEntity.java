@@ -16,29 +16,23 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserEntity {
 
+    public static final String ID_FIELD = "id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private UUID id;
 
-    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "first_name")
-    private String firstname;
+    private String firstName;
 
-    @Column(name = "last_name")
-    private String lastname;
+    private String lastName;
 
-    @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @Column(name = "avatar")
     private String avatar;
 
-    @Column(name = "role_id")
     private UUID roleId;
 }

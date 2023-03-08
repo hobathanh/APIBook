@@ -1,6 +1,5 @@
 package com.bathanh.apibook.domain.user;
 
-import com.bathanh.apibook.error.BadRequestException;
 import com.bathanh.apibook.error.UserAlreadyExistException;
 import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +10,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.bathanh.apibook.domain.user.UserError.supplyUserNotFound;
+import static com.bathanh.apibook.domain.user.UserValidation.validateCreateUser;
+import static com.bathanh.apibook.domain.user.UserValidation.validateUpdateUser;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -19,56 +21,58 @@ public class UserService {
     private final UserStore userStore;
 
     public List<User> findAll() {
-        return userStore.findAllUsers();
+        return userStore.findAll();
     }
 
     public User findById(final UUID id) {
-        return userStore.findUserById(id)
+        return userStore.findById(id)
                 .orElseThrow(supplyUserNotFound(id));
     }
 
-    public List<User> searchUsers(String keyword) {
-        return userStore.searchUsers(keyword);
+    public List<User> search(final String keyword) {
+        return userStore.search(keyword);
     }
 
-    public User createUser(final User user) {
-        validateUser(user);
+    public User create(final User user) {
+        validateCreateUser(user);
         verifyUsernameAvailable(user.getUsername());
-        return userStore.createUser(user);
+
+        return userStore.create(user);
     }
 
-    public User updateUser(final UUID id, final User updatedUser) {
-        validateUser(updatedUser);
-        final User user = findById(id);
+    public User update(final UUID id, final User user) {
+        final User updatedUser = findById(id);
+        validateUpdateUser(user);
 
-        user.setUsername(updatedUser.getUsername());
-        user.setPassword(updatedUser.getPassword());
-        user.setFirstname(updatedUser.getFirstname());
-        user.setLastname(updatedUser.getLastname());
-        user.setEnabled(updatedUser.isEnabled());
-        user.setAvatar(updatedUser.getAvatar());
+        if (!(user.getUsername().equals(updatedUser.getUsername()))) {
+            verifyUsernameAvailable(user.getUsername());
+            updatedUser.setUsername(user.getUsername());
+        }
 
-        return userStore.updateUser(user);
+        updatedUser.setUsername(updatedUser.getUsername());
+
+        if (isBlank(user.getPassword())) {
+            updatedUser.setPassword(updatedUser.getPassword());
+        }
+
+        updatedUser.setPassword(user.getPassword());
+        updatedUser.setFirstName(user.getFirstName());
+        updatedUser.setLastName(user.getLastName());
+        updatedUser.setEnabled(user.isEnabled());
+        updatedUser.setAvatar(user.getAvatar());
+
+        return userStore.update(updatedUser);
     }
 
-    public void deleteUser(final UUID id) {
+    public void delete(final UUID id) {
         findById(id);
-        userStore.deleteUser(id);
+        userStore.delete(id);
     }
 
     private void verifyUsernameAvailable(final String username) {
-        final Optional<User> userOptional = userStore.findUserByUsername(username);
+        final Optional<User> userOptional = userStore.findByUsername(username);
         if (userOptional.isPresent()) {
             throw new UserAlreadyExistException("Username already exists");
-        }
-    }
-
-    private void validateUser(final User user) {
-        if (user.getUsername() == null) {
-            throw new BadRequestException("Request failed, please check Username");
-        }
-        if (user.getPassword() == null) {
-            throw new BadRequestException("Request failed, please check Password");
         }
     }
 }
