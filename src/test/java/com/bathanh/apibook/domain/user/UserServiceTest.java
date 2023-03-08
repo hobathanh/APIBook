@@ -83,13 +83,11 @@ class UserServiceTest {
     void createUser_OK() {
         final var user = buildUser();
 
-        when(userStore.findByUsername(user.getUsername())).thenReturn(Optional.empty());
         when(userStore.create(user)).thenReturn(user);
 
         final var result = userService.create(user);
 
         assertEquals(user, result);
-        verify(userStore).findByUsername(user.getUsername());
         verify(userStore).create(user);
     }
 
