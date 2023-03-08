@@ -33,7 +33,9 @@ class UserStoreTest {
         when(userRepository.findAll())
                 .thenReturn(expected);
 
-        assertEquals(expected.size(), userStore.findAllUsers().size());
+        final var actual = userStore.findAllUsers();
+
+        assertEquals(expected.size(), actual.size());
 
         verify(userRepository).findAll();
     }
@@ -56,24 +58,24 @@ class UserStoreTest {
     @Test
     void findUserById_OK() {
         final var user = buildUserEntity();
-        final var userOpt = Optional.of(user);
+        final var userOptional = Optional.of(user);
         when(userRepository.findById(user.getId()))
-                .thenReturn(userOpt);
+                .thenReturn(userOptional);
 
-        assertEquals(userOpt, userRepository.findById(user.getId()));
+        assertEquals(userOptional, userRepository.findById(user.getId()));
         verify(userRepository).findById(user.getId());
     }
 
     @Test
     void findUserByUserName_OK() {
         final var user = buildUserEntity();
-        final var userOpt = Optional.of(user);
+        final var userOptional = Optional.of(user);
 
         when(userRepository.findByUsername(user.getUsername()))
-                .thenReturn(userOpt);
+                .thenReturn(userOptional);
 
         final var actual = userStore.findUserByUsername(user.getUsername()).get();
-        final var expected = userOpt.get();
+        final var expected = userOptional.get();
 
         assertEquals(expected.getId().toString(), actual.getId().toString());
         assertEquals(expected.getUsername(), actual.getUsername());

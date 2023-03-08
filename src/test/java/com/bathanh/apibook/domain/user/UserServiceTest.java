@@ -24,7 +24,6 @@ class UserServiceTest {
     @Mock
     private UserStore userStore;
 
-
     @InjectMocks
     private UserService userService;
 
@@ -50,6 +49,16 @@ class UserServiceTest {
     }
 
     @Test
+    void searchUsers_OK() {
+        final var expected = buildUsers();
+
+        when(userStore.searchUsers(anyString())).thenReturn(expected);
+
+        assertEquals(expected, userService.searchUsers(anyString()));
+        verify(userStore).searchUsers(anyString());
+    }
+
+    @Test
     void findUserById_OK() {
         final var expected = buildUser();
 
@@ -61,17 +70,7 @@ class UserServiceTest {
     }
 
     @Test
-    void searchUsers_OK() {
-        final var expected = buildUsers();
-
-        when(userStore.searchUsers(anyString())).thenReturn(expected);
-
-        assertEquals(expected, userService.searchUsers(anyString()));
-        verify(userStore).searchUsers(anyString());
-    }
-
-    @Test
-    void findUserById_ThrowEmptyId() {
+    void findUserById_ThrowNotFound() {
         final var id = randomUUID();
 
         when(userStore.findUserById(id)).thenReturn(Optional.empty());
@@ -93,7 +92,6 @@ class UserServiceTest {
         verify(userStore).findUserByUsername(user.getUsername());
         verify(userStore).createUser(user);
     }
-
 
     @Test
     void createUser_ThrowUserAlreadyExist() {
@@ -143,8 +141,9 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUser_ThrowEmptyId() {
+    void deleteUser_ThrowNotFound() {
         final var id = randomUUID();
+
         when(userStore.findUserById(id))
                 .thenReturn(Optional.empty());
 

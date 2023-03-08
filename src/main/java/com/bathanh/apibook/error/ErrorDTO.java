@@ -1,6 +1,5 @@
 package com.bathanh.apibook.error;
 
-
 import lombok.Builder;
 import lombok.Getter;
 

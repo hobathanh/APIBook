@@ -22,8 +22,8 @@ public class UserStore {
         return toUsers(toList(userRepository.findAll()));
     }
 
-    public List<User> searchUsers(final String keyWord) {
-        return userRepository.findAllByFirstnameContainingOrLastnameContainingOrUsernameContaining(keyWord, keyWord, keyWord)
+    public List<User> searchUsers(final String keyword) {
+        return userRepository.findAllByFirstnameContainingOrLastnameContainingOrUsernameContaining(keyword, keyword, keyword)
                 .stream().map(UserEntityMapper::toUser).collect(Collectors.toList());
     }
 

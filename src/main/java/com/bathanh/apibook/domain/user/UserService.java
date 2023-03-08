@@ -1,6 +1,6 @@
 package com.bathanh.apibook.domain.user;
 
-import com.bathanh.apibook.error.PropertyInputNotFoundException;
+import com.bathanh.apibook.error.BadRequestException;
 import com.bathanh.apibook.error.UserAlreadyExistException;
 import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +32,13 @@ public class UserService {
     }
 
     public User createUser(final User user) {
-        verifyPropertyInput(user);
+        validateUser(user);
         verifyUsernameAvailable(user.getUsername());
         return userStore.createUser(user);
     }
 
     public User updateUser(final UUID id, final User updatedUser) {
-        verifyPropertyInput(updatedUser);
+        validateUser(updatedUser);
         final User user = findById(id);
 
         user.setUsername(updatedUser.getUsername());
@@ -63,9 +63,12 @@ public class UserService {
         }
     }
 
-    private void verifyPropertyInput(final User user) {
-        if (user.getUsername() == null || user.getPassword() == null) {
-            throw new PropertyInputNotFoundException("Property input not found");
+    private void validateUser(final User user) {
+        if (user.getUsername() == null) {
+            throw new BadRequestException("Request failed, please check Username");
+        }
+        if (user.getPassword() == null) {
+            throw new BadRequestException("Request failed, please check Password");
         }
     }
 }
