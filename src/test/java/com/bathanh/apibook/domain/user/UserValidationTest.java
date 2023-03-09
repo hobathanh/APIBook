@@ -13,7 +13,8 @@ class UserValidationTest {
 
     @Test
     void validateCreateUser_OK() {
-        final var user = buildUser();
+        final var user = buildUser()
+                .withPassword(randomAlphabetic(6, 10));
 
         validateCreateUser(user);
     }
@@ -44,7 +45,8 @@ class UserValidationTest {
 
     @Test
     void validateUpdateUser_OK() {
-        final var user = buildUser();
+        final var user = buildUser()
+                .withPassword(randomAlphabetic(6, 10));
 
         validateUpdateUser(user);
     }
