@@ -10,29 +10,29 @@ public class UserValidation {
     public static void validateCreateUser(final User user) {
         validateUserName(user.getUsername());
         validatePasswordEmpty(user.getPassword());
-        validatePasswordNotEmpty(user.getPassword());
+        validateLengthPassword(user.getPassword());
     }
 
     public static void validateUpdateUser(final User user) {
         validateUserName(user.getUsername());
-        validatePasswordNotEmpty(user.getPassword());
+        validateLengthPassword(user.getPassword());
     }
 
     private static void validateUserName(final String username) {
         if (username == null || isBlank(username)) {
-            throw new BadRequestException("Request failed, username is required");
+            throw new BadRequestException("username is required, please check again");
         }
     }
 
     private static void validatePasswordEmpty(final String password) {
         if (password == null || isBlank(password)) {
-            throw new BadRequestException("Request failed, password is required");
+            throw new BadRequestException("password is required, please check again");
         }
     }
 
-    private static void validatePasswordNotEmpty(final String password) {
-        if (isNotBlank(password) && password.length() <= 6) {
-            throw new BadRequestException("Request failed, password length must be at least 6 characters");
+    private static void validateLengthPassword(final String password) {
+        if (isNotBlank(password) && password.length() < 6) {
+            throw new BadRequestException("password length must be at least 6 characters");
         }
     }
 }

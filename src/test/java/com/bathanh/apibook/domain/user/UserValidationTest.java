@@ -20,24 +20,24 @@ class UserValidationTest {
 
     @Test
     void validateCreateUser_ThrowUsernameEmpty() {
-        final var user = buildUser();
-        user.setUsername(null);
+        final var user = buildUser()
+                .withUsername(null);
 
         assertThrows(BadRequestException.class, () -> validateCreateUser(user));
     }
 
     @Test
     void validateCreateUser_ThrowPasswordEmpty() {
-        final var user = buildUser();
-        user.setPassword(null);
+        final var user = buildUser()
+                .withPassword(null);
 
         assertThrows(BadRequestException.class, () -> validateCreateUser(user));
     }
 
     @Test
     void validateCreateUser_ThrowLengthPassword() {
-        final var user = buildUser();
-        user.setPassword(randomAlphabetic(2, 5));
+        final var user = buildUser()
+                .withPassword(randomAlphabetic(3, 5));
 
         assertThrows(BadRequestException.class, () -> validateCreateUser(user));
     }
@@ -51,16 +51,16 @@ class UserValidationTest {
 
     @Test
     void validateUpdateUser_ThrowUsernameEmpty() {
-        final var user = buildUser();
-        user.setUsername(null);
+        final var user = buildUser()
+                .withUsername(null);
 
         assertThrows(BadRequestException.class, () -> validateUpdateUser(user));
     }
 
     @Test
     void validateUpdateUser_ThrowLengthPassword() {
-        final var user = buildUser();
-        user.setPassword(randomAlphabetic(2, 5));
+        final var user = buildUser()
+                .withPassword(randomAlphabetic(3, 5));
 
         assertThrows(BadRequestException.class, () -> validateUpdateUser(user));
     }

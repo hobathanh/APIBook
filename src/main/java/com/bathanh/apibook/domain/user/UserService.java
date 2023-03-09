@@ -1,6 +1,5 @@
 package com.bathanh.apibook.domain.user;
 
-import com.bathanh.apibook.error.UserAlreadyExistException;
 import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,10 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.bathanh.apibook.domain.user.UserError.supplyUserAlreadyExist;
 import static com.bathanh.apibook.domain.user.UserError.supplyUserNotFound;
 import static com.bathanh.apibook.domain.user.UserValidation.validateCreateUser;
 import static com.bathanh.apibook.domain.user.UserValidation.validateUpdateUser;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -49,17 +49,15 @@ public class UserService {
             updatedUser.setUsername(user.getUsername());
         }
 
-        updatedUser.setUsername(updatedUser.getUsername());
-
-        if (isBlank(user.getPassword())) {
-            updatedUser.setPassword(updatedUser.getPassword());
+        if (isNotBlank(user.getPassword())) {
+            updatedUser.setPassword(user.getPassword());
         }
 
-        updatedUser.setPassword(user.getPassword());
         updatedUser.setFirstName(user.getFirstName());
         updatedUser.setLastName(user.getLastName());
         updatedUser.setEnabled(user.isEnabled());
         updatedUser.setAvatar(user.getAvatar());
+        updatedUser.setRoleId(user.getRoleId());
 
         return userStore.update(updatedUser);
     }
@@ -72,7 +70,7 @@ public class UserService {
     private void verifyUsernameAvailable(final String username) {
         final Optional<User> userOptional = userStore.findByUsername(username);
         if (userOptional.isPresent()) {
-            throw new UserAlreadyExistException("Username already exists");
+            throw supplyUserAlreadyExist(username).get();
         }
     }
 }

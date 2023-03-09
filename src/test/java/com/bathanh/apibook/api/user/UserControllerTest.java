@@ -37,7 +37,7 @@ class UserControllerTest {
     private UserService userService;
 
     @Test
-    void findAllUsers_OK() throws Exception {
+    void findAll_OK() throws Exception {
         final var users = buildUsers();
 
         when(userService.findAll()).thenReturn(users);
@@ -57,28 +57,28 @@ class UserControllerTest {
     }
 
     @Test
-    void searchUser_OK() throws Exception {
+    void search_OK() throws Exception {
         final var user = buildUser();
         final var expected = buildUsers();
 
         when(userService.search(anyString())).thenReturn(expected);
 
-        final var actual = userService.search(user.getUsername());
-
         mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/search?keyword=" + user.getUsername()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(actual.size()))
-                .andExpect(jsonPath("$[0].id").value(actual.get(0).getId().toString()))
-                .andExpect(jsonPath("$[0].username").value(actual.get(0).getUsername()))
-                .andExpect(jsonPath("$[0].firstName").value(actual.get(0).getFirstName()))
-                .andExpect(jsonPath("$[0].lastName").value(actual.get(0).getLastName()))
-                .andExpect(jsonPath("$[0].enabled").value(actual.get(0).isEnabled()))
-                .andExpect(jsonPath("$[0].avatar").value(actual.get(0).getAvatar()))
-                .andExpect(jsonPath("$[0].roleId").value(actual.get(0).getRoleId().toString()));
+                .andExpect(jsonPath("$.length()").value(expected.size()))
+                .andExpect(jsonPath("$[0].id").value(expected.get(0).getId().toString()))
+                .andExpect(jsonPath("$[0].username").value(expected.get(0).getUsername()))
+                .andExpect(jsonPath("$[0].firstName").value(expected.get(0).getFirstName()))
+                .andExpect(jsonPath("$[0].lastName").value(expected.get(0).getLastName()))
+                .andExpect(jsonPath("$[0].enabled").value(expected.get(0).isEnabled()))
+                .andExpect(jsonPath("$[0].avatar").value(expected.get(0).getAvatar()))
+                .andExpect(jsonPath("$[0].roleId").value(expected.get(0).getRoleId().toString()));
+
+        verify(userService).search(user.getUsername());
     }
 
     @Test
-    void findUserById_OK() throws Exception {
+    void findById_OK() throws Exception {
         final var user = buildUser();
 
         when(userService.findById(user.getId())).thenReturn(user);
@@ -97,7 +97,7 @@ class UserControllerTest {
     }
 
     @Test
-    void createUser_OK() throws Exception {
+    void create_OK() throws Exception {
         final var user = buildUser();
 
         when(userService.create(any(User.class))).thenReturn(user);
@@ -118,7 +118,7 @@ class UserControllerTest {
     }
 
     @Test
-    void updateUser_OK() throws Exception {
+    void update_OK() throws Exception {
         final var user = buildUser();
         final var updatedUser = buildUser();
         updatedUser.setId(user.getId());
@@ -141,7 +141,7 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteUser() throws Exception {
+    void delete_OK() throws Exception {
         final var id = randomUUID();
 
         doNothing().when(userService).delete(id);

@@ -63,6 +63,7 @@ class UserStoreTest {
                 .thenReturn(userOptional);
 
         assertEquals(userOptional, userRepository.findById(user.getId()));
+
         verify(userRepository).findById(user.getId());
     }
 
