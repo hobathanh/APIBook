@@ -108,7 +108,8 @@ class UserServiceTest {
     @Test
     void shouldCreate_ThrownBadRequestException() {
         final var user = buildUser()
-                .withPassword(null);
+                .withPassword(null)
+                .withUsername(null);
 
         assertThrows(BadRequestException.class, () -> userService.create(user));
     }
