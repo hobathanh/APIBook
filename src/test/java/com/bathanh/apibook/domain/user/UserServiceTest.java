@@ -18,7 +18,6 @@ import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +76,7 @@ class UserServiceTest {
         final var user = buildUser();
         final var expected = buildUsers();
 
-        when(userStore.search(anyString())).thenReturn(expected);
+        when(userStore.search(user.getUsername())).thenReturn(expected);
 
         final var actual = userService.search(user.getUsername());
 
@@ -178,8 +177,8 @@ class UserServiceTest {
     void shouldUpdate_ThrownUsernameAlreadyExist() {
         final var userToUpdate = buildUser();
         final var userExisted = buildUser();
-        final var userUpdate = buildUser();
-        userUpdate.setUsername(userExisted.getUsername());
+        final var userUpdate = buildUser()
+                .withUsername(userExisted.getUsername());
 
         when(userStore.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
         when(userStore.findByUsername(userUpdate.getUsername())).thenReturn(Optional.of(userUpdate));
