@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.bathanh.apibook.api.book.BookDTOMapper.toBookDTO;
@@ -37,12 +37,14 @@ class BookControllerTest {
     @MockBean
     private BookService bookService;
 
-    final DateTimeFormatter formatters = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
     final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Test
     void shouldFindAll_OK() throws Exception {
         final var books = buildBooks();
+
+        books.get(0).setCreatedAt(LocalDateTime.parse("2023-03-14T17:40:00.123456"));
+        books.get(0).setUpdatedAt(LocalDateTime.parse("2023-03-14T17:41:00.123456"));
 
         when(bookService.findAll()).thenReturn(books);
 
@@ -53,8 +55,8 @@ class BookControllerTest {
                 .andExpect(jsonPath("$[0].title").value(books.get(0).getTitle()))
                 .andExpect(jsonPath("$[0].author").value(books.get(0).getAuthor()))
                 .andExpect(jsonPath("$[0].description").value(books.get(0).getDescription()))
-                .andExpect(jsonPath("$[0].createdAt").value(books.get(0).getCreatedAt().format(formatters)))
-                .andExpect(jsonPath("$[0].updatedAt").value(books.get(0).getUpdatedAt().format(formatters)))
+                .andExpect(jsonPath("$[0].createdAt").value(books.get(0).getCreatedAt().toString()))
+                .andExpect(jsonPath("$[0].updatedAt").value(books.get(0).getUpdatedAt().toString()))
                 .andExpect(jsonPath("$[0].image").value(books.get(0).getImage()))
                 .andExpect(jsonPath("$[0].userId").value(books.get(0).getUserId().toString()));
 
@@ -65,6 +67,9 @@ class BookControllerTest {
     void shouldFindById_OK() throws Exception {
         final var book = buildBook();
 
+        book.setCreatedAt(LocalDateTime.parse("2023-03-14T17:40:00.123456"));
+        book.setUpdatedAt(LocalDateTime.parse("2023-03-14T17:41:00.123456"));
+
         when(bookService.findById(book.getId())).thenReturn(book);
 
         mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + book.getId()))
@@ -73,8 +78,8 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
                 .andExpect(jsonPath("$.description").value(book.getDescription()))
-                .andExpect(jsonPath("$.createdAt").value(book.getCreatedAt().format(formatters)))
-                .andExpect(jsonPath("$.updatedAt").value(book.getUpdatedAt().format(formatters)))
+                .andExpect(jsonPath("$.createdAt").value(book.getCreatedAt().toString()))
+                .andExpect(jsonPath("$.updatedAt").value(book.getUpdatedAt().toString()))
                 .andExpect(jsonPath("$.image").value(book.getImage()))
                 .andExpect(jsonPath("$.userId").value(book.getUserId().toString()));
 
@@ -86,6 +91,9 @@ class BookControllerTest {
         final var book = buildBook();
         final var expected = buildBooks();
 
+        expected.get(0).setCreatedAt(LocalDateTime.parse("2023-03-14T17:40:00.123456"));
+        expected.get(0).setUpdatedAt(LocalDateTime.parse("2023-03-14T17:41:00.123456"));
+
         when(bookService.search(book.getTitle())).thenReturn(expected);
 
         mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/search?keyword=" + book.getTitle()))
@@ -95,8 +103,8 @@ class BookControllerTest {
                 .andExpect(jsonPath("$[0].title").value(expected.get(0).getTitle()))
                 .andExpect(jsonPath("$[0].author").value(expected.get(0).getAuthor()))
                 .andExpect(jsonPath("$[0].description").value(expected.get(0).getDescription()))
-                .andExpect(jsonPath("$[0].createdAt").value(expected.get(0).getCreatedAt().format(formatters)))
-                .andExpect(jsonPath("$[0].updatedAt").value(expected.get(0).getUpdatedAt().format(formatters)))
+                .andExpect(jsonPath("$[0].createdAt").value(expected.get(0).getCreatedAt().toString()))
+                .andExpect(jsonPath("$[0].updatedAt").value(expected.get(0).getUpdatedAt().toString()))
                 .andExpect(jsonPath("$[0].image").value(expected.get(0).getImage()))
                 .andExpect(jsonPath("$[0].userId").value(expected.get(0).getUserId().toString()));
 
@@ -107,6 +115,8 @@ class BookControllerTest {
     void shouldCreate_OK() throws Exception {
         final var book = buildBook();
 
+        book.setCreatedAt(LocalDateTime.parse("2023-03-14T17:40:00.123456"));
+
         when(bookService.create(any(Book.class))).thenReturn(book);
 
         mvc.perform(MockMvcRequestBuilders.post(BASE_URL)
@@ -116,7 +126,7 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
                 .andExpect(jsonPath("$.description").value(book.getDescription()))
-                .andExpect(jsonPath("$.createdAt").value(book.getCreatedAt().format(formatters)))
+                .andExpect(jsonPath("$.createdAt").value(book.getCreatedAt().toString()))
                 .andExpect(jsonPath("$.image").value(book.getImage()))
                 .andExpect(jsonPath("$.userId").value(book.getUserId().toString()));
 
@@ -128,6 +138,8 @@ class BookControllerTest {
         final var book = buildBook();
         final var updatedBook = buildBook().withId(book.getId());
 
+        updatedBook.setUpdatedAt(LocalDateTime.parse("2023-03-14T17:41:00.123456"));
+
         when(bookService.update(any(UUID.class), any(Book.class))).thenReturn(updatedBook);
 
         mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/" + book.getId())
@@ -138,7 +150,7 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.title").value(updatedBook.getTitle()))
                 .andExpect(jsonPath("$.author").value(updatedBook.getAuthor()))
                 .andExpect(jsonPath("$.description").value(updatedBook.getDescription()))
-                .andExpect(jsonPath("$.updatedAt").value(updatedBook.getUpdatedAt().format(formatters)))
+                .andExpect(jsonPath("$.updatedAt").value(updatedBook.getUpdatedAt().toString()))
                 .andExpect(jsonPath("$.image").value(updatedBook.getImage()))
                 .andExpect(jsonPath("$.userId").value(updatedBook.getUserId().toString()));
 

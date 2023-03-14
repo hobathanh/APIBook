@@ -2,6 +2,7 @@ package com.bathanh.apibook.fakes;
 
 import com.bathanh.apibook.domain.book.Book;
 import com.bathanh.apibook.persistence.book.BookEntity;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
+@UtilityClass
 public class BookFakes {
 
     public static Book buildBook() {
