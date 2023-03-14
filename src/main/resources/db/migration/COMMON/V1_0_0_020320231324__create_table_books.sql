@@ -7,8 +7,8 @@ CREATE TABLE books
     title       VARCHAR(255) NOT NULL,
     author      VARCHAR(255) NOT NULL,
     description VARCHAR(255),
-    created_at  TIMESTAMP    NOT NULL,
-    updated_at  TIMESTAMP    NOT NULL,
+    created_at  TIMESTAMP    NOT NULL             DEFAULT NOW(),
+    updated_at  TIMESTAMP,
     image       VARCHAR(255),
     user_id     UUID         NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)
