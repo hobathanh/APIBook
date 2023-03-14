@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+
     @Mock
     private UserStore userStore;
     @InjectMocks
@@ -158,19 +159,19 @@ class UserServiceTest {
 
         assertThrows(BadRequestException.class, () -> userService.update(user.getId(), userUpdate));
 
-        verify(userStore).findById(user.getId());
+        verify(userStore, never()).update(userUpdate);
     }
 
     @Test
     void shouldUpdate_ThrownNotFoundException() {
-        final var userUpdate = buildUser();
         final var uuid = randomUUID();
+        final var userUpdate = buildUser();
 
         when(userStore.findById(uuid)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> userService.update(uuid, userUpdate));
 
-        verify(userStore).findById(uuid);
+        verify(userStore, never()).update(userUpdate);
     }
 
     @Test
@@ -185,6 +186,8 @@ class UserServiceTest {
 
         assertThrows(BadRequestException.class, () -> userService.update(userToUpdate.getId(), userUpdate));
 
+        verify(userStore).findByUsername(userUpdate.getUsername());
+        verify(userStore).findById(userToUpdate.getId());
         verify(userStore, never()).update(userUpdate);
     }
 
