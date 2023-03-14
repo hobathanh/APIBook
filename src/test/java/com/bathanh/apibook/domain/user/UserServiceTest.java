@@ -176,15 +176,15 @@ class UserServiceTest {
 
     @Test
     void shouldUpdate_ThrownUsernameAlreadyExist() {
-        final var userToUpdate = buildUser();
+        final var user = buildUser();
         final var userExisted = buildUser();
         final var userUpdate = buildUser()
                 .withUsername(userExisted.getUsername());
 
-        when(userStore.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
+        when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
         when(userStore.findByUsername(userUpdate.getUsername())).thenReturn(Optional.of(userUpdate));
 
-        assertThrows(BadRequestException.class, () -> userService.update(userToUpdate.getId(), userUpdate));
+        assertThrows(BadRequestException.class, () -> userService.update(user.getId(), userUpdate));
 
         verify(userStore, never()).update(userUpdate);
     }
