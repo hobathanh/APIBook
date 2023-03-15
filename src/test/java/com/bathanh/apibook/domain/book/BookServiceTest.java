@@ -166,16 +166,16 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldSearch_OK() {
+    void shouldFind_OK() {
         final var book = buildBook();
         final var expected = buildBooks();
 
-        when(bookStore.search(book.getTitle())).thenReturn(expected);
+        when(bookStore.find(book.getTitle())).thenReturn(expected);
 
-        final var actual = bookService.search(book.getTitle());
+        final var actual = bookService.find(book.getTitle());
 
         assertEquals(expected.size(), actual.size());
 
-        verify(bookStore).search(book.getTitle());
+        verify(bookStore).find(book.getTitle());
     }
 }

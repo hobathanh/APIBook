@@ -80,13 +80,13 @@ class BookControllerTest {
     }
 
     @Test
-    void shouldSearch_OK() throws Exception {
+    void shouldFind_OK() throws Exception {
         final var book = buildBook();
         final var expected = buildBooks();
 
-        when(bookService.search(book.getTitle())).thenReturn(expected);
+        when(bookService.find(book.getTitle())).thenReturn(expected);
 
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/search?keyword=" + book.getTitle()))
+        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/find?keyword=" + book.getTitle()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(expected.size()))
                 .andExpect(jsonPath("$[0].id").value(expected.get(0).getId().toString()))
@@ -98,7 +98,7 @@ class BookControllerTest {
                 .andExpect(jsonPath("$[0].image").value(expected.get(0).getImage()))
                 .andExpect(jsonPath("$[0].userId").value(expected.get(0).getUserId().toString()));
 
-        verify(bookService).search(book.getTitle());
+        verify(bookService).find(book.getTitle());
     }
 
     @Test

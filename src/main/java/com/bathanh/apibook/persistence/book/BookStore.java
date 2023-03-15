@@ -25,8 +25,8 @@ public class BookStore {
                 .map(BookEntityMapper::toBook);
     }
 
-    public List<Book> search(final String keyword) {
-        return BookEntityMapper.toBooks(bookRepository.findAllByTitleOrAuthorOrDescription(keyword));
+    public List<Book> find(final String keyword) {
+        return BookEntityMapper.toBooks(bookRepository.find(keyword));
     }
 
     public Book create(final Book book) {

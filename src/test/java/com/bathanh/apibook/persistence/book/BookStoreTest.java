@@ -51,18 +51,18 @@ class BookStoreTest {
     }
 
     @Test
-    void shouldSearch_OK() {
+    void shouldSFind_OK() {
         final var expected = buildBookEntities();
         final var book = buildBookEntity();
 
-        when(bookRepository.findAllByTitleOrAuthorOrDescription(book.getTitle()))
+        when(bookRepository.find(book.getTitle()))
                 .thenReturn(expected);
 
-        final var actual = bookStore.search(book.getTitle());
+        final var actual = bookStore.find(book.getTitle());
 
         assertEquals(expected.size(), actual.size());
 
-        verify(bookRepository).findAllByTitleOrAuthorOrDescription(book.getTitle());
+        verify(bookRepository).find(book.getTitle());
     }
 
     @Test
