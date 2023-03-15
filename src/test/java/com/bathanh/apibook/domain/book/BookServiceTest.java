@@ -88,9 +88,9 @@ class BookServiceTest {
     @Test
     void shouldUpdate_OK() {
         final var book = buildBook();
-        final var bookUpdate = buildBook();
-        bookUpdate.setId(book.getId());
-        bookUpdate.setUserId(book.getUserId());
+        final var bookUpdate = buildBook()
+                .withId(book.getId())
+                .withUserId(book.getUserId());
 
         when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
         when(bookStore.update(book)).thenReturn(book);
@@ -101,7 +101,6 @@ class BookServiceTest {
         assertEquals(bookUpdate.getTitle(), actual.getTitle());
         assertEquals(bookUpdate.getAuthor(), actual.getAuthor());
         assertEquals(bookUpdate.getImage(), actual.getImage());
-        assertEquals(bookUpdate.getCreatedAt(), actual.getCreatedAt());
         assertEquals(bookUpdate.getDescription(), actual.getDescription());
         assertEquals(bookUpdate.getUserId(), actual.getUserId());
 

@@ -19,8 +19,8 @@ public class BookFakes {
                 .title(RandomStringUtils.randomAlphabetic(3, 10))
                 .author(RandomStringUtils.randomAlphabetic(3, 10))
                 .description(RandomStringUtils.randomAlphabetic(3, 10))
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
+                .createdAt(Instant.parse("2023-03-15T11:05:00.123456Z"))
+                .updatedAt(Instant.parse("2023-03-15T11:06:00.123456Z"))
                 .image(RandomStringUtils.randomAlphabetic(3, 10))
                 .userId(UUID.randomUUID())
                 .build();
