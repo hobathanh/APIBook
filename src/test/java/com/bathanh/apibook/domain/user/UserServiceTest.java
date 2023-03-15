@@ -93,8 +93,7 @@ class UserServiceTest {
 
     @Test
     void shouldCreate_OK() {
-        final var user = buildUser()
-                .withPassword(randomAlphabetic(6, 10));
+        final var user = buildUser();
 
         when(userStore.create(user)).thenReturn(user);
 
@@ -138,12 +137,12 @@ class UserServiceTest {
 
         final var actual = userService.update(user.getId(), userUpdate);
 
-        assertEquals(userUpdate.getId().toString(), actual.getId().toString());
+        assertEquals(userUpdate.getId(), actual.getId());
         assertEquals(userUpdate.getUsername(), actual.getUsername());
         assertEquals(userUpdate.getFirstName(), actual.getFirstName());
         assertEquals(userUpdate.getLastName(), actual.getLastName());
         assertEquals(userUpdate.getAvatar(), actual.getAvatar());
-        assertEquals(userUpdate.getRoleId().toString(), actual.getRoleId().toString());
+        assertEquals(userUpdate.getRoleId(), actual.getRoleId());
         assertEquals(userUpdate.isEnabled(), actual.isEnabled());
 
         verify(userStore).update(user);
@@ -185,7 +184,7 @@ class UserServiceTest {
         when(userStore.findByUsername(userUpdate.getUsername())).thenReturn(Optional.of(userUpdate));
 
         assertThrows(BadRequestException.class, () -> userService.update(userToUpdate.getId(), userUpdate));
-        
+
         verify(userStore, never()).update(userUpdate);
     }
 
