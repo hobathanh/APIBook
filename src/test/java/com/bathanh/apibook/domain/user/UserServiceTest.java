@@ -118,11 +118,12 @@ class UserServiceTest {
     void shouldCreate_ThrownUsernameAlreadyExist() {
         final var user = buildUser();
 
-        when(userStore.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userStore.findByUsername(anyString())).thenReturn(Optional.of(user));
 
         assertThrows(BadRequestException.class, () -> userService.create(user));
 
         verify(userStore).findByUsername(user.getUsername());
+        verify(userStore, never()).create(user);
     }
 
     @Test
@@ -186,8 +187,8 @@ class UserServiceTest {
 
         assertThrows(BadRequestException.class, () -> userService.update(userToUpdate.getId(), userUpdate));
 
-        verify(userStore).findByUsername(userUpdate.getUsername());
-        verify(userStore).findById(userToUpdate.getId());
+        verify(userStore).findByUsername(userExisted.getUsername());
+        verify(userStore, never()).findById(randomUUID());
         verify(userStore, never()).update(userUpdate);
     }
 
