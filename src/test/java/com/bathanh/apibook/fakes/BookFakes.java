@@ -5,7 +5,7 @@ import com.bathanh.apibook.persistence.book.BookEntity;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -19,8 +19,8 @@ public class BookFakes {
                 .title(RandomStringUtils.randomAlphabetic(3, 10))
                 .author(RandomStringUtils.randomAlphabetic(3, 10))
                 .description(RandomStringUtils.randomAlphabetic(3, 10))
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .image(RandomStringUtils.randomAlphabetic(3, 10))
                 .userId(UUID.randomUUID())
                 .build();
@@ -38,8 +38,8 @@ public class BookFakes {
                 .title(RandomStringUtils.randomAlphabetic(3, 10))
                 .author(RandomStringUtils.randomAlphabetic(3, 10))
                 .description(RandomStringUtils.randomAlphabetic(3, 10))
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .image(RandomStringUtils.randomAlphabetic(3, 10))
                 .userId(UUID.randomUUID())
                 .build();

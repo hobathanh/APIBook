@@ -13,10 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static com.bathanh.apibook.api.book.BookDTOMapper.toBookDTO;
+import static com.bathanh.apibook.api.book.BookDTOMapper.toBookResponseDTO;
 import static com.bathanh.apibook.fakes.BookFakes.buildBook;
 import static com.bathanh.apibook.fakes.BookFakes.buildBooks;
 import static java.util.UUID.randomUUID;
@@ -43,9 +42,6 @@ class BookControllerTest {
     void shouldFindAll_OK() throws Exception {
         final var books = buildBooks();
 
-        books.get(0).setCreatedAt(LocalDateTime.parse("2023-03-14T17:40:00.123456"));
-        books.get(0).setUpdatedAt(LocalDateTime.parse("2023-03-14T17:41:00.123456"));
-
         when(bookService.findAll()).thenReturn(books);
 
         mvc.perform(MockMvcRequestBuilders.get(BASE_URL))
@@ -66,9 +62,6 @@ class BookControllerTest {
     @Test
     void shouldFindById_OK() throws Exception {
         final var book = buildBook();
-
-        book.setCreatedAt(LocalDateTime.parse("2023-03-14T17:40:00.123456"));
-        book.setUpdatedAt(LocalDateTime.parse("2023-03-14T17:41:00.123456"));
 
         when(bookService.findById(book.getId())).thenReturn(book);
 
@@ -91,9 +84,6 @@ class BookControllerTest {
         final var book = buildBook();
         final var expected = buildBooks();
 
-        expected.get(0).setCreatedAt(LocalDateTime.parse("2023-03-14T17:40:00.123456"));
-        expected.get(0).setUpdatedAt(LocalDateTime.parse("2023-03-14T17:41:00.123456"));
-
         when(bookService.search(book.getTitle())).thenReturn(expected);
 
         mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/search?keyword=" + book.getTitle()))
@@ -114,8 +104,6 @@ class BookControllerTest {
     @Test
     void shouldCreate_OK() throws Exception {
         final var book = buildBook();
-
-        book.setCreatedAt(LocalDateTime.parse("2023-03-14T17:40:00.123456"));
 
         when(bookService.create(any(Book.class))).thenReturn(book);
 
@@ -138,13 +126,11 @@ class BookControllerTest {
         final var book = buildBook();
         final var updatedBook = buildBook().withId(book.getId());
 
-        updatedBook.setUpdatedAt(LocalDateTime.parse("2023-03-14T17:41:00.123456"));
-
         when(bookService.update(any(UUID.class), any(Book.class))).thenReturn(updatedBook);
 
         mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/" + book.getId())
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(toBookDTO(updatedBook))))
+                        .content(mapper.writeValueAsString(toBookResponseDTO(updatedBook))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedBook.getId().toString()))
                 .andExpect(jsonPath("$.title").value(updatedBook.getTitle()))
