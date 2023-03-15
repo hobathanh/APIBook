@@ -16,7 +16,7 @@ public class UserFakes {
         return User.builder()
                 .id(UUID.randomUUID())
                 .username(RandomStringUtils.randomAlphabetic(3, 10))
-                .password(RandomStringUtils.randomAlphabetic(3, 10))
+                .password(RandomStringUtils.randomAlphabetic(6, 10))
                 .firstName(RandomStringUtils.randomAlphabetic(3, 10))
                 .lastName(RandomStringUtils.randomAlphabetic(3, 10))
                 .enabled(Boolean.TRUE)
