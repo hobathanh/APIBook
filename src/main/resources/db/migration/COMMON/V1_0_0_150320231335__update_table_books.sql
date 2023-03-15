@@ -1,0 +1,5 @@
+ALTER TABLE books
+    ALTER COLUMN created_at SET DEFAULT NOW();
+
+ALTER TABLE books
+    ALTER COLUMN updated_at DROP NOT NULL;
