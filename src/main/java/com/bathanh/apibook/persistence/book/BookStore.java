@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.bathanh.apibook.persistence.book.BookEntityMapper.toBook;
-import static com.bathanh.apibook.persistence.book.BookEntityMapper.toBookEntity;
+import static com.bathanh.apibook.persistence.book.BookEntityMapper.*;
 import static org.apache.commons.collections4.IterableUtils.toList;
 
 @Repository
@@ -19,7 +18,7 @@ public class BookStore {
     private final BookRepository bookRepository;
 
     public List<Book> findAll() {
-        return BookEntityMapper.toBooks(toList(bookRepository.findAll()));
+        return toBooks(toList(bookRepository.findAll()));
     }
 
     public Optional<Book> findById(final UUID uuid) {
@@ -27,8 +26,13 @@ public class BookStore {
                 .map(BookEntityMapper::toBook);
     }
 
+    public Optional<Book> findByTitleAndAuthor(final String title, final String author) {
+        return bookRepository.findByTitleAndAuthor(title, author)
+                .map(BookEntityMapper::toBook);
+    }
+
     public List<Book> find(final String keyword) {
-        return BookEntityMapper.toBooks(bookRepository.find(keyword));
+        return toBooks(bookRepository.find(keyword));
     }
 
     public Book create(final Book book) {

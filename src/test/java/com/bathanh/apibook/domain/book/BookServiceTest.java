@@ -16,6 +16,7 @@ import static com.bathanh.apibook.fakes.BookFakes.buildBooks;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -83,6 +84,17 @@ class BookServiceTest {
                 .withTitle(null);
 
         assertThrows(BadRequestException.class, () -> bookService.create(book));
+    }
+
+    @Test
+    void shouldCreate_ThrownTitleAndAuthorAvailable() {
+        final var book = buildBook();
+
+        when(bookStore.findByTitleAndAuthor(anyString(), anyString())).thenReturn(Optional.of(book));
+
+        assertThrows(BadRequestException.class, () -> bookService.create(book));
+
+        verify(bookStore).findByTitleAndAuthor(book.getTitle(), book.getAuthor());
     }
 
     @Test

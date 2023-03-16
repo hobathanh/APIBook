@@ -51,7 +51,19 @@ class BookStoreTest {
     }
 
     @Test
-    void shouldSFind_OK() {
+    void shouldFindByTitleAndAuthor_Ok() {
+        final var book = buildBookEntity();
+        final var bookOptional = Optional.of(book);
+        when(bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor()))
+                .thenReturn(bookOptional);
+
+        assertEquals(bookOptional, bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor()));
+
+        verify(bookRepository).findByTitleAndAuthor(book.getTitle(), book.getAuthor());
+    }
+
+    @Test
+    void shouldFind_OK() {
         final var expected = buildBookEntities();
         final var book = buildBookEntity();
 

@@ -117,6 +117,7 @@ Base URL: `api/v1/users`. All endpoints required ADMIN role
 - POST: Create user
 - GET: Get all users
 - GET `{id}` Get user by id
+- GET: Find users by username, firstname, lastname
 - PUT: Update user information
 - DELETE: Delete a specific user
 
@@ -124,9 +125,10 @@ Base URL: `api/v1/users`. All endpoints required ADMIN role
 
 Base URL: `api/v1/books`.
 
+- POST: create a book (require logged in)
 - GET: Get all available books (allow anonymous)
 - GET: Get book by ID (allow anonymous)
-- POST: create a book (require logged in)
+- GET: Find books by title, author, description
 - PUT: Update a book
     - If user is ADMIN --> Allow
     - If user is Contributor --> Check if the user is the book's owner

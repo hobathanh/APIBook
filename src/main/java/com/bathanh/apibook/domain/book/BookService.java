@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import static com.bathanh.apibook.domain.book.BookError.supplyBookAlreadyExist;
 import static com.bathanh.apibook.domain.book.BookError.supplyBookNotFound;
 import static com.bathanh.apibook.domain.book.BookValidation.validate;
 
@@ -32,6 +34,7 @@ public class BookService {
 
     public Book create(final Book book) {
         validate(book);
+        verifyTitleAndAuthorAvailable(book.getTitle(), book.getAuthor());
 
         book.setCreatedAt(Instant.now());
         return bookStore.create(book);
@@ -53,5 +56,12 @@ public class BookService {
     public void delete(final UUID id) {
         findById(id);
         bookStore.delete(id);
+    }
+
+    private void verifyTitleAndAuthorAvailable(final String title, final String author) {
+        final Optional<Book> bookOptional = bookStore.findByTitleAndAuthor(title, author);
+        if (bookOptional.isPresent()) {
+            throw supplyBookAlreadyExist(title, author).get();
+        }
     }
 }
