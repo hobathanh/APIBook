@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.bathanh.apibook.persistence.book.BookEntityMapper.toBook;
+import static com.bathanh.apibook.persistence.book.BookEntityMapper.toBookEntity;
 import static org.apache.commons.collections4.IterableUtils.toList;
 
 @Repository
@@ -30,11 +32,11 @@ public class BookStore {
     }
 
     public Book create(final Book book) {
-        return BookEntityMapper.toBook(bookRepository.save(BookEntityMapper.toBookEntity(book)));
+        return toBook(bookRepository.save(toBookEntity(book)));
     }
 
     public Book update(final Book book) {
-        return BookEntityMapper.toBook(bookRepository.save(BookEntityMapper.toBookEntity(book)));
+        return toBook(bookRepository.save(toBookEntity(book)));
     }
 
     public void delete(final UUID id) {

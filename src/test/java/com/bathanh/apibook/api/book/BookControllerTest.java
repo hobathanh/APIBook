@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.UUID;
 
@@ -26,12 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BookController.class)
 @AutoConfigureMockMvc
-class BookControllerTest {
+class BookControllerTest extends AbstractControllerTest {
 
     private static final String BASE_URL = "/api/v1/books";
 
     @Autowired
-    protected MockMvc mvc;
+    private MockMvc mvc;
 
     @MockBean
     private BookService bookService;
@@ -44,7 +42,7 @@ class BookControllerTest {
 
         when(bookService.findAll()).thenReturn(books);
 
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL))
+        getRequest(mvc, BASE_URL)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(books.size()))
                 .andExpect(jsonPath("$[0].id").value(books.get(0).getId().toString()))
@@ -65,7 +63,7 @@ class BookControllerTest {
 
         when(bookService.findById(book.getId())).thenReturn(book);
 
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + book.getId()))
+        getRequest(mvc, BASE_URL + "/" + book.getId())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(book.getId().toString()))
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
@@ -86,7 +84,7 @@ class BookControllerTest {
 
         when(bookService.find(book.getTitle())).thenReturn(expected);
 
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/find?keyword=" + book.getTitle()))
+        getRequest(mvc, BASE_URL + "/find?keyword=" + book.getTitle())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(expected.size()))
                 .andExpect(jsonPath("$[0].id").value(expected.get(0).getId().toString()))
@@ -107,9 +105,9 @@ class BookControllerTest {
 
         when(bookService.create(any(Book.class))).thenReturn(book);
 
-        mvc.perform(MockMvcRequestBuilders.post(BASE_URL)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(book)))
+        final String requestBody = mapper.writeValueAsString(book);
+
+        postRequest(mvc, BASE_URL, requestBody)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
@@ -128,9 +126,9 @@ class BookControllerTest {
 
         when(bookService.update(any(UUID.class), any(Book.class))).thenReturn(updatedBook);
 
-        mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/" + book.getId())
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(mapper.writeValueAsString(toBookResponseDTO(updatedBook))))
+        final String requestBody = mapper.writeValueAsString(toBookResponseDTO(updatedBook));
+
+        putRequest(mvc, BASE_URL + "/" + book.getId(), requestBody)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedBook.getId().toString()))
                 .andExpect(jsonPath("$.title").value(updatedBook.getTitle()))
@@ -149,7 +147,7 @@ class BookControllerTest {
 
         doNothing().when(bookService).delete(id);
 
-        mvc.perform(MockMvcRequestBuilders.delete(BASE_URL + "/" + id))
+        deleteRequest(mvc, BASE_URL + "/" + id)
                 .andExpect(status().isOk());
 
         verify(bookService).delete(id);
