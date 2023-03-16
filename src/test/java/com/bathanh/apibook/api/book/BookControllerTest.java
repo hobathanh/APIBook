@@ -2,18 +2,12 @@ package com.bathanh.apibook.api.book;
 
 import com.bathanh.apibook.domain.book.Book;
 import com.bathanh.apibook.domain.book.BookService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static com.bathanh.apibook.api.book.BookDTOMapper.toBookResponseDTO;
 import static com.bathanh.apibook.fakes.BookFakes.buildBook;
 import static com.bathanh.apibook.fakes.BookFakes.buildBooks;
 import static java.util.UUID.randomUUID;
@@ -23,18 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
-@AutoConfigureMockMvc
 class BookControllerTest extends AbstractControllerTest {
 
     private static final String BASE_URL = "/api/v1/books";
 
-    @Autowired
-    private MockMvc mvc;
-
     @MockBean
     private BookService bookService;
-
-    final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Test
     void shouldFindAll_OK() throws Exception {
@@ -42,7 +30,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         when(bookService.findAll()).thenReturn(books);
 
-        getRequest(mvc, BASE_URL)
+        get(BASE_URL)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(books.size()))
                 .andExpect(jsonPath("$[0].id").value(books.get(0).getId().toString()))
@@ -63,7 +51,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         when(bookService.findById(book.getId())).thenReturn(book);
 
-        getRequest(mvc, BASE_URL + "/" + book.getId())
+        get(BASE_URL + "/" + book.getId())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(book.getId().toString()))
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
@@ -84,7 +72,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         when(bookService.find(book.getTitle())).thenReturn(expected);
 
-        getRequest(mvc, BASE_URL + "/find?keyword=" + book.getTitle())
+        get(BASE_URL + "/find?keyword=" + book.getTitle())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(expected.size()))
                 .andExpect(jsonPath("$[0].id").value(expected.get(0).getId().toString()))
@@ -105,9 +93,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         when(bookService.create(any(Book.class))).thenReturn(book);
 
-        final String requestBody = mapper.writeValueAsString(book);
-
-        postRequest(mvc, BASE_URL, requestBody)
+        post(BASE_URL, book)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
@@ -126,9 +112,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         when(bookService.update(any(UUID.class), any(Book.class))).thenReturn(updatedBook);
 
-        final String requestBody = mapper.writeValueAsString(toBookResponseDTO(updatedBook));
-
-        putRequest(mvc, BASE_URL + "/" + book.getId(), requestBody)
+        put(BASE_URL + "/" + book.getId(), updatedBook)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedBook.getId().toString()))
                 .andExpect(jsonPath("$.title").value(updatedBook.getTitle()))
@@ -147,7 +131,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         doNothing().when(bookService).delete(id);
 
-        deleteRequest(mvc, BASE_URL + "/" + id)
+        delete(BASE_URL + "/" + id)
                 .andExpect(status().isOk());
 
         verify(bookService).delete(id);
