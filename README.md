@@ -9,10 +9,13 @@
 [![codecov](https://codecov.io/gh/hobathanh/APIBook/branch/master/graph/badge.svg?token=2ATX52JL18)](https://codecov.io/gh/hobathanh/APIBook)
 
 ---
+
 ## Introduction
 
 _The goal of this exercise is to write a web API using Spring Boot Framework. The API allows a frontend to handle books
 in a library._
+
+---
 
 ## Step
 
@@ -40,3 +43,91 @@ in a library._
 7. Integrate security and define role foreach endpoints
 8. Create POSTMAN collections
 9. Deployment
+
+---
+
+## Models
+
+### Role
+
+| Property | Required |
+|:--------:|:--------:|
+|    id    |    ✓     |
+|   name   |    ✓     |
+
+**We have fixed 2 roles:**
+
+- Admin
+- Contributor
+
+### User
+
+| Property  | Required |
+|:---------:|:--------:|
+|    id     |    ✓     |
+| username  |    ✓     |
+| password  |    ✓     |
+| firstName |    ✗     |
+| lastName  |    ✗     |
+|  enabled  |    ✓     |
+|  avatar   |    ✗     |
+|  role_id  |    ✓     |
+
+### Book
+
+|  Property   | Required |
+|:-----------:|:--------:|
+|     id      |    ✓     |
+|    title    |    ✓     |
+|   author    |    ✓     |
+| description |    ✗     |
+| created_at  |    ✓     |
+| updated_at  |    ✓     |
+|    image    |    ✗     |
+|   user_id   |    ✓     |
+
+---
+
+## Endpoints
+
+### Auths
+
+Base URL: `api/v1/auths`
+
+- POST: (Allow anonymous)
+    - Login with username/password
+    - Request: username/password
+    - Response
+        - Success: An object with JWT token
+        - Failed: 401 error
+
+### Profiles
+
+Base URL: `api/v1/profiles`. All endpoints required logged in
+
+- GET (Required authenticated)
+    - Get the current user's information
+- PUT
+    - Update current user's profile
+
+### Users
+
+Base URL: `api/v1/users`. All endpoints required ADMIN role
+
+- POST: Create user
+- GET: Get all users
+- GET `{id}` Get user by id
+- PUT: Update user information
+- DELETE: Delete a specific user
+
+### Books
+
+Base URL: `api/v1/books`.
+
+- GET: Get all available books (allow anonymous)
+- GET: Get book by ID (allow anonymous)
+- POST: create a book (require logged in)
+- PUT: Update a book
+    - If user is ADMIN --> Allow
+    - If user is Contributor --> Check if the user is the book's owner
+- DELETE: delete a book (Check role like PUT)
