@@ -1,6 +1,5 @@
-package com.bathanh.apibook.api.book;
+package com.bathanh.apibook.api;
 
-import com.bathanh.apibook.domain.book.Book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.bathanh.apibook.api.book.BookDTOMapper.toBookResponseDTO;
-
 @AutoConfigureMockMvc
-public class AbstractControllerTest {
+public abstract class AbstractControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -24,14 +21,14 @@ public class AbstractControllerTest {
         return mvc.perform(MockMvcRequestBuilders.get(url).contentType(MediaType.APPLICATION_JSON));
     }
 
-    protected ResultActions post(final String url, final Book book) throws Exception {
-        final String requestBody = mapper.writeValueAsString(book);
+    protected ResultActions post(final String url, final Object object) throws Exception {
+        final String requestBody = mapper.writeValueAsString(object);
 
         return mvc.perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).content(requestBody));
     }
 
-    protected ResultActions put(final String url, final Book book) throws Exception {
-        final String requestBody = mapper.writeValueAsString(toBookResponseDTO(book));
+    protected ResultActions put(final String url, final Object object) throws Exception {
+        final String requestBody = mapper.writeValueAsString(object);
 
         return mvc.perform(MockMvcRequestBuilders.put(url).contentType(MediaType.APPLICATION_JSON).content(requestBody));
     }

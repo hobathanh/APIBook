@@ -1,5 +1,6 @@
 package com.bathanh.apibook.api.book;
 
+import com.bathanh.apibook.api.AbstractControllerTest;
 import com.bathanh.apibook.domain.book.Book;
 import com.bathanh.apibook.domain.book.BookService;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.UUID;
 
+import static com.bathanh.apibook.api.book.BookDTOMapper.toBookResponseDTO;
 import static com.bathanh.apibook.fakes.BookFakes.buildBook;
 import static com.bathanh.apibook.fakes.BookFakes.buildBooks;
 import static java.util.UUID.randomUUID;
@@ -112,7 +114,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         when(bookService.update(any(UUID.class), any(Book.class))).thenReturn(updatedBook);
 
-        put(BASE_URL + "/" + book.getId(), updatedBook)
+        put(BASE_URL + "/" + book.getId(), toBookResponseDTO(updatedBook))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedBook.getId().toString()))
                 .andExpect(jsonPath("$.title").value(updatedBook.getTitle()))
