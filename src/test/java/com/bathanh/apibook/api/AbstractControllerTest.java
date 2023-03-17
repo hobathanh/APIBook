@@ -16,7 +16,7 @@ public abstract class AbstractControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     protected ResultActions get(final String url) throws Exception {
         return perform(MockMvcRequestBuilders.get(url));
