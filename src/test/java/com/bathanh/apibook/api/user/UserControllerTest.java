@@ -1,16 +1,11 @@
 package com.bathanh.apibook.api.user;
 
+import com.bathanh.apibook.api.AbstractControllerTest;
 import com.bathanh.apibook.domain.user.User;
 import com.bathanh.apibook.domain.user.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.UUID;
 
@@ -25,13 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@AutoConfigureMockMvc
-class UserControllerTest {
+class UserControllerTest extends AbstractControllerTest {
 
     private static final String BASE_URL = "/api/v1/users";
-
-    @Autowired
-    protected MockMvc mvc;
 
     @MockBean
     private UserService userService;
@@ -42,7 +33,7 @@ class UserControllerTest {
 
         when(userService.findAll()).thenReturn(users);
 
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL))
+        get(BASE_URL)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(users.size()))
                 .andExpect(jsonPath("$[0].id").value(users.get(0).getId().toString()))
@@ -63,7 +54,7 @@ class UserControllerTest {
 
         when(userService.search(anyString())).thenReturn(expected);
 
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/search?keyword=" + user.getUsername()))
+        get(BASE_URL + "/search?keyword=" + user.getUsername())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(expected.size()))
                 .andExpect(jsonPath("$[0].id").value(expected.get(0).getId().toString()))
@@ -83,7 +74,7 @@ class UserControllerTest {
 
         when(userService.findById(user.getId())).thenReturn(user);
 
-        mvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/" + user.getId()))
+        get(BASE_URL + "/" + user.getId())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId().toString()))
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
@@ -102,9 +93,7 @@ class UserControllerTest {
 
         when(userService.create(any(User.class))).thenReturn(user);
 
-        mvc.perform(MockMvcRequestBuilders.post(BASE_URL)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(new ObjectMapper().writeValueAsString(user)))
+        post(BASE_URL, user)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId().toString()))
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
@@ -125,9 +114,7 @@ class UserControllerTest {
 
         when(userService.update(any(UUID.class), any(User.class))).thenReturn(updatedUser);
 
-        mvc.perform(MockMvcRequestBuilders.put(BASE_URL + "/" + user.getId())
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(new ObjectMapper().writeValueAsString(toUserDTO(updatedUser))))
+        put(BASE_URL + "/" + user.getId(), toUserDTO(updatedUser))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedUser.getId().toString()))
                 .andExpect(jsonPath("$.username").value(updatedUser.getUsername()))
@@ -146,7 +133,7 @@ class UserControllerTest {
 
         doNothing().when(userService).delete(id);
 
-        mvc.perform(MockMvcRequestBuilders.delete(BASE_URL + "/" + id))
+        delete(BASE_URL + "/" + id)
                 .andExpect(status().isOk());
 
         verify(userService).delete(id);
