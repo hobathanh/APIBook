@@ -1,5 +1,7 @@
 package com.bathanh.apibook.domain.auths;
 
+import com.bathanh.apibook.persistence.role.RoleStore;
+import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -25,8 +27,8 @@ public class JwtUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 
-    private User buildUser(final com.quanghoa.springtemplate.persistence.user.User user) {
+    private User buildUser(final com.bathanh.apibook.domain.user.User user) {
         return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),
-                List.of(new SimpleGrantedAuthority(roleStore.getRoleById(user.getRoleId()))));
+                List.of(new SimpleGrantedAuthority(roleStore.findRoleNameById(user.getRoleId()))));
     }
 }

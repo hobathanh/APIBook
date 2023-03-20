@@ -1,5 +1,6 @@
 package com.bathanh.apibook.api.auth;
 
+import com.bathanh.apibook.domain.auths.UserAuthenticationToken;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

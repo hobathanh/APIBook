@@ -3,6 +3,7 @@ package com.bathanh.apibook.api.book;
 import com.bathanh.apibook.domain.book.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,18 +36,21 @@ public class BookController {
         return toBookResponseDTOs(bookService.find(keyword));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @Operation(summary = "Create a specific book")
     @PostMapping
     public BookResponseDTO create(final @RequestBody BookRequestDTO bookRequestDTO) {
         return toBookResponseDTO(bookService.create(toBook(bookRequestDTO)));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @Operation(summary = "Update a specific book")
     @PutMapping("{id}")
     public BookResponseDTO update(final @PathVariable UUID id, final @RequestBody BookRequestDTO bookRequestDTO) {
         return toBookResponseDTO(bookService.update(id, toBook(bookRequestDTO)));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @Operation(summary = "Delete a specific book")
     @DeleteMapping("{id}")
     public void delete(final @PathVariable UUID id) {

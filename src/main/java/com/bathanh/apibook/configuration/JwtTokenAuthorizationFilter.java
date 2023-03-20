@@ -1,5 +1,6 @@
 package com.bathanh.apibook.configuration;
 
+import com.bathanh.apibook.domain.auths.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

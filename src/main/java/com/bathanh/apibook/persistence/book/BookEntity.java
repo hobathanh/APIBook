@@ -1,11 +1,11 @@
 package com.bathanh.apibook.persistence.book;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
 

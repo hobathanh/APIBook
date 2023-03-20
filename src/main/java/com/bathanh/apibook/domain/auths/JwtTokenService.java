@@ -1,5 +1,6 @@
 package com.bathanh.apibook.domain.auths;
 
+import com.bathanh.apibook.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
@@ -59,7 +60,7 @@ public class JwtTokenService {
                 UUID.fromString(claims.get(CLAIM_USER_ID).toString()),
                 claims.getSubject(),
                 Arrays.stream(split(claimRoles, ","))
-                        .map(SimpleGrantedAuthority::new)
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                         .toList()
         );
     }
