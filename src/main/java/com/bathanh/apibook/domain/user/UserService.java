@@ -1,7 +1,9 @@
 package com.bathanh.apibook.domain.user;
 
+import com.bathanh.apibook.domain.auths.AuthsProvider;
 import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class UserService {
 
     private final UserStore userStore;
+    private final AuthsProvider authsProvider;
+    private final PasswordEncoder passwordEncoder;
 
     public List<User> findAll() {
         return userStore.findAll();
@@ -37,6 +41,8 @@ public class UserService {
         validateCreateUser(user);
         verifyUsernameAvailable(user.getUsername());
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         return userStore.create(user);
     }
 
@@ -50,7 +56,7 @@ public class UserService {
         }
 
         if (isNotBlank(user.getPassword())) {
-            updatedUser.setPassword(user.getPassword());
+            updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         updatedUser.setFirstName(user.getFirstName());
