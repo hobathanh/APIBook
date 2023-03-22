@@ -18,18 +18,21 @@ public class BookController {
 
     private final BookService bookService;
 
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Find all available books")
     @GetMapping
     public List<BookResponseDTO> findAll() {
         return toBookResponseDTOs(bookService.findAll());
     }
 
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Find a specific book by id")
     @GetMapping("{id}")
     public BookResponseDTO findById(final @PathVariable UUID id) {
         return toBookResponseDTO(bookService.findById(id));
     }
 
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Find books by title, author, description")
     @GetMapping("find")
     public List<BookResponseDTO> find(final @RequestParam String keyword) {

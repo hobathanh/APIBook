@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
-public class JWTWebSecurityConfig {
+public class JwtWebSecurityConfig {
 
     private static final String[] SWAGGER_RESOURCES = {
             "/swagger-ui.html",

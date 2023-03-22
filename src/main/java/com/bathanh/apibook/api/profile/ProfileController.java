@@ -8,29 +8,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 import static com.bathanh.apibook.api.user.UserDTOMapper.toUserDTO;
 import static com.bathanh.apibook.domain.user.UserMapper.toUser;
 
 @RestController
 @RequestMapping("api/v1/profile")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('CONTRIBUTOR','ADMIN')")
 public class ProfileController {
 
     private final UserService userService;
 
-    @PreAuthorize("hasAnyRole('CONTRIBUTOR','ADMIN')")
     @Operation(summary = "Get the current user's information")
-    @GetMapping("{id}")
-    public UserResponseDTO findById(final @PathVariable UUID id) {
-        return toUserDTO(userService.findById(id));
+    @GetMapping
+    public UserResponseDTO getProfile() {
+        return toUserDTO(userService.findUserProfile());
     }
 
-    @PreAuthorize("hasAnyRole('CONTRIBUTOR','ADMIN')")
     @Operation(summary = "Update current user's profile")
-    @PutMapping("{id}")
-    public UserResponseDTO update(final @PathVariable UUID id, final @RequestBody UserRequestDTO userRequestDTO) {
-        return toUserDTO(userService.update(id, toUser(userRequestDTO)));
+    @PutMapping
+    public UserResponseDTO updateProfile(final @RequestBody UserRequestDTO userRequestDTO) {
+        return toUserDTO(userService.updateUserProfile(toUser(userRequestDTO)));
     }
 }

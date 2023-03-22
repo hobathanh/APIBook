@@ -2,7 +2,7 @@ package com.bathanh.apibook.api.book;
 
 import com.bathanh.apibook.api.AbstractControllerTest;
 import com.bathanh.apibook.api.WithMockAdmin;
-import com.bathanh.apibook.api.WithMockUser;
+import com.bathanh.apibook.api.WithMockContributor;
 import com.bathanh.apibook.domain.auths.AuthsProvider;
 import com.bathanh.apibook.domain.book.Book;
 import com.bathanh.apibook.domain.book.BookService;
@@ -44,7 +44,7 @@ class BookControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockAdmin
-    @WithMockUser
+    @WithMockContributor
     void shouldFindAll_OK() throws Exception {
         final var books = buildBooks();
 
@@ -67,7 +67,7 @@ class BookControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockAdmin
-    @WithMockUser
+    @WithMockContributor
     void shouldFindById_OK() throws Exception {
         final var book = buildBook();
 
@@ -89,7 +89,7 @@ class BookControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockAdmin
-    @WithMockUser
+    @WithMockContributor
     void shouldFind_OK() throws Exception {
         final var book = buildBook();
         final var expected = buildBooks();
@@ -112,8 +112,8 @@ class BookControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithMockContributor
     @WithMockAdmin
-    @WithMockUser
     void shouldCreate_OK() throws Exception {
         final var book = buildBook();
 
@@ -133,7 +133,7 @@ class BookControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockAdmin
-    @WithMockUser
+    @WithMockContributor
     void shouldUpdate_OK() throws Exception {
         final var book = buildBook();
         final var updatedBook = buildBook().withId(book.getId());
@@ -155,7 +155,7 @@ class BookControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockAdmin
-    @WithMockUser
+    @WithMockContributor
     void shouldDelete_OK() throws Exception {
         final var id = randomUUID();
 

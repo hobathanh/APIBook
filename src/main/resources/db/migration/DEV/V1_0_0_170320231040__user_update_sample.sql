@@ -9,5 +9,5 @@ VALUES ('thanh2', '$2a$12$3GjmcPUu7PpwwBreqaD4quYa.ZzHOjHtI7ZFbWV.i9MVwfIUTuusS'
         (SELECT id FROM roles WHERE name = 'CONTRIBUTOR'));
 
 INSERT INTO users (username, password, first_name, last_name, enabled, avatar, role_id)
-VALUES ('thanh3', '$2a$12$3GjmcPUu7PpwwBreqaD4quYa.ZzHOjHtI7ZFbWV.i9MVwfIUTuusS', 'baaa', 'thanh', true, 'avatar2.jpg',
+VALUES ('thanh3', '$2a$12$3GjmcPUu7PpwwBreqaD4quYa.ZzHOjHtI7ZFbWV.i9MVwfIUTuusS', 'baaa', 'thanh', true, 'avatar3.jpg',
         (SELECT id FROM roles WHERE name = 'CONTRIBUTOR'));

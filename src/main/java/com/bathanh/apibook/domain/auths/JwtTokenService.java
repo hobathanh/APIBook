@@ -20,16 +20,13 @@ import java.util.UUID;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.split;
 
-
 @Component
 @RequiredArgsConstructor
 public class JwtTokenService {
 
     private static final Clock clock = DefaultClock.INSTANCE;
-
     private static final String CLAIM_ROLES = "roles";
     private static final String CLAIM_USER_ID = "userId";
-
     private final JwtProperties jwtProperties;
 
     public Authentication parse(final String token) {
@@ -56,10 +53,15 @@ public class JwtTokenService {
             return null;
         }
 
+        final String claimUserId = claims.get(CLAIM_USER_ID, String.class);
+        if (isBlank(claimUserId)) {
+            return null;
+        }
+
         return new UserAuthenticationToken(
-                UUID.fromString(claims.get(CLAIM_USER_ID).toString()),
+                UUID.fromString(claimUserId),
                 claims.getSubject(),
-                Arrays.stream(split(claimRoles, ","))
+                Arrays.stream(split(claims.get(CLAIM_ROLES).toString(), ","))
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                         .toList()
         );

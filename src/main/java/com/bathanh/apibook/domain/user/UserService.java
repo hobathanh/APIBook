@@ -15,7 +15,7 @@ import static com.bathanh.apibook.domain.user.UserError.supplyUserAlreadyExist;
 import static com.bathanh.apibook.domain.user.UserError.supplyUserNotFound;
 import static com.bathanh.apibook.domain.user.UserValidation.validateCreateUser;
 import static com.bathanh.apibook.domain.user.UserValidation.validateUpdateUser;
-import static com.bathanh.apibook.error.CommonError.supplyAccessDeniedError;
+import static com.bathanh.apibook.error.CommonError.supplyForbiddenError;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
@@ -26,15 +26,23 @@ public class UserService {
     private final AuthsProvider authsProvider;
     private final PasswordEncoder passwordEncoder;
 
+    public UserAuthenticationToken getCurrentAuthentication() {
+        return authsProvider.getCurrentAuthentication();
+    }
+
     public List<User> findAll() {
         return userStore.findAll();
     }
 
     public User findById(final UUID id) {
-        verifyFindByIdUserPermission(id);
+        verifyUserProfilePermission(id);
 
         return userStore.findById(id)
                 .orElseThrow(supplyUserNotFound(id));
+    }
+
+    public User findUserProfile() {
+        return findById(getCurrentAuthentication().getUserId());
     }
 
     public List<User> search(final String keyword) {
@@ -73,6 +81,10 @@ public class UserService {
         return userStore.update(updatedUser);
     }
 
+    public User updateUserProfile(final User userUpdate) {
+        return update(getCurrentAuthentication().getUserId(), userUpdate);
+    }
+
     public void delete(final UUID id) {
         findById(id);
         userStore.delete(id);
@@ -86,20 +98,16 @@ public class UserService {
     }
 
     private void verifyUpdateUserPermission(UUID id) {
-        final UserAuthenticationToken userAuthenticationToken = authsProvider.getCurrentAuthentication();
-
-        if (userAuthenticationToken.getRole().equals("ROLE_CONTRIBUTOR")
-                && !userAuthenticationToken.getUserId().equals(id)) {
-            throw supplyAccessDeniedError("you do not have permission to update user").get();
+        if (getCurrentAuthentication().getRole().equals("ROLE_CONTRIBUTOR")
+                && !getCurrentAuthentication().getUserId().equals(id)) {
+            throw supplyForbiddenError("You do not have permission to update user").get();
         }
     }
 
-    private void verifyFindByIdUserPermission(UUID id) {
-        final UserAuthenticationToken userAuthenticationToken = authsProvider.getCurrentAuthentication();
-
-        if (userAuthenticationToken.getRole().equals("ROLE_CONTRIBUTOR")
-                && !userAuthenticationToken.getUserId().equals(id)) {
-            throw supplyAccessDeniedError("you do not have permission to view user").get();
+    private void verifyUserProfilePermission(UUID id) {
+        if (getCurrentAuthentication().getRole().equals("ROLE_CONTRIBUTOR")
+                && !getCurrentAuthentication().getUserId().equals(id)) {
+            throw supplyForbiddenError("You do not have permission to view user").get();
         }
     }
 }

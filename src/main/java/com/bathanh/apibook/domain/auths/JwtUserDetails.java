@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 import java.util.UUID;
 
-
 @Getter
 public class JwtUserDetails extends User {
 

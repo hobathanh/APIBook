@@ -4,14 +4,14 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
-import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildAdmin;
+import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildContributor;
 
-public class WithMockAdminSecurityContextFactory implements WithSecurityContextFactory<WithMockAdmin> {
+public class WithMockContributorSecurityContextFactory implements WithSecurityContextFactory<WithMockContributor> {
 
     @Override
-    public SecurityContext createSecurityContext(WithMockAdmin annotation) {
+    public SecurityContext createSecurityContext(WithMockContributor annotation) {
         final var context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(buildAdmin());
+        context.setAuthentication(buildContributor());
         return context;
     }
 }

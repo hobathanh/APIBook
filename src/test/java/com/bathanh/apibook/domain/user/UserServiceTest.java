@@ -1,17 +1,23 @@
 package com.bathanh.apibook.domain.user;
 
+import com.bathanh.apibook.domain.auths.AuthsProvider;
 import com.bathanh.apibook.error.BadRequestException;
+import com.bathanh.apibook.error.ForbiddenException;
 import com.bathanh.apibook.error.NotFoundException;
 import com.bathanh.apibook.persistence.user.UserStore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildAdmin;
+import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildContributor;
 import static com.bathanh.apibook.fakes.UserFakes.buildUser;
 import static com.bathanh.apibook.fakes.UserFakes.buildUsers;
 import static java.util.UUID.randomUUID;
@@ -27,6 +33,10 @@ class UserServiceTest {
     private UserStore userStore;
     @InjectMocks
     private UserService userService;
+    @Mock
+    private AuthsProvider authsProvider;
+    @Spy
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void shouldFindAll_OK() {
@@ -53,6 +63,7 @@ class UserServiceTest {
         final var expected = buildUser();
 
         when(userStore.findById(expected.getId())).thenReturn(Optional.of(expected));
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
 
         final var actual = userService.findById(expected.getId());
 
@@ -66,6 +77,7 @@ class UserServiceTest {
         final var uuid = randomUUID();
 
         when(userStore.findById(uuid)).thenReturn(Optional.empty());
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
 
         assertThrows(NotFoundException.class, () -> userService.findById(uuid));
 
@@ -125,7 +137,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldUpdate_OK() {
+    void shouldUpdate_Admin_OK() {
         final var user = buildUser();
         final var userUpdate = buildUser()
                 .withId(user.getId())
@@ -134,6 +146,7 @@ class UserServiceTest {
 
         when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
         when(userStore.update(user)).thenReturn(user);
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
 
         final var actual = userService.update(user.getId(), userUpdate);
 
@@ -155,6 +168,7 @@ class UserServiceTest {
                 .withPassword(randomAlphabetic(3, 5));
 
         when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
 
         assertThrows(BadRequestException.class, () -> userService.update(user.getId(), userUpdate));
 
@@ -167,6 +181,7 @@ class UserServiceTest {
         final var userUpdate = buildUser();
 
         when(userStore.findById(uuid)).thenReturn(Optional.empty());
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
 
         assertThrows(NotFoundException.class, () -> userService.update(uuid, userUpdate));
 
@@ -182,8 +197,24 @@ class UserServiceTest {
 
         when(userStore.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
         when(userStore.findByUsername(userUpdate.getUsername())).thenReturn(Optional.of(userUpdate));
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
 
         assertThrows(BadRequestException.class, () -> userService.update(userToUpdate.getId(), userUpdate));
+
+        verify(userStore, never()).update(userUpdate);
+    }
+
+    @Test
+    void shouldUpdate_ThrownForbiddenException() {
+        final var user = buildUser();
+        final var userUpdate = buildUser()
+                .withId(user.getId())
+                .withRoleId(user.getRoleId())
+                .withPassword(randomAlphabetic(6, 10));
+
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildContributor());
+
+        assertThrows(ForbiddenException.class, () -> userService.update(userUpdate.getId(), userUpdate));
 
         verify(userStore, never()).update(userUpdate);
     }
@@ -193,6 +224,7 @@ class UserServiceTest {
         final var user = buildUser();
 
         when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
 
         userService.delete(user.getId());
 
@@ -204,9 +236,20 @@ class UserServiceTest {
         final var uuid = UUID.randomUUID();
 
         when(userStore.findById(uuid)).thenReturn(Optional.empty());
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
 
         assertThrows(NotFoundException.class, () -> userService.findById(uuid));
 
         verify(userStore).findById(uuid);
+    }
+
+    @Test
+    void shouldDelete_ThrownForbiddenException() {
+        final var user = buildUser();
+
+        when(authsProvider.getCurrentAuthentication()).thenReturn(buildContributor());
+
+        assertThrows(ForbiddenException.class, () -> userService.delete(user.getId()));
+        verify(userStore, never()).delete(user.getId());
     }
 }

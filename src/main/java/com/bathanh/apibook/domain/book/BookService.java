@@ -14,7 +14,7 @@ import java.util.UUID;
 import static com.bathanh.apibook.domain.book.BookError.supplyBookAlreadyExist;
 import static com.bathanh.apibook.domain.book.BookError.supplyBookNotFound;
 import static com.bathanh.apibook.domain.book.BookValidation.validate;
-import static com.bathanh.apibook.error.CommonError.supplyAccessDeniedError;
+import static com.bathanh.apibook.error.CommonError.supplyForbiddenError;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,10 @@ public class BookService {
     private final BookStore bookStore;
 
     private final AuthsProvider authsProvider;
+
+    private UserAuthenticationToken getCurrentAuthUser() {
+        return authsProvider.getCurrentAuthentication();
+    }
 
     public List<Book> findAll() {
         return bookStore.findAll();
@@ -41,6 +45,7 @@ public class BookService {
         validate(book);
         verifyTitleAndAuthorAvailable(book.getTitle(), book.getAuthor());
 
+        book.setUserId(getCurrentAuthUser().getUserId());
         book.setCreatedAt(Instant.now());
         return bookStore.create(book);
     }
@@ -75,20 +80,16 @@ public class BookService {
     }
 
     private void verifyUpdateBookPermission(UUID id) {
-        final UserAuthenticationToken userAuthenticationToken = authsProvider.getCurrentAuthentication();
-
-        if (userAuthenticationToken.getRole().equals("ROLE_CONTRIBUTOR")
-                && !userAuthenticationToken.getUserId().equals(id)) {
-            throw supplyAccessDeniedError("you do not have permission to update book").get();
+        if (getCurrentAuthUser().getRole().equals("ROLE_CONTRIBUTOR")
+                && !getCurrentAuthUser().getUserId().equals(id)) {
+            throw supplyForbiddenError("You do not have permission to update book").get();
         }
     }
 
     private void verifyDeleteBookPermission(UUID id) {
-        final UserAuthenticationToken userAuthenticationToken = authsProvider.getCurrentAuthentication();
-
-        if (userAuthenticationToken.getRole().equals("ROLE_CONTRIBUTOR")
-                && !userAuthenticationToken.getUserId().equals(id)) {
-            throw supplyAccessDeniedError("you do not have permission to delete book").get();
+        if (getCurrentAuthUser().getRole().equals("ROLE_CONTRIBUTOR")
+                && !getCurrentAuthUser().getUserId().equals(id)) {
+            throw supplyForbiddenError("You do not have permission to delete book").get();
         }
     }
 }
