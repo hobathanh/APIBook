@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.bathanh.apibook.fakes.UserFakes.*;
 import static com.bathanh.apibook.persistence.user.UserEntityMapper.toUser;
@@ -132,10 +131,20 @@ class UserStoreTest {
 
     @Test
     void deleteUser_OK() {
-        final var userId = UUID.randomUUID();
+        final var userDelete = buildUserEntity();
+        userDelete.setEnabled(false);
+        
+        when(userRepository.save(any())).thenReturn(userDelete);
 
-        userStore.delete(userId);
+        final var actual = userStore.delete(toUser(userDelete));
 
-        verify(userRepository).deleteById(userId);
+        assertEquals(userDelete.getId().toString(), actual.getId().toString());
+        assertEquals(userDelete.getUsername(), actual.getUsername());
+        assertEquals(userDelete.getPassword(), actual.getPassword());
+        assertEquals(userDelete.getFirstName(), actual.getFirstName());
+        assertEquals(userDelete.getLastName(), actual.getLastName());
+        assertEquals(userDelete.getAvatar(), actual.getAvatar());
+        assertEquals(userDelete.isEnabled(), actual.isEnabled());
+        assertEquals(userDelete.getRoleId(), actual.getRoleId());
     }
 }

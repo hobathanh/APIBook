@@ -308,7 +308,7 @@ class UserServiceTest {
 
         userService.delete(user.getId());
 
-        verify(userStore).delete(user.getId());
+        verify(userStore).delete(user);
     }
 
     @Test
@@ -331,6 +331,6 @@ class UserServiceTest {
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
 
         assertThrows(ForbiddenException.class, () -> userService.delete(user.getId()));
-        verify(userStore, never()).delete(user.getId());
+        verify(userStore, never()).delete(user);
     }
 }

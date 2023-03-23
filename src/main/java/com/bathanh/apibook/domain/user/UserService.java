@@ -81,8 +81,8 @@ public class UserService {
     }
 
     public void delete(final UUID id) {
-        findById(id);
-        userStore.delete(id);
+        final User user = findById(id);
+        userStore.delete(user);
     }
 
     private void verifyUsernameAvailable(final String username) {
