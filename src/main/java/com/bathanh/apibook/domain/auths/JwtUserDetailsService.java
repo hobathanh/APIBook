@@ -28,7 +28,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         return userStore.findByUsername(username)
                 .map(user -> buildUser(toUserEntity(user)))
-                .orElseThrow(() -> new UsernameNotFoundException("User with username %s could not be found" + username));
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     private User buildUser(final UserEntity user) {

@@ -169,15 +169,17 @@ class UserServiceTest {
 
     @Test
     void shouldUpdate_Admin_OK() {
-        final var userUpdate = buildUser();
-        userUpdate.setId(authsProvider.getCurrentUserId());
-        userUpdate.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
+        final var user = buildUser();
+        final var userUpdate = buildUser()
+                .withId(user.getId())
+                .withRoleId(user.getRoleId())
+                .withPassword(randomAlphabetic(6, 10));
 
-        when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(userUpdate));
-        when(userStore.update(userUpdate)).thenReturn(userUpdate);
+        when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userStore.update(user)).thenReturn(user);
         when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
-        final var actual = userService.update(authsProvider.getCurrentUserId(), userUpdate);
+        final var actual = userService.update(user.getId(), userUpdate);
 
         assertEquals(userUpdate.getId(), actual.getId());
         assertEquals(userUpdate.getUsername(), actual.getUsername());
@@ -187,8 +189,7 @@ class UserServiceTest {
         assertEquals(userUpdate.getRoleId(), actual.getRoleId());
         assertEquals(userUpdate.isEnabled(), actual.isEnabled());
 
-        verify(userStore).findById(authsProvider.getCurrentUserId());
-        verify(userStore).update(userUpdate);
+        verify(userStore).update(user);
     }
 
     @Test
