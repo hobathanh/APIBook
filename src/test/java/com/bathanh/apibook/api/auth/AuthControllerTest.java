@@ -29,14 +29,14 @@ class AuthControllerTest extends AbstractControllerTest {
 
     @Test
     void shouldLogin_OK() throws Exception {
-        final var authentication = buildAuth();
+        final var auth = buildAuth();
 
         when(authenticationManager.authenticate(any(Authentication.class)))
-                .thenReturn(authentication);
-        when(jwtTokenService.generateToken((JwtUserDetails) authentication.getPrincipal()))
+                .thenReturn(auth);
+        when(jwtTokenService.generateToken((JwtUserDetails) auth.getPrincipal()))
                 .thenReturn("token");
 
-        post(BASE_URL, authentication)
+        post(BASE_URL, auth)
                 .andExpect(jsonPath("$.token").value("token"));
     }
 }

@@ -1,7 +1,6 @@
 package com.bathanh.apibook.domain.book;
 
 import com.bathanh.apibook.domain.auths.AuthsProvider;
-import com.bathanh.apibook.domain.auths.UserAuthenticationToken;
 import com.bathanh.apibook.persistence.book.BookStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,10 +23,6 @@ public class BookService {
 
     private final AuthsProvider authsProvider;
 
-    private UserAuthenticationToken getCurrentAuthUser() {
-        return authsProvider.getCurrentAuthentication();
-    }
-
     public List<Book> findAll() {
         return bookStore.findAll();
     }
@@ -45,7 +40,7 @@ public class BookService {
         validate(book);
         verifyTitleAndAuthorAvailable(book.getTitle(), book.getAuthor());
 
-        book.setUserId(getCurrentAuthUser().getUserId());
+        book.setUserId(authsProvider.getCurrentUserId());
         book.setCreatedAt(Instant.now());
         return bookStore.create(book);
     }
@@ -80,15 +75,15 @@ public class BookService {
     }
 
     private void verifyUpdateBookPermission(UUID id) {
-        if (getCurrentAuthUser().getRole().equals("ROLE_CONTRIBUTOR")
-                && !getCurrentAuthUser().getUserId().equals(id)) {
+        if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
+                && !authsProvider.getCurrentUserId().equals(id)) {
             throw supplyForbiddenError("You do not have permission to update book").get();
         }
     }
 
     private void verifyDeleteBookPermission(UUID id) {
-        if (getCurrentAuthUser().getRole().equals("ROLE_CONTRIBUTOR")
-                && !getCurrentAuthUser().getUserId().equals(id)) {
+        if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
+                && !authsProvider.getCurrentUserId().equals(id)) {
             throw supplyForbiddenError("You do not have permission to delete book").get();
         }
     }

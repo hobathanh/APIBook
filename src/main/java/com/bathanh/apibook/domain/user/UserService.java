@@ -1,7 +1,6 @@
 package com.bathanh.apibook.domain.user;
 
 import com.bathanh.apibook.domain.auths.AuthsProvider;
-import com.bathanh.apibook.domain.auths.UserAuthenticationToken;
 import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,10 +25,6 @@ public class UserService {
     private final AuthsProvider authsProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public UserAuthenticationToken getCurrentAuthentication() {
-        return authsProvider.getCurrentAuthentication();
-    }
-
     public List<User> findAll() {
         return userStore.findAll();
     }
@@ -42,7 +37,7 @@ public class UserService {
     }
 
     public User findUserProfile() {
-        return findById(getCurrentAuthentication().getUserId());
+        return findById(authsProvider.getCurrentUserId());
     }
 
     public List<User> search(final String keyword) {
@@ -82,7 +77,7 @@ public class UserService {
     }
 
     public User updateUserProfile(final User userUpdate) {
-        return update(getCurrentAuthentication().getUserId(), userUpdate);
+        return update(authsProvider.getCurrentUserId(), userUpdate);
     }
 
     public void delete(final UUID id) {
@@ -98,15 +93,15 @@ public class UserService {
     }
 
     private void verifyUpdateUserPermission(UUID id) {
-        if (getCurrentAuthentication().getRole().equals("ROLE_CONTRIBUTOR")
-                && !getCurrentAuthentication().getUserId().equals(id)) {
+        if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
+                && !authsProvider.getCurrentUserId().equals(id)) {
             throw supplyForbiddenError("You do not have permission to update user").get();
         }
     }
 
     private void verifyUserProfilePermission(UUID id) {
-        if (getCurrentAuthentication().getRole().equals("ROLE_CONTRIBUTOR")
-                && !getCurrentAuthentication().getUserId().equals(id)) {
+        if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
+                && !authsProvider.getCurrentUserId().equals(id)) {
             throw supplyForbiddenError("You do not have permission to view user").get();
         }
     }

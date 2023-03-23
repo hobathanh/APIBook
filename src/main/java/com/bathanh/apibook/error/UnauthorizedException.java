@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 public class UnauthorizedException extends DomainException {
 
     public UnauthorizedException() {
-        super(HttpStatus.UNAUTHORIZED, "");
+        super(HttpStatus.UNAUTHORIZED, "Authentication failed, please check again");
     }
 }

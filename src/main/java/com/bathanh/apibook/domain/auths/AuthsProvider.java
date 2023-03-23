@@ -5,6 +5,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class AuthsProvider {
 
@@ -16,5 +18,13 @@ public class AuthsProvider {
         }
 
         return (UserAuthenticationToken) authentication;
+    }
+
+    public UUID getCurrentUserId() {
+        return getCurrentAuthentication().getUserId();
+    }
+
+    public String getCurrentUserRole() {
+        return getCurrentAuthentication().getRole();
     }
 }

@@ -63,7 +63,7 @@ class UserServiceTest {
         final var expected = buildUser();
 
         when(userStore.findById(expected.getId())).thenReturn(Optional.of(expected));
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
         final var actual = userService.findById(expected.getId());
 
@@ -77,11 +77,42 @@ class UserServiceTest {
         final var uuid = randomUUID();
 
         when(userStore.findById(uuid)).thenReturn(Optional.empty());
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
         assertThrows(NotFoundException.class, () -> userService.findById(uuid));
 
         verify(userStore).findById(uuid);
+    }
+
+    @Test
+    void shouldFindUserProfile_Admin_OK() {
+        final var user = buildUser();
+        user.setId(authsProvider.getCurrentUserId());
+
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
+        when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(user));
+
+        final var actual = userService.findUserProfile();
+
+        assertEquals(user, actual);
+
+        verify(userStore).findById(authsProvider.getCurrentUserId());
+    }
+
+    @Test
+    void shouldFindUserProfile_Contributor_OK() {
+        final var user = buildUser();
+        user.setId(authsProvider.getCurrentUserId());
+
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
+        when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
+        when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(user));
+
+        final var actual = userService.findUserProfile();
+
+        assertEquals(user, actual);
+
+        verify(userStore).findById(authsProvider.getCurrentUserId());
     }
 
     @Test
@@ -138,17 +169,15 @@ class UserServiceTest {
 
     @Test
     void shouldUpdate_Admin_OK() {
-        final var user = buildUser();
-        final var userUpdate = buildUser()
-                .withId(user.getId())
-                .withRoleId(user.getRoleId())
-                .withPassword(randomAlphabetic(6, 10));
+        final var userUpdate = buildUser();
+        userUpdate.setId(authsProvider.getCurrentUserId());
+        userUpdate.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
 
-        when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
-        when(userStore.update(user)).thenReturn(user);
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
+        when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(userUpdate));
+        when(userStore.update(userUpdate)).thenReturn(userUpdate);
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
-        final var actual = userService.update(user.getId(), userUpdate);
+        final var actual = userService.update(authsProvider.getCurrentUserId(), userUpdate);
 
         assertEquals(userUpdate.getId(), actual.getId());
         assertEquals(userUpdate.getUsername(), actual.getUsername());
@@ -158,7 +187,8 @@ class UserServiceTest {
         assertEquals(userUpdate.getRoleId(), actual.getRoleId());
         assertEquals(userUpdate.isEnabled(), actual.isEnabled());
 
-        verify(userStore).update(user);
+        verify(userStore).findById(authsProvider.getCurrentUserId());
+        verify(userStore).update(userUpdate);
     }
 
     @Test
@@ -168,7 +198,7 @@ class UserServiceTest {
                 .withPassword(randomAlphabetic(3, 5));
 
         when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
         assertThrows(BadRequestException.class, () -> userService.update(user.getId(), userUpdate));
 
@@ -181,7 +211,7 @@ class UserServiceTest {
         final var userUpdate = buildUser();
 
         when(userStore.findById(uuid)).thenReturn(Optional.empty());
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
         assertThrows(NotFoundException.class, () -> userService.update(uuid, userUpdate));
 
@@ -197,7 +227,7 @@ class UserServiceTest {
 
         when(userStore.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
         when(userStore.findByUsername(userUpdate.getUsername())).thenReturn(Optional.of(userUpdate));
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
         assertThrows(BadRequestException.class, () -> userService.update(userToUpdate.getId(), userUpdate));
 
@@ -212,11 +242,61 @@ class UserServiceTest {
                 .withRoleId(user.getRoleId())
                 .withPassword(randomAlphabetic(6, 10));
 
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildContributor());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
+        when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
 
-        assertThrows(ForbiddenException.class, () -> userService.update(userUpdate.getId(), userUpdate));
+        assertThrows(ForbiddenException.class, () -> userService.update(user.getId(), userUpdate));
 
         verify(userStore, never()).update(userUpdate);
+    }
+
+    @Test
+    void shouldUpdateUserProfile_Admin_Ok() {
+        final var userUpdate = buildUser();
+        userUpdate.setId(authsProvider.getCurrentUserId());
+        userUpdate.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
+
+        when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(userUpdate));
+        when(userStore.update(userUpdate)).thenReturn(userUpdate);
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
+
+        final var actual = userService.updateUserProfile(userUpdate);
+
+        assertEquals(userUpdate.getId(), actual.getId());
+        assertEquals(userUpdate.getUsername(), actual.getUsername());
+        assertEquals(userUpdate.getFirstName(), actual.getFirstName());
+        assertEquals(userUpdate.getLastName(), actual.getLastName());
+        assertEquals(userUpdate.getAvatar(), actual.getAvatar());
+        assertEquals(userUpdate.getRoleId(), actual.getRoleId());
+        assertEquals(userUpdate.isEnabled(), actual.isEnabled());
+
+        verify(userStore).update(userUpdate);
+        verify(userStore).findById(authsProvider.getCurrentUserId());
+    }
+
+    @Test
+    void shouldUpdateUserProfile_Contributor_Ok() {
+        final var userUpdate = buildUser();
+        userUpdate.setId(authsProvider.getCurrentUserId());
+        userUpdate.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
+
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
+        when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
+        when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(userUpdate));
+        when(userStore.update(userUpdate)).thenReturn(userUpdate);
+
+        final var actual = userService.updateUserProfile(userUpdate);
+
+        assertEquals(userUpdate.getId(), actual.getId());
+        assertEquals(userUpdate.getUsername(), actual.getUsername());
+        assertEquals(userUpdate.getFirstName(), actual.getFirstName());
+        assertEquals(userUpdate.getLastName(), actual.getLastName());
+        assertEquals(userUpdate.getAvatar(), actual.getAvatar());
+        assertEquals(userUpdate.getRoleId(), actual.getRoleId());
+        assertEquals(userUpdate.isEnabled(), actual.isEnabled());
+
+        verify(userStore).update(userUpdate);
+        verify(userStore).findById(authsProvider.getCurrentUserId());
     }
 
     @Test
@@ -224,7 +304,7 @@ class UserServiceTest {
         final var user = buildUser();
 
         when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
         userService.delete(user.getId());
 
@@ -236,7 +316,7 @@ class UserServiceTest {
         final var uuid = UUID.randomUUID();
 
         when(userStore.findById(uuid)).thenReturn(Optional.empty());
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildAdmin());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
         assertThrows(NotFoundException.class, () -> userService.findById(uuid));
 
@@ -247,7 +327,8 @@ class UserServiceTest {
     void shouldDelete_ThrownForbiddenException() {
         final var user = buildUser();
 
-        when(authsProvider.getCurrentAuthentication()).thenReturn(buildContributor());
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
+        when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
 
         assertThrows(ForbiddenException.class, () -> userService.delete(user.getId()));
         verify(userStore, never()).delete(user.getId());

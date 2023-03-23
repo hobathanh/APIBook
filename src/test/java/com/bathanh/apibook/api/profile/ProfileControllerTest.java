@@ -43,9 +43,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     @WithMockContributor
     void shouldGetProfile_OK() throws Exception {
         final var user = buildUser();
-        final var userAuthToken = authsProvider.getCurrentAuthentication();
 
-        when(userService.findById(userAuthToken.getUserId())).thenReturn(user);
         when(userService.findUserProfile()).thenReturn(user);
 
         get(BASE_URL)
@@ -66,9 +64,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     @WithMockContributor
     void shouldUpdateProfile_OK() throws Exception {
         final var updatedUser = buildUser();
-        final var userAuthToken = authsProvider.getCurrentAuthentication();
 
-        when(userService.findById(userAuthToken.getUserId())).thenReturn(updatedUser);
         when(userService.updateUserProfile(any(User.class))).thenReturn(updatedUser);
 
         put(BASE_URL, updatedUser)
