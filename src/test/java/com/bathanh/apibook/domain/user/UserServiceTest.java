@@ -88,6 +88,7 @@ class UserServiceTest {
     void shouldFindUserProfile_Admin_OK() {
         final var user = buildUser();
         user.setId(authsProvider.getCurrentUserId());
+        user.setUsername(authsProvider.getCurrentUsername());
 
         when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
         when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(user));
@@ -103,7 +104,8 @@ class UserServiceTest {
     void shouldFindUserProfile_Contributor_OK() {
         final var user = buildUser();
         user.setId(authsProvider.getCurrentUserId());
-
+        user.setUsername(authsProvider.getCurrentUsername());
+        
         when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
         when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(user));
@@ -242,7 +244,7 @@ class UserServiceTest {
         userUpdate.setId(user.getId());
         userUpdate.setRoleId(user.getRoleId());
         userUpdate.setPassword(randomAlphabetic(6, 10));
-        
+
         when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
 

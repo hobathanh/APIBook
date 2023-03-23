@@ -27,4 +27,8 @@ public class AuthsProvider {
     public String getCurrentUserRole() {
         return getCurrentAuthentication().getRole();
     }
+
+    public String getCurrentUsername() {
+        return getCurrentAuthentication().getUsername();
+    }
 }

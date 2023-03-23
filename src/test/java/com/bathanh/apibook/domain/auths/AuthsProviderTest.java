@@ -70,4 +70,22 @@ class AuthsProviderTest {
 
         assertThrows(UnauthorizedException.class, () -> authsProvider.getCurrentUserRole());
     }
+
+    @Test
+    void shouldGetCurrentUsername_OK() {
+        final var user = buildAdmin();
+
+        SecurityContextHolder.getContext().setAuthentication(user);
+
+        final var actual = authsProvider.getCurrentUsername();
+
+        assertEquals(user.getUsername(), actual);
+    }
+
+    @Test
+    void shouldGetCurrentUsername_Throw() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+        assertThrows(UnauthorizedException.class, () -> authsProvider.getCurrentUsername());
+    }
 }
