@@ -13,56 +13,56 @@ class UserValidationTest {
 
     @Test
     void validateCreateUser_OK() {
-        final var user = buildUser()
-                .withPassword(randomAlphabetic(6, 10));
+        final var user = buildUser();
+        user.setPassword(randomAlphabetic(6, 10));
 
         validateCreateUser(user);
     }
 
     @Test
     void validateCreateUser_ThrowUsernameEmpty() {
-        final var user = buildUser()
-                .withUsername(null);
+        final var user = buildUser();
+        user.setUsername(null);
 
         assertThrows(BadRequestException.class, () -> validateCreateUser(user));
     }
 
     @Test
     void validateCreateUser_ThrowPasswordEmpty() {
-        final var user = buildUser()
-                .withPassword(null);
+        final var user = buildUser();
+        user.setPassword(null);
 
         assertThrows(BadRequestException.class, () -> validateCreateUser(user));
     }
 
     @Test
     void validateCreateUser_ThrowLengthPassword() {
-        final var user = buildUser()
-                .withPassword(randomAlphabetic(3, 5));
+        final var user = buildUser();
+        user.setPassword(randomAlphabetic(3, 5));
 
         assertThrows(BadRequestException.class, () -> validateCreateUser(user));
     }
 
     @Test
     void validateUpdateUser_OK() {
-        final var user = buildUser()
-                .withPassword(randomAlphabetic(6, 10));
+        final var user = buildUser();
+        user.setPassword(randomAlphabetic(6, 10));
 
         validateUpdateUser(user);
     }
 
     @Test
     void validateUpdateUser_ThrowUsernameEmpty() {
-        final var user = buildUser()
-                .withUsername(null);
+        final var user = buildUser();
+        user.setUsername(null);
 
         assertThrows(BadRequestException.class, () -> validateUpdateUser(user));
     }
 
     @Test
     void validateUpdateUser_ThrowLengthPassword() {
-        final var user = buildUser()
-                .withPassword(randomAlphabetic(3, 5));
+        final var user = buildUser();
+        user.setPassword(randomAlphabetic(3, 5));
 
         assertThrows(BadRequestException.class, () -> validateUpdateUser(user));
     }

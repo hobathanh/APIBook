@@ -1,6 +1,7 @@
 package com.bathanh.apibook.domain.auths;
 
 import com.bathanh.apibook.domain.role.Role;
+import com.bathanh.apibook.error.UsernameNotFoundException;
 import com.bathanh.apibook.persistence.role.RoleStore;
 import com.bathanh.apibook.persistence.user.UserEntity;
 import com.bathanh.apibook.persistence.user.UserStore;
@@ -9,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

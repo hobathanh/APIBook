@@ -3,14 +3,12 @@ package com.bathanh.apibook.domain.user;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.With;
 
 import java.util.UUID;
 
-@Getter
-@With
-@Setter
 @Builder
+@Getter
+@Setter
 public class User {
 
     private UUID id;
