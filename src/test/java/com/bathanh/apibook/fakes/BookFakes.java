@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class BookFakes {
 
     public static Book buildBook() {
-        return Book.builder()
+        final Book book = Book.builder()
                 .id(UUID.randomUUID())
                 .title(RandomStringUtils.randomAlphabetic(3, 10))
                 .author(RandomStringUtils.randomAlphabetic(3, 10))
@@ -24,6 +24,16 @@ public class BookFakes {
                 .image(RandomStringUtils.randomAlphabetic(3, 10))
                 .userId(UUID.randomUUID())
                 .build();
+
+        return book
+                .withId(UUID.randomUUID())
+                .withTitle(RandomStringUtils.randomAlphabetic(3, 10))
+                .withAuthor(RandomStringUtils.randomAlphabetic(3, 10))
+                .withDescription(RandomStringUtils.randomAlphabetic(3, 10))
+                .withCreatedAt(Instant.parse("2023-03-15T11:05:00.123456Z"))
+                .withUpdatedAt(Instant.parse("2023-03-15T11:06:00.123456Z"))
+                .withImage(RandomStringUtils.randomAlphabetic(3, 10))
+                .withUserId(UUID.randomUUID());
     }
 
     public static List<Book> buildBooks() {

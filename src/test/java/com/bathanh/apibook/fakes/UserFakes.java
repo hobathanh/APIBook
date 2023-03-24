@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 public class UserFakes {
 
     public static User buildUser() {
-        return User.builder()
+        final User user = User.builder()
                 .id(UUID.randomUUID())
                 .username(RandomStringUtils.randomAlphabetic(3, 10))
                 .password(RandomStringUtils.randomAlphabetic(6, 10))
@@ -23,6 +23,16 @@ public class UserFakes {
                 .avatar(RandomStringUtils.randomAlphabetic(3, 10))
                 .roleId(UUID.randomUUID())
                 .build();
+
+        return user
+                .withId(UUID.randomUUID())
+                .withUsername(RandomStringUtils.randomAlphabetic(3, 10))
+                .withPassword(RandomStringUtils.randomAlphabetic(6, 10))
+                .withFirstName(RandomStringUtils.randomAlphabetic(3, 10))
+                .withLastName(RandomStringUtils.randomAlphabetic(3, 10))
+                .withEnabled(Boolean.TRUE)
+                .withAvatar(RandomStringUtils.randomAlphabetic(3, 10))
+                .withRoleId(UUID.randomUUID());
     }
 
     public static List<User> buildUsers() {
