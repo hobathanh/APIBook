@@ -7,10 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
 
 import static com.bathanh.apibook.fakes.JwtFakes.buildJwtUserDetails;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class JwtTokenServiceTest {
@@ -26,6 +26,18 @@ class JwtTokenServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         jwtTokenService = new JwtTokenService(jwtProperties);
+    }
+
+    @Test
+    void givenEmptyToken_whenParse_thenReturnsNull() {
+        final Authentication result = jwtTokenService.parse("");
+        assertNull(result);
+    }
+
+    @Test
+    void givenNullToken_whenParse_thenReturnsNull() {
+        final Authentication result = jwtTokenService.parse(null);
+        assertNull(result);
     }
 
     @Test
