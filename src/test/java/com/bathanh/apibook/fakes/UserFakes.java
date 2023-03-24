@@ -9,30 +9,22 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
+import static java.lang.Boolean.TRUE;
+
 @UtilityClass
 public class UserFakes {
 
     public static User buildUser() {
-        final User user = User.builder()
+        return User.builder()
                 .id(UUID.randomUUID())
                 .username(RandomStringUtils.randomAlphabetic(3, 10))
                 .password(RandomStringUtils.randomAlphabetic(6, 10))
                 .firstName(RandomStringUtils.randomAlphabetic(3, 10))
                 .lastName(RandomStringUtils.randomAlphabetic(3, 10))
-                .enabled(Boolean.TRUE)
+                .enabled(TRUE)
                 .avatar(RandomStringUtils.randomAlphabetic(3, 10))
                 .roleId(UUID.randomUUID())
                 .build();
-
-        return user
-                .withId(UUID.randomUUID())
-                .withUsername(RandomStringUtils.randomAlphabetic(3, 10))
-                .withPassword(RandomStringUtils.randomAlphabetic(6, 10))
-                .withFirstName(RandomStringUtils.randomAlphabetic(3, 10))
-                .withLastName(RandomStringUtils.randomAlphabetic(3, 10))
-                .withEnabled(Boolean.TRUE)
-                .withAvatar(RandomStringUtils.randomAlphabetic(3, 10))
-                .withRoleId(UUID.randomUUID());
     }
 
     public static List<User> buildUsers() {
@@ -48,7 +40,7 @@ public class UserFakes {
                 .password(RandomStringUtils.randomAlphabetic(3, 10))
                 .firstName(RandomStringUtils.randomAlphabetic(3, 10))
                 .lastName(RandomStringUtils.randomAlphabetic(3, 10))
-                .enabled(Boolean.TRUE)
+                .enabled(TRUE)
                 .avatar(RandomStringUtils.randomAlphabetic(3, 10))
                 .roleId(UUID.randomUUID())
                 .build();

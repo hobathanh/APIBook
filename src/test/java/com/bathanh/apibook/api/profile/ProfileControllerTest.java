@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.bathanh.apibook.fakes.UserFakes.buildUser;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -44,7 +45,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     void shouldGetProfile_OK() throws Exception {
         final var user = buildUser();
 
-        when(userService.findUserProfile()).thenReturn(user);
+        when(userService.findById(authsProvider.getCurrentUserId())).thenReturn(user);
 
         get(BASE_URL)
                 .andExpect(status().isOk())
@@ -56,7 +57,7 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.avatar").value(user.getAvatar()))
                 .andExpect(jsonPath("$.roleId").value(user.getRoleId().toString()));
 
-        verify(userService).findUserProfile();
+        verify(userService).findById(authsProvider.getCurrentUserId());
     }
 
     @Test
@@ -65,7 +66,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     void shouldUpdateProfile_OK() throws Exception {
         final var updatedUser = buildUser();
 
-        when(userService.updateUserProfile(any(User.class))).thenReturn(updatedUser);
+        when(userService.update(eq(authsProvider.getCurrentUserId()), any(User.class))).thenReturn(updatedUser);
 
         put(BASE_URL, updatedUser)
                 .andExpect(status().isOk())

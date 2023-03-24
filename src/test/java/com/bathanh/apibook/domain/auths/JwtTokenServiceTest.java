@@ -42,7 +42,7 @@ class JwtTokenServiceTest {
 
     @Test
     void generateToken_ShouldCreateValidToken() {
-        final JwtUserDetails userDetails = buildJwtUserDetails("testUser", "testPassword", "ROLE_USER");
+        final JwtUserDetails userDetails = buildJwtUserDetails();
 
         when(jwtProperties.getSecret()).thenReturn(SECRET);
         when(jwtProperties.getExpiration()).thenReturn(EXPIRATION);

@@ -49,8 +49,8 @@ class JwtUserDetailsServiceTest {
     }
 
     @Test
-    void loadUserByUsername_whenUsernameNotFound_shouldThrowUsernameNotFoundException() {
+    void verifyLoadUserByUsername_ThrowUsernameNotFoundException() {
         when(userStore.findByUsername(anyString())).thenReturn(Optional.empty());
-        assertThrows(UsernameNotFoundException.class, () -> jwtUserDetailsService.loadUserByUsername("nonexistentusername"));
+        assertThrows(UsernameNotFoundException.class, () -> jwtUserDetailsService.loadUserByUsername("Non existent username"));
     }
 }

@@ -36,10 +36,6 @@ public class UserService {
                 .orElseThrow(supplyUserNotFound(id));
     }
 
-    public User findUserProfile() {
-        return findById(authsProvider.getCurrentUserId());
-    }
-
     public List<User> search(final String keyword) {
         return userStore.search(keyword);
     }
@@ -74,10 +70,6 @@ public class UserService {
         updatedUser.setRoleId(user.getRoleId());
 
         return userStore.update(updatedUser);
-    }
-
-    public User updateUserProfile(final User userUpdate) {
-        return update(authsProvider.getCurrentUserId(), userUpdate);
     }
 
     public void delete(final UUID userId) {

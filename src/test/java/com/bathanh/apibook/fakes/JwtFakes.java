@@ -11,9 +11,9 @@ import java.util.Set;
 @UtilityClass
 public class JwtFakes {
 
-    public static JwtUserDetails buildJwtUserDetails(String username, String password, String role) {
+    public static JwtUserDetails buildJwtUserDetails() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(role));
-        return new JwtUserDetails(null, username, password, authorities);
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        return new JwtUserDetails(null, "testUser", "testPassword", authorities);
     }
 }
