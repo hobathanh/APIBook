@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 class JwtUserDetailsServiceTest {
+
     @Mock
     private UserStore userStore;
     @Mock
@@ -29,13 +30,13 @@ class JwtUserDetailsServiceTest {
     private JwtUserDetailsService jwtUserDetailsService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         openMocks(this);
         jwtUserDetailsService = new JwtUserDetailsService(userStore, roleStore);
     }
 
     @Test
-    public void loadUserByUsername_whenUsernameNotFound_OK() {
+    void loadUserByUsername_whenUsernameNotFound_OK() {
         final var user = buildUserEntity();
         final var role = buildRole();
         role.setId(user.getRoleId());
@@ -48,7 +49,7 @@ class JwtUserDetailsServiceTest {
     }
 
     @Test
-    public void loadUserByUsername_whenUsernameNotFound_shouldThrowUsernameNotFoundException() {
+    void loadUserByUsername_whenUsernameNotFound_shouldThrowUsernameNotFoundException() {
         when(userStore.findByUsername(anyString())).thenReturn(Optional.empty());
         assertThrows(UsernameNotFoundException.class, () -> jwtUserDetailsService.loadUserByUsername("nonexistentusername"));
     }
