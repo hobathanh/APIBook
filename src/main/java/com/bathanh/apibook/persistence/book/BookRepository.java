@@ -13,15 +13,13 @@ public interface BookRepository extends CrudRepository<BookEntity, UUID> {
 
     @Query(value = "SELECT * " +
             "FROM books " +
-            "WHERE " +
-            "   title ILIKE CONCAT('%', :title, '%') " +
+            "WHERE title ILIKE CONCAT('%', :title, '%') " +
             "   AND author ILIKE CONCAT('%', :author, '%')", nativeQuery = true)
     Optional<BookEntity> findByTitleAndAuthor(final String title, final String author);
 
     @Query(value = "SELECT * " +
             "FROM books " +
-            "WHERE " +
-            "   title ILIKE CONCAT('%', :keyword,'%') " +
+            "WHERE title ILIKE CONCAT('%', :keyword,'%') " +
             "   OR author ILIKE CONCAT('%', :keyword,'%') " +
             "   OR description ILIKE CONCAT('%', :keyword,'%')", nativeQuery = true)
     List<BookEntity> find(final String keyword);

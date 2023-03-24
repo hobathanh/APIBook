@@ -49,7 +49,7 @@ public class BookService {
         validate(book);
         final Book updatedBook = findById(id);
 
-        verifyUpdateBookPermission(updatedBook.getUserId());
+        verifyUpdateBookPermission(updatedBook);
 
         updatedBook.setTitle(book.getTitle());
         updatedBook.setAuthor(book.getAuthor());
@@ -62,7 +62,7 @@ public class BookService {
 
     public void delete(final UUID id) {
         final Book book = findById(id);
-        verifyDeleteBookPermission(book.getUserId());
+        verifyDeleteBookPermission(book);
 
         bookStore.delete(id);
     }
@@ -74,17 +74,17 @@ public class BookService {
         }
     }
 
-    private void verifyUpdateBookPermission(UUID id) {
+    private void verifyUpdateBookPermission(final Book book) {
         if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
-                && !authsProvider.getCurrentUserId().equals(id)) {
-            throw supplyForbiddenError("You do not have permission to update book").get();
+                && !authsProvider.getCurrentUserId().equals(book.getUserId())) {
+            throw supplyForbiddenError().get();
         }
     }
 
-    private void verifyDeleteBookPermission(UUID id) {
+    private void verifyDeleteBookPermission(final Book book) {
         if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
-                && !authsProvider.getCurrentUserId().equals(id)) {
-            throw supplyForbiddenError("You do not have permission to delete book").get();
+                && !authsProvider.getCurrentUserId().equals(book.getUserId())) {
+            throw supplyForbiddenError().get();
         }
     }
 }

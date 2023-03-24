@@ -16,7 +16,8 @@ public class UserAuthenticationToken extends UsernamePasswordAuthenticationToken
     private final String username;
     private final String role;
 
-    public UserAuthenticationToken(final UUID userId, final String username,
+    public UserAuthenticationToken(final UUID userId,
+                                   final String username,
                                    final Collection<? extends GrantedAuthority> authorities) {
         super(userId, username, authorities);
         this.userId = userId;
@@ -24,6 +25,6 @@ public class UserAuthenticationToken extends UsernamePasswordAuthenticationToken
         this.role = this.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElseThrow(supplyForbiddenError("You do not have permission to access this resource"));
+                .orElseThrow(supplyForbiddenError());
     }
 }

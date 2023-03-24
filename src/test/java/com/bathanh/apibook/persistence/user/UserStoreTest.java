@@ -131,20 +131,9 @@ class UserStoreTest {
 
     @Test
     void deleteUser_OK() {
-        final var userDelete = buildUserEntity();
-        userDelete.setEnabled(false);
-        
-        when(userRepository.save(any())).thenReturn(userDelete);
+        final var user = buildUserEntity();
+        userStore.delete(user.getId());
 
-        final var actual = userStore.delete(toUser(userDelete));
-
-        assertEquals(userDelete.getId().toString(), actual.getId().toString());
-        assertEquals(userDelete.getUsername(), actual.getUsername());
-        assertEquals(userDelete.getPassword(), actual.getPassword());
-        assertEquals(userDelete.getFirstName(), actual.getFirstName());
-        assertEquals(userDelete.getLastName(), actual.getLastName());
-        assertEquals(userDelete.getAvatar(), actual.getAvatar());
-        assertEquals(userDelete.isEnabled(), actual.isEnabled());
-        assertEquals(userDelete.getRoleId(), actual.getRoleId());
+        verify(userRepository).deleteById(user.getId());
     }
 }

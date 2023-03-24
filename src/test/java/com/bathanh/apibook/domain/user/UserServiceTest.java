@@ -86,9 +86,9 @@ class UserServiceTest {
 
     @Test
     void shouldFindUserProfile_Admin_OK() {
-        final var user = buildUser();
-        user.setId(authsProvider.getCurrentUserId());
-        user.setUsername(authsProvider.getCurrentUsername());
+        final var user = buildUser()
+                .withId(authsProvider.getCurrentUserId())
+                .withUsername(authsProvider.getCurrentUsername());
 
         when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
         when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(user));
@@ -102,10 +102,10 @@ class UserServiceTest {
 
     @Test
     void shouldFindUserProfile_Contributor_OK() {
-        final var user = buildUser();
-        user.setId(authsProvider.getCurrentUserId());
-        user.setUsername(authsProvider.getCurrentUsername());
-        
+        final var user = buildUser()
+                .withId(authsProvider.getCurrentUserId())
+                .withUsername(authsProvider.getCurrentUsername());
+
         when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
         when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(user));
@@ -151,9 +151,9 @@ class UserServiceTest {
 
     @Test
     void shouldCreate_ThrownBadRequestException() {
-        final var user = buildUser();
-        user.setPassword(null);
-        user.setUsername(null);
+        final var user = buildUser()
+                .withUsername(null)
+                .withPassword(null);
 
         assertThrows(BadRequestException.class, () -> userService.create(user));
     }
@@ -172,10 +172,10 @@ class UserServiceTest {
     @Test
     void shouldUpdate_Admin_OK() {
         final var user = buildUser();
-        final var userUpdate = buildUser();
-        userUpdate.setId(user.getId());
-        userUpdate.setRoleId(user.getRoleId());
-        userUpdate.setPassword(randomAlphabetic(6, 10));
+        final var userUpdate = buildUser()
+                .withId(user.getId())
+                .withRoleId(user.getRoleId())
+                .withPassword(randomAlphabetic(6, 10));
 
         when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
         when(userStore.update(user)).thenReturn(user);
@@ -197,8 +197,8 @@ class UserServiceTest {
     @Test
     void shouldUpdate_ThrownLengthPasswordException() {
         final var user = buildUser();
-        final var userUpdate = buildUser();
-        userUpdate.setPassword(randomAlphabetic(3, 5));
+        final var userUpdate = buildUser()
+                .withPassword(randomAlphabetic(3, 5));
 
         when(userStore.findById(user.getId())).thenReturn(Optional.of(user));
         when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
@@ -225,8 +225,8 @@ class UserServiceTest {
     void shouldUpdate_ThrownUsernameAlreadyExist() {
         final var userToUpdate = buildUser();
         final var userExisted = buildUser();
-        final var userUpdate = buildUser();
-        userUpdate.setUsername(userExisted.getUsername());
+        final var userUpdate = buildUser()
+                .withUsername(userExisted.getUsername());
 
         when(userStore.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
         when(userStore.findByUsername(userUpdate.getUsername())).thenReturn(Optional.of(userUpdate));
@@ -240,10 +240,10 @@ class UserServiceTest {
     @Test
     void shouldUpdate_ThrownForbiddenException() {
         final var user = buildUser();
-        final var userUpdate = buildUser();
-        userUpdate.setId(user.getId());
-        userUpdate.setRoleId(user.getRoleId());
-        userUpdate.setPassword(randomAlphabetic(6, 10));
+        final var userUpdate = buildUser()
+                .withId(user.getId())
+                .withRoleId(user.getRoleId())
+                .withPassword(randomAlphabetic(6, 10));
 
         when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
@@ -255,8 +255,8 @@ class UserServiceTest {
 
     @Test
     void shouldUpdateUserProfile_Admin_Ok() {
-        final var userUpdate = buildUser();
-        userUpdate.setId(authsProvider.getCurrentUserId());
+        final var userUpdate = buildUser()
+                .withId(authsProvider.getCurrentUserId());
         userUpdate.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
 
         when(userStore.findById(authsProvider.getCurrentUserId())).thenReturn(Optional.of(userUpdate));
@@ -279,8 +279,8 @@ class UserServiceTest {
 
     @Test
     void shouldUpdateUserProfile_Contributor_Ok() {
-        final var userUpdate = buildUser();
-        userUpdate.setId(authsProvider.getCurrentUserId());
+        final var userUpdate = buildUser()
+                .withId(authsProvider.getCurrentUserId());
         userUpdate.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
 
         when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
@@ -311,7 +311,7 @@ class UserServiceTest {
 
         userService.delete(user.getId());
 
-        verify(userStore).delete(user);
+        verify(userStore).delete(user.getId());
     }
 
     @Test
@@ -334,6 +334,6 @@ class UserServiceTest {
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
 
         assertThrows(ForbiddenException.class, () -> userService.delete(user.getId()));
-        verify(userStore, never()).delete(user);
+        verify(userStore, never()).delete(user.getId());
     }
 }

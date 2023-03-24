@@ -80,9 +80,9 @@ public class UserService {
         return update(authsProvider.getCurrentUserId(), userUpdate);
     }
 
-    public void delete(final UUID id) {
-        final User user = findById(id);
-        userStore.delete(user);
+    public void delete(final UUID userId) {
+        findById(userId);
+        userStore.delete(userId);
     }
 
     private void verifyUsernameAvailable(final String username) {
@@ -92,17 +92,17 @@ public class UserService {
         }
     }
 
-    private void verifyUpdateUserPermission(UUID id) {
+    private void verifyUpdateUserPermission(final UUID id) {
         if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
                 && !authsProvider.getCurrentUserId().equals(id)) {
-            throw supplyForbiddenError("You do not have permission to update user").get();
+            throw supplyForbiddenError().get();
         }
     }
 
-    private void verifyUserProfilePermission(UUID id) {
+    private void verifyUserProfilePermission(final UUID id) {
         if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
                 && !authsProvider.getCurrentUserId().equals(id)) {
-            throw supplyForbiddenError("You do not have permission to view user").get();
+            throw supplyForbiddenError().get();
         }
     }
 }
