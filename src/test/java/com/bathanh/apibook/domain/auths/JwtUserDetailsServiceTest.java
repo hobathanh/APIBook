@@ -17,8 +17,8 @@ import static com.bathanh.apibook.persistence.user.UserEntityMapper.toUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 class JwtUserDetailsServiceTest {
 
@@ -31,7 +31,8 @@ class JwtUserDetailsServiceTest {
 
     @BeforeEach
     void setUp() {
-        openMocks(this);
+        roleStore = mock(RoleStore.class);
+        userStore = mock(UserStore.class);
         jwtUserDetailsService = new JwtUserDetailsService(userStore, roleStore);
     }
 

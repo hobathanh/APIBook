@@ -29,11 +29,11 @@ public class UserService {
         return userStore.findAll();
     }
 
-    public User findById(final UUID id) {
-        verifyUserProfilePermission(id);
+    public User findById(final UUID userId) {
+        verifyUserProfilePermission(userId);
 
-        return userStore.findById(id)
-                .orElseThrow(supplyUserNotFound(id));
+        return userStore.findById(userId)
+                .orElseThrow(supplyUserNotFound(userId));
     }
 
     public List<User> search(final String keyword) {
@@ -52,7 +52,7 @@ public class UserService {
     public User update(final UUID id, final User user) {
         final User updatedUser = findById(id);
         validateUpdateUser(user);
-        verifyUpdateUserPermission(id);
+        verifyUpdateUserPermission(updatedUser);
 
         if (!(user.getUsername().equals(updatedUser.getUsername()))) {
             verifyUsernameAvailable(user.getUsername());
@@ -84,16 +84,16 @@ public class UserService {
         }
     }
 
-    private void verifyUpdateUserPermission(final UUID id) {
+    private void verifyUpdateUserPermission(final User user) {
         if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
-                && !authsProvider.getCurrentUserId().equals(id)) {
+                && !authsProvider.getCurrentUserId().equals(user.getId())) {
             throw supplyForbiddenError().get();
         }
     }
 
-    private void verifyUserProfilePermission(final UUID id) {
+    private void verifyUserProfilePermission(final UUID userId) {
         if (authsProvider.getCurrentUserRole().equals("ROLE_CONTRIBUTOR")
-                && !authsProvider.getCurrentUserId().equals(id)) {
+                && !authsProvider.getCurrentUserId().equals(userId)) {
             throw supplyForbiddenError().get();
         }
     }
