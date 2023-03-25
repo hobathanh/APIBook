@@ -7,10 +7,10 @@ import lombok.With;
 
 import java.util.UUID;
 
-@Getter
-@With
-@Setter
 @Builder
+@Getter
+@Setter
+@With
 public class User {
 
     private UUID id;

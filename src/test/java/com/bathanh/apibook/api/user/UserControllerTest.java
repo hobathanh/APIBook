@@ -1,11 +1,16 @@
 package com.bathanh.apibook.api.user;
 
 import com.bathanh.apibook.api.AbstractControllerTest;
+import com.bathanh.apibook.api.WithMockAdmin;
+import com.bathanh.apibook.domain.auths.AuthsProvider;
 import com.bathanh.apibook.domain.user.User;
 import com.bathanh.apibook.domain.user.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
@@ -20,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
+@ExtendWith(SpringExtension.class)
 class UserControllerTest extends AbstractControllerTest {
 
     private static final String BASE_URL = "/api/v1/users";
@@ -27,7 +33,17 @@ class UserControllerTest extends AbstractControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private AuthsProvider authsProvider;
+
+    @BeforeEach
+    void init() {
+        when(authsProvider.getCurrentAuthentication())
+                .thenCallRealMethod();
+    }
+
     @Test
+    @WithMockAdmin
     void findAll_OK() throws Exception {
         final var users = buildUsers();
 
@@ -48,6 +64,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithMockAdmin
     void search_OK() throws Exception {
         final var user = buildUser();
         final var expected = buildUsers();
@@ -69,6 +86,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithMockAdmin
     void findById_OK() throws Exception {
         final var user = buildUser();
 
@@ -88,6 +106,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithMockAdmin
     void create_OK() throws Exception {
         final var user = buildUser();
 
@@ -107,6 +126,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithMockAdmin
     void update_OK() throws Exception {
         final var user = buildUser();
         final var updatedUser = buildUser();
@@ -128,6 +148,7 @@ class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithMockAdmin
     void delete_OK() throws Exception {
         final var id = randomUUID();
 

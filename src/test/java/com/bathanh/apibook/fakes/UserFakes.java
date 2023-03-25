@@ -19,7 +19,7 @@ public class UserFakes {
                 .password(RandomStringUtils.randomAlphabetic(6, 10))
                 .firstName(RandomStringUtils.randomAlphabetic(3, 10))
                 .lastName(RandomStringUtils.randomAlphabetic(3, 10))
-                .enabled(Boolean.TRUE)
+                .enabled(true)
                 .avatar(RandomStringUtils.randomAlphabetic(3, 10))
                 .roleId(UUID.randomUUID())
                 .build();
@@ -38,7 +38,7 @@ public class UserFakes {
                 .password(RandomStringUtils.randomAlphabetic(3, 10))
                 .firstName(RandomStringUtils.randomAlphabetic(3, 10))
                 .lastName(RandomStringUtils.randomAlphabetic(3, 10))
-                .enabled(Boolean.TRUE)
+                .enabled(true)
                 .avatar(RandomStringUtils.randomAlphabetic(3, 10))
                 .roleId(UUID.randomUUID())
                 .build();

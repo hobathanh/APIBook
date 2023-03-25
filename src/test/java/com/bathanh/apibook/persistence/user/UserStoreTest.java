@@ -7,10 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.bathanh.apibook.fakes.UserFakes.*;
 import static com.bathanh.apibook.persistence.user.UserEntityMapper.toUser;
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -132,8 +132,7 @@ class UserStoreTest {
 
     @Test
     void deleteUser_OK() {
-        final var userId = UUID.randomUUID();
-
+        final var userId = randomUUID();
         userStore.delete(userId);
 
         verify(userRepository).deleteById(userId);

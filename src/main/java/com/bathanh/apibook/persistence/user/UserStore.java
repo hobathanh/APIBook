@@ -43,7 +43,7 @@ public class UserStore {
         return toUser(userRepository.save(toUserEntity(user)));
     }
 
-    public void delete(final UUID id) {
-        userRepository.deleteById(id);
+    public void delete(final UUID userId) {
+        userRepository.deleteById(userId);
     }
 }

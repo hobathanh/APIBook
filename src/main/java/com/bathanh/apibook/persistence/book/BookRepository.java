@@ -11,18 +11,16 @@ import java.util.UUID;
 @Repository
 public interface BookRepository extends CrudRepository<BookEntity, UUID> {
 
-    @Query("SELECT b " +
-            "FROM BookEntity b " +
-            "WHERE " +
-            "   b.title ILIKE CONCAT('%', :title, '%') " +
-            "   AND b.author ILIKE CONCAT('%', :author, '%')")
+    @Query(value = "SELECT * " +
+            "FROM books " +
+            "WHERE title ILIKE CONCAT('%', :title, '%') " +
+            "   AND author ILIKE CONCAT('%', :author, '%')", nativeQuery = true)
     Optional<BookEntity> findByTitleAndAuthor(final String title, final String author);
 
-    @Query("SELECT b " +
-            "FROM BookEntity b " +
-            "WHERE " +
-            "   b.title ILIKE CONCAT('%', :keyword,'%') " +
-            "   OR b.author ILIKE CONCAT('%', :keyword,'%') " +
-            "   OR b.description ILIKE CONCAT('%', :keyword,'%')")
+    @Query(value = "SELECT * " +
+            "FROM books " +
+            "WHERE title ILIKE CONCAT('%', :keyword,'%') " +
+            "   OR author ILIKE CONCAT('%', :keyword,'%') " +
+            "   OR description ILIKE CONCAT('%', :keyword,'%')", nativeQuery = true)
     List<BookEntity> find(final String keyword);
 }

@@ -29,7 +29,6 @@ public class BookDTOMapper {
                 .author(bookRequestDTO.getAuthor())
                 .description(bookRequestDTO.getDescription())
                 .image(bookRequestDTO.getImage())
-                .userId(bookRequestDTO.getUserId())
                 .build();
     }
 
