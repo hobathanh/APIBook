@@ -6,7 +6,6 @@ public class UserMapper {
 
     public static User toUser(final UserRequestDTO userRequestDTO) {
         return User.builder()
-                .id(userRequestDTO.getId())
                 .username(userRequestDTO.getUsername())
                 .password(userRequestDTO.getPassword())
                 .firstName(userRequestDTO.getFirstName())
