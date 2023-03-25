@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static java.lang.Boolean.TRUE;
-
 @UtilityClass
 public class UserFakes {
 
@@ -21,7 +19,7 @@ public class UserFakes {
                 .password(RandomStringUtils.randomAlphabetic(6, 10))
                 .firstName(RandomStringUtils.randomAlphabetic(3, 10))
                 .lastName(RandomStringUtils.randomAlphabetic(3, 10))
-                .enabled(TRUE)
+                .enabled(true)
                 .avatar(RandomStringUtils.randomAlphabetic(3, 10))
                 .roleId(UUID.randomUUID())
                 .build();
@@ -40,7 +38,7 @@ public class UserFakes {
                 .password(RandomStringUtils.randomAlphabetic(3, 10))
                 .firstName(RandomStringUtils.randomAlphabetic(3, 10))
                 .lastName(RandomStringUtils.randomAlphabetic(3, 10))
-                .enabled(TRUE)
+                .enabled(true)
                 .avatar(RandomStringUtils.randomAlphabetic(3, 10))
                 .roleId(UUID.randomUUID())
                 .build();

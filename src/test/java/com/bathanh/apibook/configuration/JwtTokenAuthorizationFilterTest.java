@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,9 +45,7 @@ class JwtTokenAuthorizationFilterTest {
 
         filter.doFilterInternal(request, response, filterChain);
 
-        final var header = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        assertEquals(authorizationHeader, header);
         verify(jwtTokenService).parse(token);
+        verify(filterChain).doFilter(request, response);
     }
 }

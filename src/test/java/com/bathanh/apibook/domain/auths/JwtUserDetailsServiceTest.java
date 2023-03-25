@@ -3,10 +3,11 @@ package com.bathanh.apibook.domain.auths;
 import com.bathanh.apibook.error.UsernameNotFoundException;
 import com.bathanh.apibook.persistence.role.RoleStore;
 import com.bathanh.apibook.persistence.user.UserStore;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
@@ -17,9 +18,10 @@ import static com.bathanh.apibook.persistence.user.UserEntityMapper.toUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class JwtUserDetailsServiceTest {
 
     @Mock
@@ -28,13 +30,6 @@ class JwtUserDetailsServiceTest {
     private RoleStore roleStore;
     @InjectMocks
     private JwtUserDetailsService jwtUserDetailsService;
-
-    @BeforeEach
-    void setUp() {
-        roleStore = mock(RoleStore.class);
-        userStore = mock(UserStore.class);
-        jwtUserDetailsService = new JwtUserDetailsService(userStore, roleStore);
-    }
 
     @Test
     void loadUserByUsername_whenUsernameNotFound_OK() {
@@ -46,12 +41,20 @@ class JwtUserDetailsServiceTest {
         when(roleStore.findRoleById(role.getId())).thenReturn(role);
 
         final UserDetails actual = jwtUserDetailsService.loadUserByUsername(user.getUsername());
+
         assertEquals(user.getUsername(), actual.getUsername());
+        assertEquals(user.getPassword(), actual.getPassword());
+
+        verify(userStore).findByUsername(user.getUsername());
+        verify(roleStore).findRoleById(role.getId());
     }
 
     @Test
     void verifyLoadUserByUsername_ThrowUsernameNotFoundException() {
         when(userStore.findByUsername(anyString())).thenReturn(Optional.empty());
+
         assertThrows(UsernameNotFoundException.class, () -> jwtUserDetailsService.loadUserByUsername("Non existent username"));
+
+        verify(userStore).findByUsername("Non existent username");
     }
 }
