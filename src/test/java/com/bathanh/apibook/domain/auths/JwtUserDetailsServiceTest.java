@@ -13,8 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Optional;
 
 import static com.bathanh.apibook.fakes.RoleFakes.buildRole;
-import static com.bathanh.apibook.fakes.UserFakes.buildUserEntity;
-import static com.bathanh.apibook.persistence.user.UserEntityMapper.toUser;
+import static com.bathanh.apibook.fakes.UserFakes.buildUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,11 +32,11 @@ class JwtUserDetailsServiceTest {
 
     @Test
     void loadUserByUsername_whenUsernameNotFound_OK() {
-        final var user = buildUserEntity();
+        final var user = buildUser();
         final var role = buildRole();
         role.setId(user.getRoleId());
 
-        when(userStore.findByUsername(anyString())).thenReturn(Optional.of(toUser(user)));
+        when(userStore.findByUsername(anyString())).thenReturn(Optional.of(user));
         when(roleStore.findRoleById(role.getId())).thenReturn(role);
 
         final UserDetails actual = jwtUserDetailsService.loadUserByUsername(user.getUsername());
