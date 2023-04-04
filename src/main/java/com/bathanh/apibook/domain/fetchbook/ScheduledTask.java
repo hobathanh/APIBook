@@ -2,11 +2,10 @@ package com.bathanh.apibook.domain.fetchbook;
 
 import com.bathanh.apibook.domain.book.BookService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +13,11 @@ import javax.annotation.PostConstruct;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ScheduledTask {
 
     private final BookService bookService;
     private Scheduler scheduler;
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledTask.class);
 
     @PostConstruct
     public void init() throws SchedulerException {
@@ -27,12 +26,13 @@ public class ScheduledTask {
     }
 
     @Scheduled(fixedRate = 600000)
-    public void storeNewBooksPeriodically() throws SchedulerException {
-        if (scheduler.isStarted()) {
-            logger.info("Scheduler has been started");
+    public void storeNewBooksPeriodically() {
+        try {
+            log.info("Start retrieving new books");
+            bookService.storeNewBooks();
+            log.info("Retrieving new books done");
+        } catch (Exception ex) {
+            log.error("Failed to retrieve new books with error", ex);
         }
-
-        bookService.storeNewBooks();
-        logger.info("Fetch new books from other API successfully");
     }
 }

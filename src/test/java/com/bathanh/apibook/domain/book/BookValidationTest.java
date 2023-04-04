@@ -12,97 +12,97 @@ class BookValidationTest {
 
     @Test
     void validate_OK() {
-        final var book = buildBook();
-        book.setRating(3.5);
-        book.setYear(2000);
+        final var book = buildBook()
+                .withRating(3.5)
+                .withYear(2001);
 
         validate(book);
     }
 
     @Test
     void validate_ThrowTitleEmpty() {
-        final var book = buildBook();
-        book.setTitle(null);
+        final var book = buildBook()
+                .withTitle(null);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowAuthorEmpty() {
-        final var book = buildBook();
-        book.setAuthor(null);
+        final var book = buildBook()
+                .withAuthor(null);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowUserIdEmpty() {
-        final var book = buildBook();
-        book.setUserId(null);
+        final var book = buildBook()
+                .withUserId(null);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowSubtitleEmpty() {
-        final var book = buildBook();
-        book.setSubtitle(null);
+        final var book = buildBook()
+                .withSubtitle(null);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowPublisherEmpty() {
-        final var book = buildBook();
-        book.setPublisher(null);
+        final var book = buildBook()
+                .withPublisher(null);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowIsbn13Empty() {
-        final var book = buildBook();
-        book.setIsbn13(null);
+        final var book = buildBook()
+                .withIsbn13(null);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowInvalidIsbn13Length() {
-        final var book = buildBook();
-        book.setIsbn13(randomAlphabetic(5));
+        final var book = buildBook()
+                .withIsbn13(randomAlphabetic(5));
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowPriceEmpty() {
-        final var book = buildBook();
-        book.setPrice(null);
+        final var book = buildBook()
+                .withPrice(null);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowYearEmpty() {
-        final var book = buildBook();
-        book.setYear(null);
+        final var book = buildBook()
+                .withYear(null);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowInvalidYear() {
-        final var book = buildBook();
-        book.setYear(2500);
+        final var book = buildBook()
+                .withYear(2024);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
 
     @Test
     void validate_ThrowInvalidRating() {
-        final var book = buildBook();
-        book.setRating(6.0);
+        final var book = buildBook()
+                .withRating(6.0);
 
         assertThrows(BadRequestException.class, () -> validate(book));
     }
