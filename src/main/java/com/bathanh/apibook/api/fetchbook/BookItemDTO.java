@@ -1,17 +1,13 @@
 package com.bathanh.apibook.api.fetchbook;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class BookItemDTO {
 
-    private String title;
-    private String subtitle;
     private String isbn13;
-    private String price;
-    private String image;
 }
