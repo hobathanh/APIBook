@@ -6,6 +6,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class FetchBookException extends ResponseStatusException {
 
     public FetchBookException(String message) {
-        super(HttpStatus.FOUND, message);
+        super(HttpStatus.NOT_FOUND, message);
     }
 }

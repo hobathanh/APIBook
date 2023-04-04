@@ -23,7 +23,7 @@ public class BookApiAdapter {
                 .bodyToMono(BooksResponseDTO.class)
                 .block();
         if (response == null) {
-            throw new FetchBookException("Response is null");
+            throw new FetchBookException("Error fetching new books, Response API is null");
         }
         return response.getBooks();
     }

@@ -30,8 +30,6 @@ public class ScheduledTask {
     public void storeNewBooksPeriodically() throws SchedulerException {
         if (scheduler.isStarted()) {
             logger.info("Scheduler has been started");
-        } else {
-            logger.info("Scheduler has not been started");
         }
 
         bookService.storeNewBooks();
