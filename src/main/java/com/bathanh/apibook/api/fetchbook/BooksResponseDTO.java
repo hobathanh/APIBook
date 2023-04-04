@@ -11,5 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BooksResponseDTO {
 
+    private String error;
+    private String total;
     private List<BookItemDTO> books;
 }
