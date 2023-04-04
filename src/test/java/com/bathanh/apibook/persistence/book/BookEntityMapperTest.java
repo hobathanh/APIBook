@@ -22,6 +22,12 @@ class BookEntityMapperTest {
         assertEquals(bookEntity.getCreatedAt(), book.getCreatedAt());
         assertEquals(bookEntity.getUpdatedAt(), book.getUpdatedAt());
         assertEquals(bookEntity.getImage(), book.getImage());
+        assertEquals(bookEntity.getSubtitle(), book.getSubtitle());
+        assertEquals(bookEntity.getPublisher(), book.getPublisher());
+        assertEquals(bookEntity.getIsbn13(), book.getIsbn13());
+        assertEquals(bookEntity.getPrice(), book.getPrice());
+        assertEquals(bookEntity.getYear(), book.getYear());
+        assertEquals(bookEntity.getRating(), book.getRating());
         assertEquals(bookEntity.getUserId(), book.getUserId());
     }
 
@@ -37,6 +43,12 @@ class BookEntityMapperTest {
         assertEquals(book.getCreatedAt(), bookEntity.getCreatedAt());
         assertEquals(book.getUpdatedAt(), bookEntity.getUpdatedAt());
         assertEquals(book.getImage(), bookEntity.getImage());
+        assertEquals(book.getSubtitle(), bookEntity.getSubtitle());
+        assertEquals(book.getPublisher(), bookEntity.getPublisher());
+        assertEquals(book.getIsbn13(), bookEntity.getIsbn13());
+        assertEquals(book.getPrice(), bookEntity.getPrice());
+        assertEquals(book.getYear(), bookEntity.getYear());
+        assertEquals(book.getRating(), bookEntity.getRating());
         assertEquals(book.getUserId(), bookEntity.getUserId());
     }
 

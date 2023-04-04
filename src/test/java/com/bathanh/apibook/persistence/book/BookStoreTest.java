@@ -1,5 +1,6 @@
 package com.bathanh.apibook.persistence.book;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -69,6 +70,44 @@ class BookStoreTest {
 
         assertFalse(bookStore.findById(uuid).isPresent());
         verify(bookRepository).findById(uuid);
+    }
+
+    @Test
+    void shouldFindBookByIsbn13_OK() {
+        final var book = buildBookEntity();
+        final var bookOptional = Optional.of(book);
+
+        when(bookRepository.findByIsbn13(book.getIsbn13())).thenReturn(bookOptional);
+
+        final var actual = bookStore.findBookByIsbn13(book.getIsbn13()).get();
+        final var expected = bookOptional.get();
+
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getAuthor(), actual.getAuthor());
+        assertEquals(expected.getUpdatedAt(), actual.getUpdatedAt());
+        assertEquals(expected.getCreatedAt(), actual.getCreatedAt());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getImage(), actual.getImage());
+        assertEquals(expected.getSubtitle(), actual.getSubtitle());
+        assertEquals(expected.getPublisher(), actual.getPublisher());
+        assertEquals(expected.getIsbn13(), actual.getIsbn13());
+        assertEquals(expected.getPrice(), actual.getPrice());
+        assertEquals(expected.getYear(), actual.getYear());
+        assertEquals(expected.getRating(), actual.getRating());
+        assertEquals(expected.getUserId(), actual.getUserId());
+
+        verify(bookRepository).findByIsbn13(book.getIsbn13());
+    }
+
+    @Test
+    void shouldFindBookByIsbn13_Empty() {
+        final var isbn13 = RandomStringUtils.randomNumeric(13);
+
+        when(bookRepository.findByIsbn13(isbn13)).thenReturn(Optional.empty());
+
+        assertFalse(bookStore.findBookByIsbn13(isbn13).isPresent());
+        verify(bookRepository).findByIsbn13(isbn13);
     }
 
     @Test

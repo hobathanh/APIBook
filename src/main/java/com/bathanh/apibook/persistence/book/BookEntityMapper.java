@@ -20,6 +20,12 @@ public class BookEntityMapper {
                 .updatedAt(bookEntity.getUpdatedAt())
                 .image(bookEntity.getImage())
                 .userId(bookEntity.getUserId())
+                .subtitle(bookEntity.getSubtitle())
+                .publisher(bookEntity.getPublisher())
+                .isbn13(bookEntity.getIsbn13())
+                .price(bookEntity.getPrice())
+                .year(bookEntity.getYear())
+                .rating(bookEntity.getRating())
                 .build();
     }
 
@@ -33,6 +39,12 @@ public class BookEntityMapper {
                 .updatedAt(book.getUpdatedAt())
                 .image(book.getImage())
                 .userId(book.getUserId())
+                .subtitle(book.getSubtitle())
+                .publisher(book.getPublisher())
+                .isbn13(book.getIsbn13())
+                .price(book.getPrice())
+                .year(book.getYear())
+                .rating(book.getRating())
                 .build();
     }
 

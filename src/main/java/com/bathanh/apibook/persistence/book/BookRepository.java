@@ -23,4 +23,7 @@ public interface BookRepository extends CrudRepository<BookEntity, UUID> {
             "   OR author ILIKE CONCAT('%', :keyword,'%') " +
             "   OR description ILIKE CONCAT('%', :keyword,'%')", nativeQuery = true)
     List<BookEntity> find(final String keyword);
+
+    @Query(value = "SELECT * FROM books WHERE isbn13 = :isbn13", nativeQuery = true)
+    Optional<BookEntity> findByIsbn13(final String isbn13);
 }

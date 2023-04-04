@@ -18,5 +18,41 @@ public class BookValidation {
         if (book.getUserId() == null) {
             throw new BadRequestException("UserId is required, please check again");
         }
+
+        if (isBlank(book.getSubtitle())) {
+            throw new BadRequestException("Subtitle is required, please check again");
+        }
+
+        if (isBlank(book.getPublisher())) {
+            throw new BadRequestException("Publisher is required, please check again");
+        }
+
+        if (isBlank(book.getIsbn13())) {
+            throw new BadRequestException("Isbn13 is required, please check again");
+        }
+
+        if ((book.getIsbn13()).length() != 13) {
+            throw new BadRequestException("Isbn13 is only contain 13 characters, please check again");
+        }
+
+        if (isBlank(book.getPrice())) {
+            throw new BadRequestException("Price is required, please check again");
+        }
+
+        if (book.getYear() == null) {
+            throw new BadRequestException("Year is required, please check again");
+        }
+
+        if (book.getYear() < 1800 || book.getYear() > 2023) {
+            throw new BadRequestException("Invalid year, please check again");
+        }
+
+        if (book.getRating() == null) {
+            book.setRating(0.0);
+        }
+
+        if (book.getRating() < 0 || book.getRating() > 5) {
+            throw new BadRequestException("Rating cannot be outside the range from 0 to 5, please check again");
+        }
     }
 }
