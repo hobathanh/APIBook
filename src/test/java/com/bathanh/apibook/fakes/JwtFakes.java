@@ -14,13 +14,13 @@ import static java.util.UUID.randomUUID;
 public class JwtFakes {
 
     public static JwtUserDetails buildJwtUserDetails() {
-        Set<GrantedAuthority> authorities = new HashSet<>();
+        final Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return new JwtUserDetails(randomUUID(), "testUser", "testPassword", authorities);
     }
 
     public static JwtUserDetails buildJwtUserDetail_NullUserId() {
-        Set<GrantedAuthority> authorities = new HashSet<>();
+        final Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return new JwtUserDetails(null, "testUser", "testPassword", authorities);
     }

@@ -1,6 +1,6 @@
 package com.bathanh.apibook.fakes;
 
-import com.bathanh.apibook.api.book.BookItemDetailDTO;
+import com.bathanh.apibook.api.book.ItBookDetailDTO;
 
 import static com.bathanh.apibook.fakes.BookFakes.generateRating;
 import static com.bathanh.apibook.fakes.BookFakes.generateYear;
@@ -9,8 +9,8 @@ import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
 public class FetchBookFakes {
 
-    public static BookItemDetailDTO buildBookItemDetailDTO() {
-        return BookItemDetailDTO.builder()
+    public static ItBookDetailDTO buildBookItemDetailDTO() {
+        return ItBookDetailDTO.builder()
                 .title(randomAlphabetic(3, 10))
                 .authors(randomAlphabetic(3, 10))
                 .desc(randomAlphabetic(3, 10))

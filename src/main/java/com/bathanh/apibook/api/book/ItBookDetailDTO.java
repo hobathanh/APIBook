@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookItemDetailDTO {
+public class ItBookDetailDTO {
 
     private String title;
     private String subtitle;

@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 import static java.time.Instant.parse;
+import static java.time.Year.now;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
@@ -55,7 +56,7 @@ public class BookFakes {
                 .publisher(randomAlphabetic(3, 10))
                 .isbn13(randomNumeric(13))
                 .price(randomAlphabetic(3, 10))
-                .year(generateYear())
+                .year(2023)
                 .rating(generateRating())
                 .userId(UUID.randomUUID())
                 .build();
@@ -68,7 +69,7 @@ public class BookFakes {
     }
 
     public static int generateYear() {
-        return new SecureRandom().nextInt(224) + 1800;
+        return now().getValue();
     }
 
     public static double generateRating() {

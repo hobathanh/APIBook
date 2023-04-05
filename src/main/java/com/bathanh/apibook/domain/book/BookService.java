@@ -43,6 +43,10 @@ public class BookService {
         verifyTitleAndAuthorAvailable(book.getTitle(), book.getAuthor());
         verifyIsbn13BookAvailable(book);
 
+        if (book.getRating() == null) {
+            book.setRating(0.0);
+        }
+
         book.setUserId(authsProvider.getCurrentUserId());
         book.setIsbn13(book.getIsbn13());
         book.setCreatedAt(Instant.now());
@@ -51,12 +55,14 @@ public class BookService {
     }
 
     public Book update(final UUID id, final Book book) {
-        validate(book);
-        verifyIsbn13BookAvailable(book);
-
         final Book updatedBook = findById(id);
-
+        validate(book);
         verifyUpdateBookPermission(updatedBook);
+
+        if (!updatedBook.getIsbn13().equals(book.getIsbn13())) {
+            verifyIsbn13BookAvailable(book);
+            updatedBook.setIsbn13(book.getIsbn13());
+        }
 
         updatedBook.setTitle(book.getTitle());
         updatedBook.setAuthor(book.getAuthor());
@@ -64,7 +70,6 @@ public class BookService {
         updatedBook.setImage(book.getImage());
         updatedBook.setSubtitle(book.getSubtitle());
         updatedBook.setPublisher(book.getPublisher());
-        updatedBook.setIsbn13(book.getIsbn13());
         updatedBook.setPrice(book.getPrice());
         updatedBook.setYear(book.getYear());
         updatedBook.setRating(book.getRating());

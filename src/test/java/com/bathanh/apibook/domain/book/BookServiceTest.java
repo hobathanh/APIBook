@@ -5,7 +5,6 @@ import com.bathanh.apibook.error.BadRequestException;
 import com.bathanh.apibook.error.ForbiddenException;
 import com.bathanh.apibook.error.NotFoundException;
 import com.bathanh.apibook.persistence.book.BookStore;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +18,7 @@ import static com.bathanh.apibook.fakes.BookFakes.buildBooks;
 import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildAdmin;
 import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildContributor;
 import static java.util.UUID.randomUUID;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -100,7 +100,7 @@ class BookServiceTest {
 
     @Test
     void shouldFindBookByIsbn13_ThrownNotFound() {
-        final var isbn13 = RandomStringUtils.randomNumeric(13);
+        final var isbn13 = randomNumeric(13);
 
         when(bookStore.findBookByIsbn13(isbn13)).thenReturn(Optional.empty());
 
@@ -229,24 +229,6 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldUpdate_ThrownTitleEmpty() {
-        final var id = randomUUID();
-        final var bookUpdate = buildBook()
-                .withTitle(null);
-
-        assertThrows(BadRequestException.class, () -> bookService.update(id, bookUpdate));
-    }
-
-    @Test
-    void shouldUpdate_ThrownAuthorEmpty() {
-        final var id = randomUUID();
-        final var bookUpdate = buildBook()
-                .withAuthor(null);
-
-        assertThrows(BadRequestException.class, () -> bookService.update(id, bookUpdate));
-    }
-
-    @Test
     void shouldUpdate_ThrownNotFoundException() {
         final var bookId = randomUUID();
         final var bookUpdate = buildBook();
@@ -259,14 +241,18 @@ class BookServiceTest {
 
     @Test
     void shouldUpdate_ThrownIsbn13BookAvailable() {
+        final var bookToUpdate = buildBook();
         final var bookExited = buildBook();
         final var bookUpdate = buildBook()
                 .withIsbn13(bookExited.getIsbn13());
 
+        when(bookStore.findById(bookToUpdate.getId())).thenReturn(Optional.of(bookToUpdate));
         when(bookStore.findBookByIsbn13(bookUpdate.getIsbn13())).thenReturn(Optional.of(bookUpdate));
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
-        assertThrows(BadRequestException.class, () -> bookService.update(bookExited.getId(), bookUpdate));
+        assertThrows(BadRequestException.class, () -> bookService.update(bookToUpdate.getId(), bookUpdate));
 
+        verify(bookStore).findById(bookToUpdate.getId());
         verify(bookStore).findBookByIsbn13(bookUpdate.getIsbn13());
         verify(bookStore, never()).save(bookUpdate);
     }

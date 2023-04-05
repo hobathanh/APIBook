@@ -3,11 +3,9 @@ package com.bathanh.apibook.api.book;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-public class BooksResponseDTO {
+public class ItBookItemDTO {
 
-    private List<BookItemDTO> books;
+    private String isbn13;
 }

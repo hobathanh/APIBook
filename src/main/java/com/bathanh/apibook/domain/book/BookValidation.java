@@ -2,6 +2,8 @@ package com.bathanh.apibook.domain.book;
 
 import com.bathanh.apibook.error.BadRequestException;
 
+import static java.util.Calendar.YEAR;
+import static java.util.Calendar.getInstance;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class BookValidation {
@@ -39,12 +41,8 @@ public class BookValidation {
             throw new BadRequestException("Year is required, please check again");
         }
 
-        if (book.getYear() < 1800 || book.getYear() > 2023) {
+        if (book.getYear() != getInstance().get(YEAR)) {
             throw new BadRequestException("Invalid year, please check again");
-        }
-
-        if (book.getRating() == null) {
-            book.setRating(0.0);
         }
 
         if (book.getRating() < 0 || book.getRating() > 5) {

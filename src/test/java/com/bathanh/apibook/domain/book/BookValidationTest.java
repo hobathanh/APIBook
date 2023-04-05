@@ -14,7 +14,7 @@ class BookValidationTest {
     void validate_OK() {
         final var book = buildBook()
                 .withRating(3.5)
-                .withYear(2001);
+                .withYear(2023);
 
         validate(book);
     }

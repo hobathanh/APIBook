@@ -1,7 +1,7 @@
 package com.bathanh.apibook.integration;
 
-import com.bathanh.apibook.api.book.BookItemDTO;
-import com.bathanh.apibook.api.book.BookItemDetailDTO;
+import com.bathanh.apibook.api.book.ItBookDetailDTO;
+import com.bathanh.apibook.api.book.ItBookItemDTO;
 import com.bathanh.apibook.domain.book.Book;
 import com.bathanh.apibook.persistence.book.BookStore;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-import static com.bathanh.apibook.api.book.BookMapper.toBookFromItemDetail;
+import static com.bathanh.apibook.api.book.ItBookMapper.toBookFromItemDetail;
+import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
@@ -24,12 +26,12 @@ public class ItBookService {
     private UUID userIdCronJob;
 
     public void storeNewBooks() {
-        final List<BookItemDTO> newBooks = bookApiAdapter.fetchNewBooks();
-        final List<BookItemDTO> booksToInsert = filterNewBooks(newBooks);
+        final List<ItBookItemDTO> newBooks = bookApiAdapter.fetchNewBooks();
+        final List<ItBookItemDTO> booksToInsert = filterNewBooks(newBooks);
 
         final List<Book> bookList = booksToInsert.stream()
                 .map(bookToInsert -> {
-                    final BookItemDetailDTO bookDetail = bookApiAdapter.fetchBookDetail(bookToInsert.getIsbn13());
+                    final ItBookDetailDTO bookDetail = bookApiAdapter.fetchBookDetail(bookToInsert.getIsbn13());
                     final Book book = toBookFromItemDetail(bookDetail);
 
                     book.setUserId(userIdCronJob);
@@ -42,12 +44,13 @@ public class ItBookService {
         bookStore.saveAll(bookList);
     }
 
-    private List<BookItemDTO> filterNewBooks(final List<BookItemDTO> newBooks) {
-        final List<Book> existingBooks = bookStore.findAll();
+    private List<ItBookItemDTO> filterNewBooks(final List<ItBookItemDTO> newBooks) {
+        final Set<String> existingIsbn13s = bookStore.findAll().stream()
+                .map(Book::getIsbn13)
+                .collect(toSet());
 
         return newBooks.stream()
-                .filter(book -> existingBooks.stream()
-                        .noneMatch(existingBook -> existingBook.getIsbn13().equals(book.getIsbn13())))
+                .filter(book -> !existingIsbn13s.contains(book.getIsbn13()))
                 .toList();
     }
 }
