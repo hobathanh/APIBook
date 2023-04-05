@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @EnableScheduling
 public class WebClientConfiguration {
 
-    @Value("${itbook.base-url}")
+    @Value("${integration.itbook.base-url}")
     private String baseUrl;
 
     @Bean

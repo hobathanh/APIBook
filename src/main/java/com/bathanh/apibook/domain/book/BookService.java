@@ -26,7 +26,7 @@ public class BookService {
     }
 
     public Book findById(final UUID id) {
-        return bookStore.findById(id).orElseThrow(supplyBookNotFound(id));
+        return bookStore.findById(id).orElseThrow(supplyNotFound("id", String.valueOf(id)));
     }
 
     public List<Book> find(final String keyword) {
@@ -35,7 +35,7 @@ public class BookService {
 
     public Book findBookByIsbn13(final String isbn13) {
         return bookStore.findBookByIsbn13(isbn13)
-                .orElseThrow(supplyBookNotFoundIsbn13(isbn13));
+                .orElseThrow(supplyNotFound("isbn13", isbn13));
     }
 
     public Book create(final Book book) {
@@ -52,7 +52,6 @@ public class BookService {
 
     public Book update(final UUID id, final Book book) {
         validate(book);
-        verifyTitleAndAuthorAvailable(book.getTitle(), book.getAuthor());
         verifyIsbn13BookAvailable(book);
 
         final Book updatedBook = findById(id);

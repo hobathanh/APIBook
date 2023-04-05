@@ -1,4 +1,4 @@
-package com.bathanh.apibook.domain.integration;
+package com.bathanh.apibook.integration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

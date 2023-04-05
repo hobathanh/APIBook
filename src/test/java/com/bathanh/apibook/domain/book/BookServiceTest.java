@@ -238,15 +238,6 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldUpdate_ThrownUserIdEmpty() {
-        final var id = randomUUID();
-        final var bookUpdate = buildBook()
-                .withUserId(null);
-
-        assertThrows(BadRequestException.class, () -> bookService.update(id, bookUpdate));
-    }
-
-    @Test
     void shouldUpdate_ThrownAuthorEmpty() {
         final var id = randomUUID();
         final var bookUpdate = buildBook()
@@ -264,21 +255,6 @@ class BookServiceTest {
 
         assertThrows(NotFoundException.class, () -> bookService.update(bookId, bookUpdate));
         verify(bookStore).findById(bookId);
-    }
-
-    @Test
-    void shouldUpdate_ThrownTitleAndAuthorAvailable() {
-        final var bookExited = buildBook();
-        final var bookUpdate = buildBook()
-                .withTitle(bookExited.getTitle())
-                .withAuthor(bookExited.getAuthor());
-
-        when(bookStore.findByTitleAndAuthor(bookUpdate.getTitle(), bookUpdate.getAuthor())).thenReturn(Optional.of(bookUpdate));
-
-        assertThrows(BadRequestException.class, () -> bookService.update(bookExited.getId(), bookUpdate));
-
-        verify(bookStore).findByTitleAndAuthor(bookUpdate.getTitle(), bookUpdate.getAuthor());
-        verify(bookStore, never()).save(bookUpdate);
     }
 
     @Test

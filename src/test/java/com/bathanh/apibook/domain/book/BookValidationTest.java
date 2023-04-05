@@ -36,14 +36,6 @@ class BookValidationTest {
     }
 
     @Test
-    void validate_ThrowUserIdEmpty() {
-        final var book = buildBook()
-                .withUserId(null);
-
-        assertThrows(BadRequestException.class, () -> validate(book));
-    }
-
-    @Test
     void validate_ThrowSubtitleEmpty() {
         final var book = buildBook()
                 .withSubtitle(null);

@@ -15,10 +15,6 @@ public class BookValidation {
             throw new BadRequestException("Author book is required, please check again");
         }
 
-        if (book.getUserId() == null) {
-            throw new BadRequestException("UserId is required, please check again");
-        }
-
         if (isBlank(book.getSubtitle())) {
             throw new BadRequestException("Subtitle is required, please check again");
         }

@@ -1,4 +1,4 @@
-package com.bathanh.apibook.domain.integration;
+package com.bathanh.apibook.integration;
 
 import com.bathanh.apibook.api.book.BookItemDTO;
 import com.bathanh.apibook.api.book.BookItemDetailDTO;
@@ -15,20 +15,19 @@ public class BookApiAdapter {
     private final WebClient webClient;
 
     public List<BookItemDTO> fetchNewBooks() {
-        final BooksResponseDTO response = webClient.get()
+        return webClient.get()
                 .uri("/new")
                 .retrieve()
                 .bodyToMono(BooksResponseDTO.class)
-                .block();
-        return response.getBooks();
+                .block()
+                .getBooks();
     }
 
     public BookItemDetailDTO fetchBookDetail(final String isbn13) {
-        final BookItemDetailDTO response = webClient.get()
+        return webClient.get()
                 .uri("/books/" + isbn13)
                 .retrieve()
                 .bodyToMono(BookItemDetailDTO.class)
                 .block();
-        return response;
     }
 }

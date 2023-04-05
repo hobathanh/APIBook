@@ -1,14 +1,10 @@
 package com.bathanh.apibook.api.book;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class BookRequestDTO {
 
     private String title;

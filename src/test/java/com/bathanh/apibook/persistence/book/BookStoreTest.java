@@ -1,6 +1,5 @@
 package com.bathanh.apibook.persistence.book;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +14,7 @@ import static com.bathanh.apibook.persistence.book.BookEntityMapper.toBook;
 import static com.bathanh.apibook.persistence.book.BookEntityMapper.toBooks;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -104,7 +104,7 @@ class BookStoreTest {
 
     @Test
     void shouldFindBookByIsbn13_Empty() {
-        final var isbn13 = RandomStringUtils.randomNumeric(13);
+        final var isbn13 = randomNumeric(13);
 
         when(bookRepository.findByIsbn13(isbn13)).thenReturn(Optional.empty());
 
@@ -139,8 +139,7 @@ class BookStoreTest {
         final var expected = buildBookEntities();
         final var book = buildBookEntity();
 
-        when(bookRepository.find(book.getTitle()))
-                .thenReturn(expected);
+        when(bookRepository.find(book.getTitle())).thenReturn(expected);
 
         final var actual = bookStore.find(book.getTitle());
 
