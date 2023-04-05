@@ -101,13 +101,39 @@ class BookControllerTest extends AbstractControllerTest {
 
     @Test
     @WithMockAdmin
-    @WithMockContributor
-    void shouldFindByIsbn13_OK() throws Exception {
+    void shouldFindByIsbn13_Admin_OK() throws Exception {
         final var book = buildBook();
 
         when(bookService.findBookByIsbn13(book.getIsbn13())).thenReturn(book);
 
-        get(BASE_URL + "/isbn13?isbn13=" + book.getIsbn13())
+        get(BASE_URL + "/isbn13/" + book.getIsbn13())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(book.getId().toString()))
+                .andExpect(jsonPath("$.title").value(book.getTitle()))
+                .andExpect(jsonPath("$.author").value(book.getAuthor()))
+                .andExpect(jsonPath("$.description").value(book.getDescription()))
+                .andExpect(jsonPath("$.createdAt").value(book.getCreatedAt().toString()))
+                .andExpect(jsonPath("$.updatedAt").value(book.getUpdatedAt().toString()))
+                .andExpect(jsonPath("$.image").value(book.getImage()))
+                .andExpect(jsonPath("$.subtitle").value(book.getSubtitle()))
+                .andExpect(jsonPath("$.publisher").value(book.getPublisher()))
+                .andExpect(jsonPath("$.isbn13").value(book.getIsbn13()))
+                .andExpect(jsonPath("$.price").value(book.getPrice()))
+                .andExpect(jsonPath("$.year").value(book.getYear()))
+                .andExpect(jsonPath("$.rating").value(book.getRating()))
+                .andExpect(jsonPath("$.userId").value(book.getUserId().toString()));
+
+        verify(bookService).findBookByIsbn13(book.getIsbn13());
+    }
+
+    @Test
+    @WithMockContributor
+    void shouldFindByIsbn13_Contributor_OK() throws Exception {
+        final var book = buildBook();
+
+        when(bookService.findBookByIsbn13(book.getIsbn13())).thenReturn(book);
+
+        get(BASE_URL + "/isbn13/" + book.getIsbn13())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(book.getId().toString()))
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
