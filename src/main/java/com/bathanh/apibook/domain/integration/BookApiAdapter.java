@@ -1,8 +1,8 @@
-package com.bathanh.apibook.domain.fetchbook;
+package com.bathanh.apibook.domain.integration;
 
-import com.bathanh.apibook.api.fetchbook.BookItemDTO;
-import com.bathanh.apibook.api.fetchbook.BookItemDetailDTO;
-import com.bathanh.apibook.api.fetchbook.BooksResponseDTO;
+import com.bathanh.apibook.api.book.BookItemDTO;
+import com.bathanh.apibook.api.book.BookItemDetailDTO;
+import com.bathanh.apibook.api.book.BooksResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;

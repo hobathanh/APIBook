@@ -112,22 +112,22 @@ class BookServiceTest {
     void shouldCreate_Contributor_OK() {
         final var book = buildBook();
 
-        when(bookStore.create(book)).thenReturn(book);
+        when(bookStore.save(book)).thenReturn(book);
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
 
         assertEquals(book, bookService.create(book));
-        verify(bookStore).create(book);
+        verify(bookStore).save(book);
     }
 
     @Test
     void shouldCreate_Admin_OK() {
         final var book = buildBook();
 
-        when(bookStore.create(book)).thenReturn(book);
+        when(bookStore.save(book)).thenReturn(book);
         when(authsProvider.getCurrentUserId()).thenReturn(buildAdmin().getUserId());
 
         assertEquals(book, bookService.create(book));
-        verify(bookStore).create(book);
+        verify(bookStore).save(book);
     }
 
     @Test
@@ -137,7 +137,7 @@ class BookServiceTest {
 
         assertThrows(BadRequestException.class, () -> bookService.create(book));
 
-        verify(bookStore, never()).create(book);
+        verify(bookStore, never()).save(book);
     }
 
     @Test
@@ -170,7 +170,7 @@ class BookServiceTest {
                 .withUserId(book.getUserId());
 
         when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
-        when(bookStore.update(book)).thenReturn(book);
+        when(bookStore.save(book)).thenReturn(book);
         when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
 
         final var actual = bookService.update(book.getId(), bookUpdate);
@@ -183,7 +183,7 @@ class BookServiceTest {
         assertEquals(bookUpdate.getUserId(), actual.getUserId());
 
         verify(bookStore).findById(book.getId());
-        verify(bookStore).update(book);
+        verify(bookStore).save(book);
     }
 
     @Test
@@ -194,7 +194,7 @@ class BookServiceTest {
                 .withUserId(book.getUserId());
 
         when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
-        when(bookStore.update(book)).thenReturn(book);
+        when(bookStore.save(book)).thenReturn(book);
         when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
 
@@ -211,7 +211,7 @@ class BookServiceTest {
         assertEquals(bookUpdate.getUserId(), actual.getUserId());
 
         verify(bookStore).findById(book.getId());
-        verify(bookStore).update(book);
+        verify(bookStore).save(book);
     }
 
     @Test
@@ -278,7 +278,7 @@ class BookServiceTest {
         assertThrows(BadRequestException.class, () -> bookService.update(bookExited.getId(), bookUpdate));
 
         verify(bookStore).findByTitleAndAuthor(bookUpdate.getTitle(), bookUpdate.getAuthor());
-        verify(bookStore, never()).update(bookUpdate);
+        verify(bookStore, never()).save(bookUpdate);
     }
 
     @Test
@@ -292,7 +292,7 @@ class BookServiceTest {
         assertThrows(BadRequestException.class, () -> bookService.update(bookExited.getId(), bookUpdate));
 
         verify(bookStore).findBookByIsbn13(bookUpdate.getIsbn13());
-        verify(bookStore, never()).update(bookUpdate);
+        verify(bookStore, never()).save(bookUpdate);
     }
 
     @Test

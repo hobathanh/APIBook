@@ -1,10 +1,9 @@
-package com.bathanh.apibook.api.fetchbook;
+package com.bathanh.apibook.api.book;
 
 import org.junit.jupiter.api.Test;
 
 import static com.bathanh.apibook.fakes.FetchBookFakes.buildBookItemDetailDTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 
 class BookMapperTest {
 

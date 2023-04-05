@@ -40,12 +40,12 @@ public class BookStore {
         return toBooks(bookRepository.find(keyword));
     }
 
-    public Book create(final Book book) {
+    public Book save(final Book book) {
         return toBook(bookRepository.save(toBookEntity(book)));
     }
 
-    public Book update(final Book book) {
-        return toBook(bookRepository.save(toBookEntity(book)));
+    public List<Book> saveAll(final List<Book> books) {
+        return toBooks(toList(bookRepository.saveAll(toBookEntities(books))));
     }
 
     public void delete(final UUID id) {

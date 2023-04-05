@@ -36,7 +36,7 @@ public class BookController {
         return toBookResponseDTO(bookService.findBookByIsbn13(isbn13));
     }
 
-    @Operation(summary = "Find books by title, author, description")
+    @Operation(summary = "Find books by title, author, description, subtitle, publisher")
     @GetMapping("find")
     public List<BookResponseDTO> find(final @RequestParam String keyword) {
         return toBookResponseDTOs(bookService.find(keyword));

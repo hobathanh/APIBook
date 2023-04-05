@@ -1,6 +1,6 @@
 package com.bathanh.apibook.fakes;
 
-import com.bathanh.apibook.api.fetchbook.BookItemDetailDTO;
+import com.bathanh.apibook.api.book.BookItemDetailDTO;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.security.SecureRandom;

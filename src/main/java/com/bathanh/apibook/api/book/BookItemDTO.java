@@ -1,4 +1,4 @@
-package com.bathanh.apibook.api.fetchbook;
+package com.bathanh.apibook.api.book;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

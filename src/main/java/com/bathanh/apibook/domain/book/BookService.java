@@ -1,18 +1,11 @@
 package com.bathanh.apibook.domain.book;
 
-import com.bathanh.apibook.api.fetchbook.BookItemDTO;
-import com.bathanh.apibook.api.fetchbook.BookItemDetailDTO;
-import com.bathanh.apibook.api.fetchbook.BookMapper;
 import com.bathanh.apibook.domain.auths.AuthsProvider;
-import com.bathanh.apibook.domain.fetchbook.BookApiAdapter;
-import com.bathanh.apibook.persistence.book.BookRepository;
 import com.bathanh.apibook.persistence.book.BookStore;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,11 +20,6 @@ public class BookService {
 
     private final BookStore bookStore;
     private final AuthsProvider authsProvider;
-    private final BookApiAdapter bookApiAdapter;
-    private final BookRepository bookRepository;
-
-    @Value("${userIdCronJob}")
-    private UUID userIdCronJob;
 
     public List<Book> findAll() {
         return bookStore.findAll();
@@ -50,35 +38,6 @@ public class BookService {
                 .orElseThrow(supplyBookNotFoundIsbn13(isbn13));
     }
 
-    private List<BookItemDTO> filterNewBooks(List<BookItemDTO> newBooks) {
-        List<Book> existingBooks = bookStore.findAll();
-
-        List<BookItemDTO> newBooksToInsert = new ArrayList<>();
-        for (BookItemDTO book : newBooks) {
-            if (existingBooks.stream().noneMatch(existingBook -> existingBook.getIsbn13().equals(book.getIsbn13()))) {
-                newBooksToInsert.add(book);
-            }
-        }
-
-        return newBooksToInsert;
-    }
-
-    public void storeNewBooks() {
-        List<BookItemDTO> newBooks = bookApiAdapter.fetchNewBooks();
-        List<BookItemDTO> booksToInsert = filterNewBooks(newBooks);
-
-        for (BookItemDTO bookToInsert : booksToInsert) {
-            BookItemDetailDTO bookDetail = bookApiAdapter.fetchBookDetail(bookToInsert.getIsbn13());
-            Book book = BookMapper.toBookFromItemDetail(bookDetail);
-
-            book.setUserId(userIdCronJob);
-            book.setCreatedAt(Instant.now());
-
-            verifyIsbn13BookAvailable(book);
-            bookStore.create(book);
-        }
-    }
-
     public Book create(final Book book) {
         validate(book);
         verifyTitleAndAuthorAvailable(book.getTitle(), book.getAuthor());
@@ -88,7 +47,7 @@ public class BookService {
         book.setIsbn13(book.getIsbn13());
         book.setCreatedAt(Instant.now());
 
-        return bookStore.create(book);
+        return bookStore.save(book);
     }
 
     public Book update(final UUID id, final Book book) {
@@ -112,7 +71,7 @@ public class BookService {
         updatedBook.setRating(book.getRating());
         updatedBook.setUpdatedAt(Instant.now());
 
-        return bookStore.update(updatedBook);
+        return bookStore.save(updatedBook);
     }
 
     public void delete(final UUID id) {
@@ -143,7 +102,7 @@ public class BookService {
         }
     }
 
-    private void verifyIsbn13BookAvailable(final Book book) {
+    public void verifyIsbn13BookAvailable(final Book book) {
         final Optional<Book> bookOptional = bookStore.findBookByIsbn13(book.getIsbn13());
         if (bookOptional.isPresent()) {
             throw supplyIsbn13BookAlreadyExist(book.getIsbn13()).get();

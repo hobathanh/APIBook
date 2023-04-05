@@ -1,6 +1,5 @@
-package com.bathanh.apibook.domain.fetchbook;
+package com.bathanh.apibook.domain.integration;
 
-import com.bathanh.apibook.domain.book.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Scheduler;
@@ -16,7 +15,7 @@ import javax.annotation.PostConstruct;
 @Slf4j
 public class ScheduledTask {
 
-    private final BookService bookService;
+    private final ItBookService itBookService;
     private Scheduler scheduler;
 
     @PostConstruct
@@ -29,7 +28,7 @@ public class ScheduledTask {
     public void storeNewBooksPeriodically() {
         try {
             log.info("Start retrieving new books");
-            bookService.storeNewBooks();
+            itBookService.storeNewBooks();
             log.info("Retrieving new books done");
         } catch (Exception ex) {
             log.error("Failed to retrieve new books with error", ex);
