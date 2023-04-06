@@ -12,8 +12,7 @@ import static com.bathanh.apibook.fakes.BookFakes.*;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -74,13 +73,13 @@ class BookStoreTest {
     @Test
     void shouldFindBookByIsbn13_OK() {
         final var book = buildBookEntity();
-        final var bookOptional = Optional.of(book);
 
-        when(bookRepository.findByIsbn13(book.getIsbn13())).thenReturn(bookOptional);
+        when(bookRepository.findByIsbn13(book.getIsbn13())).thenReturn(Optional.of(book));
 
         final var actual = bookStore.findBookByIsbn13(book.getIsbn13()).get();
-        final var expected = bookOptional.get();
+        final var expected = book;
 
+        assertNotNull(actual);
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getAuthor(), actual.getAuthor());
