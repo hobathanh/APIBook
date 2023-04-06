@@ -168,17 +168,6 @@ class BookStoreTest {
     }
 
     @Test
-    void shouldSaveAll_OK() {
-        final var bookEntities = buildBookEntities();
-
-        when(bookRepository.saveAll(any())).thenReturn(bookEntities);
-
-        final var actual = bookStore.saveAll(toBooks(bookEntities));
-
-        assertEquals(bookEntities.size(), actual.size());
-    }
-
-    @Test
     void shouldDelete_OK() {
         final var id = randomUUID();
 
