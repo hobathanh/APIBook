@@ -1,5 +1,6 @@
 package com.bathanh.apibook.api.book;
 
+import com.bathanh.apibook.integration.ItBookMapper;
 import org.junit.jupiter.api.Test;
 
 import static com.bathanh.apibook.fakes.FetchBookFakes.buildBookItemDetailDTO;
@@ -10,7 +11,7 @@ class ItBookMapperTest {
     @Test
     void shouldToBookFromItemDetail_OK() {
         final var bookItemDetailDTO = buildBookItemDetailDTO();
-        final var book = ItBookMapper.toBookFromItemDetail(bookItemDetailDTO);
+        final var book = ItBookMapper.toBook(bookItemDetailDTO);
 
         assertEquals(bookItemDetailDTO.getTitle(), book.getTitle());
         assertEquals(bookItemDetailDTO.getSubtitle(), book.getSubtitle());

@@ -1,4 +1,4 @@
-package com.bathanh.apibook.api.book;
+package com.bathanh.apibook.integration;
 
 import lombok.*;
 

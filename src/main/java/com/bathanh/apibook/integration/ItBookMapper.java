@@ -1,10 +1,10 @@
-package com.bathanh.apibook.api.book;
+package com.bathanh.apibook.integration;
 
 import com.bathanh.apibook.domain.book.Book;
 
 public class ItBookMapper {
 
-    public static Book toBookFromItemDetail(ItBookDetailDTO itBookDetailDTO) {
+    public static Book toBook(ItBookDetailDTO itBookDetailDTO) {
         return Book.builder()
                 .title(itBookDetailDTO.getTitle())
                 .subtitle(itBookDetailDTO.getSubtitle())

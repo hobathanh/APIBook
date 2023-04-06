@@ -1,7 +1,5 @@
 package com.bathanh.apibook.integration;
 
-import com.bathanh.apibook.api.book.ItBookDetailDTO;
-import com.bathanh.apibook.api.book.ItBookItemDTO;
 import com.bathanh.apibook.domain.book.Book;
 import com.bathanh.apibook.persistence.book.BookStore;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.bathanh.apibook.api.book.ItBookMapper.toBookFromItemDetail;
+import static com.bathanh.apibook.integration.ItBookMapper.toBook;
 import static java.util.stream.Collectors.toSet;
 
 @Service
@@ -30,7 +28,7 @@ public class ItBookService {
         final List<ItBookItemDTO> booksToInsert = filterNewBooks(newBooks);
 
         final List<Book> bookList = booksToInsert.stream()
-                .map(bookToInsert -> createBookFromDetailDTO(bookApiAdapter.fetchBookDetail(bookToInsert.getIsbn13())))
+                .map(bookToInsert -> save(bookApiAdapter.fetchBookDetail(bookToInsert.getIsbn13())))
                 .toList();
 
         bookStore.saveAll(bookList);
@@ -46,8 +44,8 @@ public class ItBookService {
                 .toList();
     }
 
-    private Book createBookFromDetailDTO(final ItBookDetailDTO bookDetail) {
-        final Book book = toBookFromItemDetail(bookDetail);
+    private Book save(final ItBookDetailDTO itBookDetailDTO) {
+        final Book book = toBook(itBookDetailDTO);
 
         book.setUserId(userIdCronJob);
         book.setCreatedAt(Instant.now());

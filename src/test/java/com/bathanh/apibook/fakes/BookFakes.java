@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static java.time.Instant.parse;
 import static java.time.Year.now;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -26,8 +25,8 @@ public class BookFakes {
                 .title(randomAlphabetic(3, 10))
                 .author(randomAlphabetic(3, 10))
                 .description(randomAlphabetic(3, 10))
-                .createdAt(parse("2023-03-15T11:05:00.123456Z"))
-                .updatedAt(parse("2023-03-15T11:06:00.123456Z"))
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .image(randomAlphabetic(3, 10))
                 .subtitle(randomAlphabetic(3, 10))
                 .publisher(randomAlphabetic(3, 10))

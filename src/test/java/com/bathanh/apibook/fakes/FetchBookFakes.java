@@ -1,6 +1,6 @@
 package com.bathanh.apibook.fakes;
 
-import com.bathanh.apibook.api.book.ItBookDetailDTO;
+import com.bathanh.apibook.integration.ItBookDetailDTO;
 
 import static com.bathanh.apibook.fakes.BookFakes.generateRating;
 import static com.bathanh.apibook.fakes.BookFakes.generateYear;
