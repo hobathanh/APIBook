@@ -1,0 +1,628 @@
+{
+	"info": {
+		"_postman_id": "6afe5725-925b-4308-93a5-a73d33549909",
+		"name": "API Book",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24139746"
+	},
+	"item": [
+		{
+			"name": "Auths",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin2\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/v1/auths",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"auths"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/profiles",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"profiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJpYXQiOjE2Nzk5MDI3MzksImV4cCI6MTY3OTkyNDMzOSwicm9sZXMiOiJBRE1JTiIsInVzZXJJZCI6IjYzMDJhNDFiLWU2MWYtNDBhOS05ZGQwLTllYjEwMDI4YTc5NCJ9.togSecA48OCqSqXQD7Ls2IAtMlwrWJkfKNwwQoPFSK4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CRUD User",
+			"item": [
+				{
+					"name": "GET ALL User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJpYXQiOjE2ODA2ODAwNjgsImV4cCI6MTY4MDcwMTY2OCwicm9sZXMiOiJBRE1JTiIsInVzZXJJZCI6IjYzMDJhNDFiLWU2MWYtNDBhOS05ZGQwLTllYjEwMDI4YTc5NCJ9.HjdHlxYVFYzLyZlvr7akYSNXqdytRzlnWB_-Kv5Z8MQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJpYXQiOjE2ODA2ODAwNjgsImV4cCI6MTY4MDcwMTY2OCwicm9sZXMiOiJBRE1JTiIsInVzZXJJZCI6IjYzMDJhNDFiLWU2MWYtNDBhOS05ZGQwLTllYjEwMDI4YTc5NCJ9.HjdHlxYVFYzLyZlvr7akYSNXqdytRzlnWB_-Kv5Z8MQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"thanh8\",\r\n    \"password\": \"12345678\",\r\n    \"firstName\": \"ba\",\r\n    \"lastName\": \"thanh\",\r\n    \"enabled\": true,\r\n    \"avatar\": \"avatar2.jpg\",\r\n    \"roleId\": \"d1471fca-6120-464b-bc57-0ac60faffc7a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJpYXQiOjE2NzkzMDA5NjQsImV4cCI6MTY3OTMyMjU2NCwicm9sZXMiOiJBRE1JTiIsInVzZXJJZCI6IjYzMDJhNDFiLWU2MWYtNDBhOS05ZGQwLTllYjEwMDI4YTc5NCJ9.gyGRkC6JP7pQzC_hLIzaS5fn9MEVtlRvVOY22QLytQc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"thanh5234\",\r\n    \"password\": \"123456\",\r\n    \"firstName\": \"ba\",\r\n    \"lastName\": \"thanh\",\r\n    \"enabled\": true,\r\n    \"avatar\": \"avatar2.jpg\",\r\n    \"roleId\": \"d1471fca-6120-464b-bc57-0ac60faffc7a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/v1/users/a56786ae-566f-4ea5-9658-e99a1c40f7fc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"a56786ae-566f-4ea5-9658-e99a1c40f7fc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJpYXQiOjE2NzkzMDA5NjQsImV4cCI6MTY3OTMyMjU2NCwicm9sZXMiOiJBRE1JTiIsInVzZXJJZCI6IjYzMDJhNDFiLWU2MWYtNDBhOS05ZGQwLTllYjEwMDI4YTc5NCJ9.gyGRkC6JP7pQzC_hLIzaS5fn9MEVtlRvVOY22QLytQc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/users/a56786ae-566f-4ea5-9658-e99a1c40f7fc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"a56786ae-566f-4ea5-9658-e99a1c40f7fc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/users/search?keyword=th",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"search"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "th"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CRUD Book",
+			"item": [
+				{
+					"name": "Create Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJpYXQiOjE2ODA3NTQwMzQsImV4cCI6MTY4MDc3NTYzNCwicm9sZXMiOiJBRE1JTiIsInVzZXJJZCI6IjYzMDJhNDFiLWU2MWYtNDBhOS05ZGQwLTllYjEwMDI4YTc5NCJ9.rdfEPOmigJyXjbsAmLXShLnWFNC8GwhMJIEEx80Oxns",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Harry yyyyyiitttttiyyt4yiuu\",\r\n    \"author\": \"ddada\",\r\n    \"description\": \"Harry Potter is a seven-part\",\r\n    \"image\": \"image03.jpg\",\r\n    \"subtitle\": \"tttttt\",\r\n    \"publisher\": \"yyyyyy\",\r\n    \"isbn13\": \"9781019319898\",\r\n    \"price\": \"$99.99\",\r\n    \"rating\": \"4\",\r\n    \"year\": 2023\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/v1/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJpYXQiOjE2ODA2ODE1NjEsImV4cCI6MTY4MDcwMzE2MSwicm9sZXMiOiJBRE1JTiIsInVzZXJJZCI6IjYzMDJhNDFiLWU2MWYtNDBhOS05ZGQwLTllYjEwMDI4YTc5NCJ9.EXt6Mg70ncUnVdrW-SzwibfnDGszuRBSRoYcSvPRYFc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Harry Potter and the Sorcerr oSte\",\r\n    \"author\": \"J. K. Rowling\",\r\n    \"description\": \"Harry Potter is a seven-part\",\r\n    \"image\": \"image03.jpg\",\r\n    \"subtitle\": \"fakdfakf\",\r\n    \"publisher\": \"tttttt\",\r\n    \"isbn13\": \"1234567781289\",\r\n    \"price\": \"$99.99\",\r\n    \"rating\": \"0\",\r\n    \"year\": 2020\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/v1/books/3475dabe-ac0a-42b7-abd9-6f463ebf08aa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"3475dabe-ac0a-42b7-abd9-6f463ebf08aa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Book",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/books/find?keyword=PrinciP",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"find"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "PrinciP"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL Book",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJpYXQiOjE2ODAwODI3NjEsImV4cCI6MTY4MDEwNDM2MSwicm9sZXMiOiJBRE1JTiIsInVzZXJJZCI6IjYzMDJhNDFiLWU2MWYtNDBhOS05ZGQwLTllYjEwMDI4YTc5NCJ9.Yr3rN4K6vnAasFSp2l34QvJy8yaewGDKRpqJzjlc03I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/books/0e946e0a-000c-4bc7-98c5-e5e4567395d1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"0e946e0a-000c-4bc7-98c5-e5e4567395d1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Book By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/books/9cd60b62-a273-4aa7-b7b4-363cd2c3c725",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"9cd60b62-a273-4aa7-b7b4-363cd2c3c725"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Book",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"    <table bgcolor=\"#FFFFFF\">\r",
+									"        <tr>\r",
+									"            <th>Id</th>\r",
+									"            <th>Title</th>\r",
+									"            <th>Author</th>\r",
+									"            <th>Description</th>\r",
+									"            <th>CreatedAt</th>\r",
+									"            <th>UpdateAt</th>\r",
+									"            <th>Image</th>\r",
+									"            <th>Subtitle</th>\r",
+									"            <th>Pulisher</th>\r",
+									"            <th>Isbn13</th>\r",
+									"            <th>Price</th>\r",
+									"            <th>Year</th>\r",
+									"            <th>Rating</th>\r",
+									"            <th>UserId</th>\r",
+									"        </tr>\r",
+									"        {{#each response}}\r",
+									"            <tr>\r",
+									"                <td>{{id}}</td>\r",
+									"                <td>{{title}}</td>\r",
+									"                <td>{{author}}</td>\r",
+									"                <td class=\"description\">{{description}}</td>\r",
+									"                <td>{{createdAt}}</td>\r",
+									"                <td>{{updatedAt}}</td>\r",
+									"                <td><img src=\"{{image}}\" alt=\"{{title}}\" width=\"100\" height=\"200\"></td>\r",
+									"                <td>{{subtitle}}</td>                \r",
+									"                <td>{{publisher}}</td>\r",
+									"                <td>{{isbn13}}</td>\r",
+									"                <td>{{price}}</td>\r",
+									"                <td>{{year}}</td>\r",
+									"                <td>{{rating}}</td>\r",
+									"                <td>{{userId}}</td>\r",
+									"            </tr>\r",
+									"        {{/each}}\r",
+									"    </table>\r",
+									"\r",
+									"    <style>\r",
+									"        td.description {\r",
+									"            max-width: 200px;\r",
+									"            white-space: nowrap;\r",
+									"            overflow: hidden;\r",
+									"            text-overflow: ellipsis;\r",
+									"        }\r",
+									"    </style>\r",
+									"`;\r",
+									"\r",
+									"pm.visualizer.set(template, {\r",
+									"    response: pm.response.json()\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/v1/books",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGFuaDMiLCJpYXQiOjE2Nzk5MDAzODQsImV4cCI6MTY3OTkyMTk4NCwicm9sZXMiOiJDT05UUklCVVRPUiIsInVzZXJJZCI6ImRlYmVkYzJlLWUyNTYtNDIzNS1hZTAyLTRkMTQ5NjRhNjFhNiJ9.Hn1_5F-bNTBRrpKdogNK1-uv_pAMb-5h2yDO8q3F3sY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/v1/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGFuaDMiLCJpYXQiOjE2Nzk5MDAzODQsImV4cCI6MTY3OTkyMTk4NCwicm9sZXMiOiJDT05UUklCVVRPUiIsInVzZXJJZCI6ImRlYmVkYzJlLWUyNTYtNDIzNS1hZTAyLTRkMTQ5NjRhNjFhNiJ9.Hn1_5F-bNTBRrpKdogNK1-uv_pAMb-5h2yDO8q3F3sY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"thanh3\",\r\n    \"password\": \"654321\",\r\n    \"firstName\": \"baaa\",\r\n    \"lastName\": \"than\",\r\n    \"enabled\": true,\r\n    \"avatar\": \"avatar2.jpg\",\r\n    \"roleId\": \"9fa909a2-c28e-4b2a-a8e0-f02f24ba90e3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/v1/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"v1",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
