@@ -30,15 +30,7 @@ public class ItBookService {
         final List<ItBookItemDTO> booksToInsert = filterNewBooks(newBooks);
 
         final List<Book> bookList = booksToInsert.stream()
-                .map(bookToInsert -> {
-                    final ItBookDetailDTO bookDetail = bookApiAdapter.fetchBookDetail(bookToInsert.getIsbn13());
-                    final Book book = toBookFromItemDetail(bookDetail);
-
-                    book.setUserId(userIdCronJob);
-                    book.setCreatedAt(Instant.now());
-
-                    return book;
-                })
+                .map(bookToInsert -> createBookFromDetailDTO(bookApiAdapter.fetchBookDetail(bookToInsert.getIsbn13())))
                 .toList();
 
         bookStore.saveAll(bookList);
@@ -52,5 +44,14 @@ public class ItBookService {
         return newBooks.stream()
                 .filter(book -> !existingIsbn13s.contains(book.getIsbn13()))
                 .toList();
+    }
+
+    private Book createBookFromDetailDTO(final ItBookDetailDTO bookDetail) {
+        final Book book = toBookFromItemDetail(bookDetail);
+
+        book.setUserId(userIdCronJob);
+        book.setCreatedAt(Instant.now());
+
+        return book;
     }
 }
