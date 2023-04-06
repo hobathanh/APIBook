@@ -16,11 +16,10 @@ import javax.annotation.PostConstruct;
 public class ScheduledTask {
 
     private final ItBookService itBookService;
-    private Scheduler scheduler;
 
     @PostConstruct
     public void init() throws SchedulerException {
-        scheduler = new StdSchedulerFactory().getScheduler();
+        final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.start();
     }
 

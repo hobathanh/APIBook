@@ -68,7 +68,7 @@ class JwtTokenServiceTest {
                 .parseClaimsJws(token)
                 .getBody();
 
-        Authentication authentication = jwtTokenService.parse(token);
+        final Authentication authentication = jwtTokenService.parse(token);
 
         assertNotNull(authentication);
         assertEquals(userDetails.getUserId(), authentication.getPrincipal());

@@ -106,7 +106,7 @@ public class BookService {
         }
     }
 
-    public void verifyIsbn13BookAvailable(final Book book) {
+    private void verifyIsbn13BookAvailable(final Book book) {
         final Optional<Book> bookOptional = bookStore.findBookByIsbn13(book.getIsbn13());
         if (bookOptional.isPresent()) {
             throw supplyIsbn13BookAlreadyExist(book.getIsbn13()).get();
