@@ -2,6 +2,7 @@ package com.bathanh.apibook.fakes;
 
 import com.bathanh.apibook.domain.book.Book;
 import com.bathanh.apibook.persistence.book.BookEntity;
+import com.bathanh.apibook.persistence.book.BookEntityMapper;
 import lombok.experimental.UtilityClass;
 
 import java.security.SecureRandom;
@@ -12,6 +13,7 @@ import java.util.stream.IntStream;
 
 import static java.time.Instant.parse;
 import static java.time.Year.now;
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
@@ -67,6 +69,33 @@ public class BookFakes {
                 .mapToObj(_ignored -> buildBookEntity())
                 .toList();
     }
+
+    public static Book toBook(final BookEntity bookEntity) {
+        return Book.builder()
+                .id(bookEntity.getId())
+                .title(bookEntity.getTitle())
+                .author(bookEntity.getAuthor())
+                .description(bookEntity.getDescription())
+                .createdAt(bookEntity.getCreatedAt())
+                .updatedAt(bookEntity.getUpdatedAt())
+                .image(bookEntity.getImage())
+                .userId(bookEntity.getUserId())
+                .subtitle(bookEntity.getSubtitle())
+                .publisher(bookEntity.getPublisher())
+                .isbn13(bookEntity.getIsbn13())
+                .price(bookEntity.getPrice())
+                .year(bookEntity.getYear())
+                .rating(bookEntity.getRating())
+                .build();
+    }
+
+    public static List<Book> toBooks(final List<BookEntity> bookEntities) {
+        return emptyIfNull(bookEntities)
+                .stream()
+                .map(BookEntityMapper::toBook)
+                .toList();
+    }
+
 
     public static int generateYear() {
         return now().getValue();

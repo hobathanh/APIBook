@@ -8,10 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.bathanh.apibook.fakes.BookFakes.buildBookEntities;
-import static com.bathanh.apibook.fakes.BookFakes.buildBookEntity;
-import static com.bathanh.apibook.persistence.book.BookEntityMapper.toBook;
-import static com.bathanh.apibook.persistence.book.BookEntityMapper.toBooks;
+import static com.bathanh.apibook.fakes.BookFakes.*;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -173,13 +170,13 @@ class BookStoreTest {
 
     @Test
     void shouldSaveAll_OK() {
-        final var expected = buildBookEntities();
+        final var bookEntities = buildBookEntities();
 
-        when(bookRepository.saveAll(any())).thenReturn(expected);
+        when(bookRepository.saveAll(any())).thenReturn(bookEntities);
 
-        final var actual = bookStore.saveAll(toBooks(expected));
+        final var actual = bookStore.saveAll(toBooks(bookEntities));
 
-        assertEquals(expected.size(), actual.size());
+        assertEquals(bookEntities.size(), actual.size());
     }
 
     @Test

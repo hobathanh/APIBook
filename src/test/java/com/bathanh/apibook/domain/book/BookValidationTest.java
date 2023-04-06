@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static com.bathanh.apibook.domain.book.BookValidation.validate;
 import static com.bathanh.apibook.fakes.BookFakes.buildBook;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BookValidationTest {
@@ -16,7 +17,7 @@ class BookValidationTest {
                 .withRating(3.5)
                 .withYear(2023);
 
-        validate(book);
+        assertDoesNotThrow(() -> validate(book));
     }
 
     @Test
