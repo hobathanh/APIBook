@@ -28,7 +28,9 @@ public class ItBookService {
         final List<ItBookItemDTO> booksToInsert = filterNewBooks(newBooks);
 
         final List<Book> bookList = booksToInsert.stream()
-                .map(bookToInsert -> save(bookApiAdapter.fetchBookDetail(bookToInsert.getIsbn13())))
+                .map(ItBookItemDTO::getIsbn13)
+                .map(bookApiAdapter::fetchBookDetail)
+                .map(this::save)
                 .toList();
 
         bookStore.saveAll(bookList);
@@ -50,6 +52,6 @@ public class ItBookService {
         book.setUserId(userIdCronJob);
         book.setCreatedAt(Instant.now());
 
-        return book;
+        return bookStore.save(book);
     }
 }
