@@ -57,6 +57,9 @@ dependencies {
     testFixturesCompileOnly 'org.projectlombok:lombok'
     testFixturesAnnotationProcessor 'org.projectlombok:lombok'
 
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.4'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz:3.0.4'
 }
 
 tasks.named('test') {

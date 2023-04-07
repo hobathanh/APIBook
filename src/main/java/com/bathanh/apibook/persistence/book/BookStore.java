@@ -26,6 +26,11 @@ public class BookStore {
                 .map(BookEntityMapper::toBook);
     }
 
+    public Optional<Book> findBookByIsbn13(final String isbn13) {
+        return bookRepository.findByIsbn13(isbn13)
+                .map(BookEntityMapper::toBook);
+    }
+
     public Optional<Book> findByTitleAndAuthor(final String title, final String author) {
         return bookRepository.findByTitleAndAuthor(title, author)
                 .map(BookEntityMapper::toBook);
@@ -35,11 +40,7 @@ public class BookStore {
         return toBooks(bookRepository.find(keyword));
     }
 
-    public Book create(final Book book) {
-        return toBook(bookRepository.save(toBookEntity(book)));
-    }
-
-    public Book update(final Book book) {
+    public Book save(final Book book) {
         return toBook(bookRepository.save(toBookEntity(book)));
     }
 
