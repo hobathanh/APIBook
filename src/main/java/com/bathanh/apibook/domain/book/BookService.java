@@ -41,42 +41,41 @@ public class BookService {
     public Book create(final Book book) {
         validate(book);
         verifyTitleAndAuthorAvailable(book.getTitle(), book.getAuthor());
-        verifyIsbn13BookAvailable(book);
+        verifyIsbn13BookAvailable(book.getIsbn13());
 
-        if (book.getRating() == null) {
-            book.setRating(0.0);
-        }
+        final double bookRating = book.getRating() == null ? 0.0 : book.getRating();
 
         final Book bookToCreate = book
                 .withUserId(authsProvider.getCurrentUserId())
                 .withIsbn13(book.getIsbn13())
-                .withCreatedAt(Instant.now());
+                .withCreatedAt(Instant.now())
+                .withRating(bookRating);
 
         return bookStore.save(bookToCreate);
     }
 
     public Book update(final UUID id, final Book book) {
-        final Book updatedBook = findById(id);
+        final Book bookToUpdate = findById(id);
         validate(book);
-        verifyUpdateBookPermission(updatedBook);
+        verifyUpdateBookPermission(bookToUpdate);
 
-        if (!updatedBook.getIsbn13().equals(book.getIsbn13())) {
-            verifyIsbn13BookAvailable(book);
-            updatedBook.setIsbn13(book.getIsbn13());
+        if (!bookToUpdate.getIsbn13().equals(book.getIsbn13())) {
+            verifyIsbn13BookAvailable(book.getIsbn13());
+            bookToUpdate.setIsbn13(book.getIsbn13());
         }
 
-        updatedBook.setTitle(book.getTitle());
-        updatedBook.setAuthor(book.getAuthor());
-        updatedBook.setDescription(book.getDescription());
-        updatedBook.setImage(book.getImage());
-        updatedBook.setSubtitle(book.getSubtitle());
-        updatedBook.setPublisher(book.getPublisher());
-        updatedBook.setPrice(book.getPrice());
-        updatedBook.setYear(book.getYear());
-        updatedBook.setRating(book.getRating());
-        updatedBook.setUpdatedAt(Instant.now());
+        bookToUpdate.setTitle(book.getTitle());
+        bookToUpdate.setAuthor(book.getAuthor());
+        bookToUpdate.setDescription(book.getDescription());
+        bookToUpdate.setImage(book.getImage());
+        bookToUpdate.setSubtitle(book.getSubtitle());
+        bookToUpdate.setPublisher(book.getPublisher());
+        bookToUpdate.setPrice(book.getPrice());
+        bookToUpdate.setYear(book.getYear());
+        bookToUpdate.setRating(book.getRating());
+        bookToUpdate.setUpdatedAt(Instant.now());
 
-        return bookStore.save(updatedBook);
+        return bookStore.save(bookToUpdate);
     }
 
     public void delete(final UUID id) {
@@ -107,10 +106,10 @@ public class BookService {
         }
     }
 
-    private void verifyIsbn13BookAvailable(final Book book) {
-        bookStore.findBookByIsbn13(book.getIsbn13())
+    private void verifyIsbn13BookAvailable(final String isbn13) {
+        bookStore.findBookByIsbn13(isbn13)
                 .ifPresent(b -> {
-                    throw supplyIsbn13BookAlreadyExist(book.getIsbn13()).get();
+                    throw supplyIsbn13BookAlreadyExist(isbn13).get();
                 });
     }
 }
