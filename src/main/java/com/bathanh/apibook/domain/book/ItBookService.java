@@ -1,6 +1,8 @@
-package com.bathanh.apibook.integration;
+package com.bathanh.apibook.domain.book;
 
-import com.bathanh.apibook.domain.book.Book;
+import com.bathanh.apibook.integration.BookApiAdapter;
+import com.bathanh.apibook.integration.ItBookDetailDTO;
+import com.bathanh.apibook.integration.ItBookItemDTO;
 import com.bathanh.apibook.persistence.book.BookStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,12 +45,12 @@ public class ItBookService {
                 .toList();
     }
 
-    private Book save(final ItBookDetailDTO itBookDetailDTO) {
+    private void save(final ItBookDetailDTO itBookDetailDTO) {
         final Book book = toBook(itBookDetailDTO);
 
         book.setUserId(userIdCronJob);
         book.setCreatedAt(Instant.now());
 
-        return bookStore.save(book);
+        bookStore.save(book);
     }
 }

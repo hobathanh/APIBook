@@ -47,11 +47,12 @@ public class BookService {
             book.setRating(0.0);
         }
 
-        book.setUserId(authsProvider.getCurrentUserId());
-        book.setIsbn13(book.getIsbn13());
-        book.setCreatedAt(Instant.now());
+        final Book bookToCreate = book
+                .withUserId(authsProvider.getCurrentUserId())
+                .withIsbn13(book.getIsbn13())
+                .withCreatedAt(Instant.now());
 
-        return bookStore.save(book);
+        return bookStore.save(bookToCreate);
     }
 
     public Book update(final UUID id, final Book book) {

@@ -112,22 +112,26 @@ class BookServiceTest {
     void shouldCreate_Contributor_OK() {
         final var book = buildBook();
 
-        when(bookStore.save(book)).thenReturn(book);
+        when(bookStore.save(any(Book.class))).thenReturn(book);
         when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
 
-        assertEquals(book, bookService.create(book));
-        verify(bookStore).save(book);
+        final var actual = bookService.create(book);
+
+        assertEquals(book, actual);
+        verify(bookStore).save(any(Book.class));
     }
 
     @Test
     void shouldCreate_Admin_OK() {
         final var book = buildBook();
 
-        when(bookStore.save(book)).thenReturn(book);
+        when(bookStore.save(any(Book.class))).thenReturn(book);
         when(authsProvider.getCurrentUserId()).thenReturn(buildAdmin().getUserId());
 
-        assertEquals(book, bookService.create(book));
-        verify(bookStore).save(book);
+        final var actual = bookService.create(book);
+
+        assertEquals(book, actual);
+        verify(bookStore).save(any(Book.class));
     }
 
     @Test

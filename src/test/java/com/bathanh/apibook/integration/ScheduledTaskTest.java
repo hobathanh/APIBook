@@ -1,5 +1,7 @@
 package com.bathanh.apibook.integration;
 
+import com.bathanh.apibook.domain.book.ItBookService;
+import com.bathanh.apibook.jobs.ScheduledTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

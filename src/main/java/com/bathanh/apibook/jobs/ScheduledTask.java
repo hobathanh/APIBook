@@ -1,5 +1,6 @@
-package com.bathanh.apibook.integration;
+package com.bathanh.apibook.jobs;
 
+import com.bathanh.apibook.domain.book.ItBookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Scheduler;
@@ -9,6 +10,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+
+import static java.util.concurrent.TimeUnit.HOURS;
 
 @Component
 @RequiredArgsConstructor
@@ -23,7 +26,7 @@ public class ScheduledTask {
         scheduler.start();
     }
 
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 6, timeUnit = HOURS)
     public void storeNewBooksPeriodically() {
         try {
             log.info("Start retrieving new books");
