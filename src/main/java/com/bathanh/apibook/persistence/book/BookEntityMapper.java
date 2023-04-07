@@ -54,12 +54,5 @@ public class BookEntityMapper {
                 .map(BookEntityMapper::toBook)
                 .toList();
     }
-
-    public static List<BookEntity> toBookEntities(final List<Book> books) {
-        return emptyIfNull(books)
-                .stream()
-                .map(BookEntityMapper::toBookEntity)
-                .toList();
-    }
 }
 
