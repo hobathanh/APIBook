@@ -27,11 +27,10 @@ public class ItBookService {
         final List<ItBookItemDTO> newBooks = bookApiAdapter.fetchNewBooks();
         final List<ItBookItemDTO> booksToInsert = filterNewBooks(newBooks);
 
-        List<Book> bookList = booksToInsert.stream()
+        booksToInsert.stream()
                 .map(ItBookItemDTO::getIsbn13)
                 .map(bookApiAdapter::fetchBookDetail)
-                .map(this::save)
-                .toList();
+                .forEach(this::save);
     }
 
     private List<ItBookItemDTO> filterNewBooks(final List<ItBookItemDTO> newBooks) {
