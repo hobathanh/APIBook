@@ -30,8 +30,8 @@ public class ItBookService {
         booksToInsert.stream()
                 .map(ItBookItemDTO::getIsbn13)
                 .map(bookApiAdapter::fetchBookDetail)
-                .map(this::save)
-                .toList();
+                .map(this::createBook)
+                .forEach(bookStore::save);
     }
 
     private List<ItBookItemDTO> filterNewBooks(final List<ItBookItemDTO> newBooks) {
@@ -44,12 +44,12 @@ public class ItBookService {
                 .toList();
     }
 
-    private Book save(final ItBookDetailDTO itBookDetailDTO) {
+    private Book createBook(final ItBookDetailDTO itBookDetailDTO) {
         final Book book = toBook(itBookDetailDTO);
 
         book.setUserId(userIdCronJob);
         book.setCreatedAt(Instant.now());
 
-        return bookStore.save(book);
+        return book;
     }
 }
