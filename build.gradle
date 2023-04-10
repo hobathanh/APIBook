@@ -60,6 +60,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.4'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springframework.boot:spring-boot-starter-quartz:3.0.4'
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation group: 'org.springframework.social', name: 'spring-social-facebook', version: '2.0.3.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.7.5'
 }
 
 tasks.named('test') {

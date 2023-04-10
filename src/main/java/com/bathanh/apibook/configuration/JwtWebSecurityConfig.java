@@ -29,7 +29,7 @@ public class JwtWebSecurityConfig {
     };
 
     private static final String[] LOGIN_RESOURCE = {
-            "/api/v1/auths"
+            "/api/v1/auths/**"
     };
 
     private final JwtTokenAuthorizationFilter jwtTokenAuthorizationFilter;
@@ -68,6 +68,8 @@ public class JwtWebSecurityConfig {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/v1/books/**")
+                .permitAll()
+                .antMatchers(HttpMethod.GET, "/facebook")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

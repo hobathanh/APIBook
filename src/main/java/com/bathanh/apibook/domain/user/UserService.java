@@ -1,8 +1,11 @@
 package com.bathanh.apibook.domain.user;
 
 import com.bathanh.apibook.domain.auths.AuthsProvider;
+import com.bathanh.apibook.domain.auths.JwtUserDetailsService;
+import com.bathanh.apibook.persistence.role.RoleStore;
 import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,11 +13,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.bathanh.apibook.domain.auths.UserDetailsMapper.toUserDetails;
 import static com.bathanh.apibook.domain.user.UserError.supplyUserAlreadyExist;
 import static com.bathanh.apibook.domain.user.UserError.supplyUserNotFound;
 import static com.bathanh.apibook.domain.user.UserValidation.validateCreateUser;
 import static com.bathanh.apibook.domain.user.UserValidation.validateUpdateUser;
 import static com.bathanh.apibook.error.CommonError.supplyForbiddenError;
+import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
@@ -24,6 +29,20 @@ public class UserService {
     private final UserStore userStore;
     private final AuthsProvider authsProvider;
     private final PasswordEncoder passwordEncoder;
+    private final RoleStore roleStore;
+    private final JwtUserDetailsService jwtUserDetailsService;
+    private final FacebookService facebookService;
+
+    public UserDetails loginWithFacebook(final String facebookToken) {
+        final SocialUser socialUser = facebookService.parseToken(facebookToken);
+
+        return userStore.findByUsername(socialUser.getUsername())
+                .map(user -> toUserDetails(user, "CONTRIBUTOR"))
+                .orElseGet(() -> {
+                    final User user = createNewUserFromSocialUser(socialUser);
+                    return toUserDetails(user, "CONTRIBUTOR");
+                });
+    }
 
     public List<User> findAll() {
         return userStore.findAll();
@@ -34,6 +53,10 @@ public class UserService {
 
         return userStore.findById(userId)
                 .orElseThrow(supplyUserNotFound(userId));
+    }
+
+    public User findByUsername(final String username) {
+        return userStore.findByUsername(username).orElseThrow(supplyUserNotFound(username));
     }
 
     public List<User> search(final String keyword) {
@@ -96,5 +119,18 @@ public class UserService {
                 && !authsProvider.getCurrentUserId().equals(userId)) {
             throw supplyForbiddenError().get();
         }
+    }
+
+    private User createNewUserFromSocialUser(final SocialUser socialUser) {
+        final User user = User.builder()
+                .username(socialUser.getUsername())
+                .password(randomUUID().toString())
+                .firstName(socialUser.getFirstName())
+                .lastName(socialUser.getLastName())
+                .enabled(true)
+                .roleId(roleStore.findByName("CONTRIBUTOR").getId())
+                .build();
+
+        return userStore.create(user);
     }
 }

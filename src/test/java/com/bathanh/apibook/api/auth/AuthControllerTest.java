@@ -3,6 +3,7 @@ package com.bathanh.apibook.api.auth;
 import com.bathanh.apibook.api.AbstractControllerTest;
 import com.bathanh.apibook.domain.auths.JwtTokenService;
 import com.bathanh.apibook.domain.auths.JwtUserDetails;
+import com.bathanh.apibook.domain.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,9 +12,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 
 import static com.bathanh.apibook.fakes.AuthFakes.buildAuth;
+import static com.bathanh.apibook.fakes.JwtFakes.buildJwtUserDetails;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -27,6 +33,9 @@ class AuthControllerTest extends AbstractControllerTest {
     @MockBean
     private AuthenticationManager authenticationManager;
 
+    @MockBean
+    private UserService userService;
+
     @Test
     void shouldLogin_OK() throws Exception {
         final var auth = buildAuth();
@@ -38,5 +47,30 @@ class AuthControllerTest extends AbstractControllerTest {
 
         post(BASE_URL, auth)
                 .andExpect(jsonPath("$.token").value("token"));
+    }
+
+    @Test
+    void shouldLoginFacebookWithoutAccessToken_OK() {
+        final JwtUserDetails userDetails = buildJwtUserDetails();
+        final TokenRequestDTO tokenRequestDTO = TokenRequestDTO.builder().accessToken(randomAlphabetic(3, 10)).build();
+        final String jwtToken = randomAlphabetic(3, 10);
+
+        when(userService.loginWithFacebook(tokenRequestDTO.getAccessToken())).thenReturn(userDetails);
+        when(jwtTokenService.generateToken(userDetails)).thenReturn(jwtToken);
+
+        final var jwtTokenActual = jwtTokenService.generateToken(userDetails);
+
+        assertEquals(jwtToken, jwtTokenActual);
+        assertNotNull(tokenRequestDTO);
+    }
+
+    @Test
+    void shouldLoginFacebookWithoutAccessToken_ThroughBadRequest() throws Exception {
+        final JwtUserDetails userDetails = buildJwtUserDetails();
+        final TokenRequestDTO tokenRequestDTO = TokenRequestDTO.builder().accessToken(randomAlphabetic(3, 10)).build();
+
+        when(userService.loginWithFacebook(tokenRequestDTO.getAccessToken())).thenReturn(userDetails);
+
+        post(BASE_URL + "/facebook", null).andExpect(status().isBadRequest());
     }
 }
