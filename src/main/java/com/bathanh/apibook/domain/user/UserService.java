@@ -1,7 +1,6 @@
 package com.bathanh.apibook.domain.user;
 
 import com.bathanh.apibook.domain.auths.AuthsProvider;
-import com.bathanh.apibook.domain.auths.JwtUserDetailsService;
 import com.bathanh.apibook.persistence.role.RoleStore;
 import com.bathanh.apibook.persistence.user.UserStore;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +29,12 @@ public class UserService {
     private final AuthsProvider authsProvider;
     private final PasswordEncoder passwordEncoder;
     private final RoleStore roleStore;
-    private final JwtUserDetailsService jwtUserDetailsService;
     private final FacebookService facebookService;
 
     public UserDetails loginWithFacebook(final String facebookToken) {
         final SocialUser socialUser = facebookService.parseToken(facebookToken);
 
-        return userStore.findByUsername(socialUser.getUsername())
+        return userStore.findByUsername(socialUser.getId())
                 .map(user -> toUserDetails(user, "CONTRIBUTOR"))
                 .orElseGet(() -> {
                     final User user = createNewUserFromSocialUser(socialUser);
@@ -123,7 +121,7 @@ public class UserService {
 
     private User createNewUserFromSocialUser(final SocialUser socialUser) {
         final User user = User.builder()
-                .username(socialUser.getUsername())
+                .username(socialUser.getId())
                 .password(randomUUID().toString())
                 .firstName(socialUser.getFirstName())
                 .lastName(socialUser.getLastName())

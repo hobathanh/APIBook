@@ -10,7 +10,7 @@ public class SocialUserFakes {
 
     public static SocialUser buildSocialUser() {
         return SocialUser.builder()
-                .username(randomAlphabetic(6, 10))
+                .id(randomAlphabetic(6, 10))
                 .firstName(randomAlphabetic(6, 10))
                 .lastName(randomAlphabetic(6, 10))
                 .build();
