@@ -8,12 +8,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-@WebMvcTest(HomeController.class)
-public class HomeControllerTest extends AbstractControllerTest {
+@WebMvcTest(LoginController.class)
+public class LoginControllerTest extends AbstractControllerTest {
+
     @Test
     @WithMockAdmin
     public void shouldLoginPage_OK() throws Exception {
-        get("/facebook")
+        get("/login-social")
                 .andExpect(status().isOk())
                 .andExpect(view().name("index.html"));
     }
