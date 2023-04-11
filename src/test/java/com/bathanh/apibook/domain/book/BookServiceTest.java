@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+import java.time.Instant;
 import java.util.Optional;
 
 import static com.bathanh.apibook.fakes.BookFakes.buildBook;
@@ -33,6 +35,8 @@ class BookServiceTest {
     private BookService bookService;
     @Mock
     private AuthsProvider authsProvider;
+    @Mock
+    private CloudinaryService cloudinaryService;
 
     @Test
     void shouldFindAll_OK() {
@@ -307,5 +311,73 @@ class BookServiceTest {
 
         assertThrows(NotFoundException.class, () -> bookService.delete(uuid));
         verify(bookStore).findById(uuid);
+    }
+
+    @Test
+    void shouldUploadImage_Contributor_OK() throws IOException {
+        final var book = buildBook();
+        final var bookUpdate = buildBook()
+                .withId(book.getId());
+        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+
+        when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
+        when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
+
+        book.setUserId(authsProvider.getCurrentUserId());
+        bookUpdate.setUserId(authsProvider.getCurrentUserId());
+
+        bookUpdate.setImage(cloudinaryService.upload(bytes));
+        bookUpdate.setCreatedAt(Instant.now());
+        bookService.uploadImage(bookUpdate.getId(), bytes);
+
+        verify(bookStore).findById(book.getId());
+    }
+
+    @Test
+    void shouldUploadImage_Admin_OK() throws IOException {
+        final var book = buildBook();
+        final var bookUpdate = buildBook()
+                .withId(book.getId())
+                .withUserId(book.getUserId());
+        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+
+        when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
+
+        bookUpdate.setImage(cloudinaryService.upload(bytes));
+        bookUpdate.setCreatedAt(Instant.now());
+        bookUpdate.setUserId(authsProvider.getCurrentUserId());
+        bookService.uploadImage(bookUpdate.getId(), bytes);
+
+        verify(bookStore).findById(book.getId());
+    }
+
+    @Test
+    void shouldUploadImage_Contributor_ThrownForbiddenException() {
+        final var book = buildBook();
+        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+
+        when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
+        when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
+        when(authsProvider.getCurrentUserId()).thenReturn(buildContributor().getUserId());
+
+        assertThrows(ForbiddenException.class, () -> bookService.uploadImage(book.getId(), bytes));
+
+        verify(bookStore).findById(book.getId());
+        verify(bookStore, never()).save(book);
+    }
+
+    @Test
+    void shouldUploadImage_ThrownNotFound() {
+        final var book = buildBook();
+        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+
+        when(bookStore.findById(book.getId())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> bookService.uploadImage(book.getId(), bytes));
+
+        verify(bookStore).findById(book.getId());
+        verify(bookStore, never()).save(book);
     }
 }

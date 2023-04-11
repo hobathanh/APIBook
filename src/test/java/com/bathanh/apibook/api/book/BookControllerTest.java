@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
@@ -137,7 +138,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         when(bookService.create(any(Book.class))).thenReturn(book);
 
-        post(BASE_URL, book)
+        post(BASE_URL, book, false)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
@@ -196,5 +197,19 @@ class BookControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk());
 
         verify(bookService).delete(id);
+    }
+
+    @Test
+    @WithMockAdmin
+    @WithMockContributor
+    void shouldUploadImage_OK() throws Exception {
+        final var id = UUID.randomUUID();
+        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+        final var file = new MockMultipartFile("file", "image.png", "image/png", bytes);
+
+        post(BASE_URL + "/" + id + "/image", file, true)
+                .andExpect(status().isOk());
+
+        verify(bookService).uploadImage(id, bytes);
     }
 }

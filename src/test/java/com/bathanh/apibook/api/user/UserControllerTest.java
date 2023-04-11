@@ -112,7 +112,7 @@ class UserControllerTest extends AbstractControllerTest {
 
         when(userService.create(any(User.class))).thenReturn(user);
 
-        post(BASE_URL, user)
+        post(BASE_URL, user, false)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId().toString()))
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
