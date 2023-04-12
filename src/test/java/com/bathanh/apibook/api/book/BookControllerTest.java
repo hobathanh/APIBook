@@ -6,6 +6,7 @@ import com.bathanh.apibook.api.WithMockContributor;
 import com.bathanh.apibook.domain.auths.AuthsProvider;
 import com.bathanh.apibook.domain.book.Book;
 import com.bathanh.apibook.domain.book.BookService;
+import com.bathanh.apibook.persistence.book.BookStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,9 @@ class BookControllerTest extends AbstractControllerTest {
 
     @MockBean
     private AuthsProvider authsProvider;
+
+    @MockBean
+    private BookStore bookStore;
 
     @BeforeEach
     void init() {
@@ -206,8 +210,6 @@ class BookControllerTest extends AbstractControllerTest {
         final var book = buildBook();
         final var bytes = "image".getBytes();
         final var file = new MockMultipartFile("file", "image.png", "image/png", bytes);
-
-        when(bookService.uploadImage(any(UUID.class), any(byte[].class))).thenReturn(book);
 
         post(BASE_URL + "/" + book.getId() + "/image", file)
                 .andExpect(status().isOk());

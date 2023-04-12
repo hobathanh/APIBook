@@ -87,14 +87,14 @@ public class BookService {
         bookStore.delete(id);
     }
 
-    public Book uploadImage(final UUID id, final byte[] image) throws IOException {
+    public void uploadImage(final UUID id, final byte[] image) throws IOException {
         final Book book = findById(id);
         verifyUpdateBookPermission(book);
 
         book.setImage(cloudinaryService.upload(image));
         book.setUpdatedAt(Instant.now());
 
-        return bookStore.save(book);
+        bookStore.save(book);
     }
 
     private void verifyTitleAndAuthorAvailable(final String title, final String author) {

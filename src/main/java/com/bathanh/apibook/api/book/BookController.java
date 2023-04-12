@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.bathanh.apibook.api.book.BookDTOMapper.*;
@@ -63,7 +62,7 @@ public class BookController {
     @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
     @Operation(summary = "Upload Image a specific book")
     @PostMapping("{id}/image")
-    public Optional<BookResponseDTO> upload(final @PathVariable UUID id, @RequestParam("file") final MultipartFile file) throws IOException {
-        return Optional.ofNullable(toBookResponseDTO(bookService.uploadImage(id, file.getBytes())));
+    public void upload(final @PathVariable UUID id, @RequestParam("file") final MultipartFile file) throws IOException {
+        bookService.uploadImage(id, file.getBytes());
     }
 }

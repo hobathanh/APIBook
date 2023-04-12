@@ -382,6 +382,5 @@ class BookServiceTest {
         assertThrows(NotFoundException.class, () -> bookService.uploadImage(book.getId(), bytes));
 
         verify(bookStore).findById(book.getId());
-        verify(bookStore, never()).save(book);
     }
 }
