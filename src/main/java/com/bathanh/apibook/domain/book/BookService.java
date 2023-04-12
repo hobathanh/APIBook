@@ -5,6 +5,7 @@ import com.bathanh.apibook.persistence.book.BookStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ public class BookService {
 
     private final BookStore bookStore;
     private final AuthsProvider authsProvider;
+    private final CloudinaryService cloudinaryService;
 
     public List<Book> findAll() {
         return bookStore.findAll();
@@ -83,6 +85,16 @@ public class BookService {
         verifyDeleteBookPermission(book);
 
         bookStore.delete(id);
+    }
+
+    public void uploadImage(final UUID id, final byte[] image) throws IOException {
+        final Book book = findById(id);
+        verifyUpdateBookPermission(book);
+
+        book.setImage(cloudinaryService.upload(image));
+        book.setUpdatedAt(Instant.now());
+
+        bookStore.save(book);
     }
 
     private void verifyTitleAndAuthorAvailable(final String title, final String author) {
