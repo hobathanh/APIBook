@@ -36,7 +36,7 @@ class AuthControllerTest extends AbstractControllerTest {
         when(jwtTokenService.generateToken((JwtUserDetails) auth.getPrincipal()))
                 .thenReturn("token");
 
-        post(BASE_URL, auth, false)
+        post(BASE_URL, auth)
                 .andExpect(jsonPath("$.token").value("token"));
     }
 }

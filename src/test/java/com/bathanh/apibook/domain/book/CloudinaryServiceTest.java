@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.util.Map;
 
+import static org.apache.commons.lang3.RandomUtils.nextBytes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -34,7 +35,7 @@ class CloudinaryServiceTest {
 
     @Test
     void shouldUploadImage_Successfully() throws IOException {
-        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+        final var bytes = nextBytes(20);
 
         final var cloudinaryResponse = Map.of("secure_url", "https://res.cloudinary.com/test/image/upload/test.jpg");
         when(cloudinary.uploader().upload(any(byte[].class), any())).thenReturn(cloudinaryResponse);

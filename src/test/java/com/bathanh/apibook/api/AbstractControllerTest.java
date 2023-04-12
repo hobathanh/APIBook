@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
@@ -27,19 +28,17 @@ public abstract class AbstractControllerTest {
         return perform(MockMvcRequestBuilders.get(url));
     }
 
-    protected ResultActions post(final String url, final Object requestBody, final boolean isMultipart) throws Exception {
+    protected ResultActions post(final String url, final Object requestBody) throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder;
 
-        if (isMultipart) {
-            final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
-            final var file = new MockMultipartFile("file", "image.png", "image/png", bytes);
-            final var multipartRequest = MockMvcRequestBuilders.multipart(url).file(file);
-
-            return perform(multipartRequest.with(csrf()));
+        if (requestBody instanceof MultipartFile) {
+            requestBuilder = MockMvcRequestBuilders.multipart(url).file((MockMultipartFile) requestBody);
+        } else {
+            String jsonBody = mapper.writeValueAsString(requestBody);
+            requestBuilder = MockMvcRequestBuilders.post(url).content(jsonBody);
         }
-
-        final String jsonBody = mapper.writeValueAsString(requestBody);
-
-        return perform(MockMvcRequestBuilders.post(url).content(jsonBody).with(csrf()));
+        
+        return perform(requestBuilder.with(csrf()));
     }
 
     protected ResultActions put(final String url, final Object object) throws Exception {

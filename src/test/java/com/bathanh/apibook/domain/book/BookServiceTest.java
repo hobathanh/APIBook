@@ -21,6 +21,7 @@ import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildAdmin;
 import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildContributor;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
+import static org.apache.commons.lang3.RandomUtils.nextBytes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -318,7 +319,7 @@ class BookServiceTest {
         final var book = buildBook();
         final var bookUpdate = buildBook()
                 .withId(book.getId());
-        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+        final var bytes = nextBytes(20);
 
         when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
         when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
@@ -340,7 +341,7 @@ class BookServiceTest {
         final var bookUpdate = buildBook()
                 .withId(book.getId())
                 .withUserId(book.getUserId());
-        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+        final var bytes = nextBytes(20);
 
         when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
         when(authsProvider.getCurrentUserRole()).thenReturn(buildAdmin().getRole());
@@ -357,7 +358,7 @@ class BookServiceTest {
     @Test
     void shouldUploadImage_Contributor_ThrownForbiddenException() {
         final var book = buildBook();
-        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+        final var bytes = nextBytes(20);
 
         when(bookStore.findById(book.getId())).thenReturn(Optional.of(book));
         when(authsProvider.getCurrentUserRole()).thenReturn(buildContributor().getRole());
@@ -374,7 +375,7 @@ class BookServiceTest {
     @Test
     void shouldUploadImage_ThrownNotFound() {
         final var book = buildBook();
-        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+        final var bytes = nextBytes(20);
 
         when(bookStore.findById(book.getId())).thenReturn(Optional.empty());
 

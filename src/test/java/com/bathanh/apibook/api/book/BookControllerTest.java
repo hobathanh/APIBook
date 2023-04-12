@@ -138,7 +138,7 @@ class BookControllerTest extends AbstractControllerTest {
 
         when(bookService.create(any(Book.class))).thenReturn(book);
 
-        post(BASE_URL, book, false)
+        post(BASE_URL, book)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value(book.getTitle()))
                 .andExpect(jsonPath("$.author").value(book.getAuthor()))
@@ -203,13 +203,15 @@ class BookControllerTest extends AbstractControllerTest {
     @WithMockAdmin
     @WithMockContributor
     void shouldUploadImage_OK() throws Exception {
-        final var id = UUID.randomUUID();
-        final var bytes = new byte[]{0x12, 0x34, 0x56, 0x78};
+        final var book = buildBook();
+        final var bytes = "image".getBytes();
         final var file = new MockMultipartFile("file", "image.png", "image/png", bytes);
 
-        post(BASE_URL + "/" + id + "/image", file, true)
+        when(bookService.uploadImage(any(UUID.class), any(byte[].class))).thenReturn(book);
+
+        post(BASE_URL + "/" + book.getId() + "/image", file)
                 .andExpect(status().isOk());
 
-        verify(bookService).uploadImage(id, bytes);
+        verify(bookService).uploadImage(book.getId(), bytes);
     }
 }
