@@ -61,6 +61,9 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springframework.boot:spring-boot-starter-quartz:3.0.4'
 
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation group: 'org.springframework.social', name: 'spring-social-facebook', version: '2.0.3.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.7.5'
     implementation 'com.cloudinary:cloudinary-http44:1.31.0'
 }
 

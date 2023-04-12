@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Facebook Login</title>
+</head>
+<body>
+<h1>Facebook Login</h1>
+<button id="fb-login-button">Login with Facebook</button>
+<div id="status"></div>
+<div id="id"></div>
+<script>
+    const fbLoginButton = document.getElementById('fb-login-button');
+    const statusDiv = document.getElementById('status');
+    const usernameDiv = document.getElementById('id');
+    const jwtToken = localStorage.getItem('jwtToken');
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '1243782392890330',
+            cookie: true,
+            xfbml: true,
+            version: 'v16.0'
+        });
+
+        fbLoginButton.addEventListener('click', () => {
+            FB.login((response) => {
+                statusChangeCallback(response);
+            }, {scope: 'email,public_profile'});
+        });
+    };
+
+    function statusChangeCallback(response) {
+        if (response.status === 'connected') {
+            sendApi(response.authResponse.accessToken);
+        } else {
+            statusDiv.innerHTML = 'Please log into this app with Facebook.';
+        }
+    }
+
+    function showProfileUser() {
+        if (jwtToken) {
+            fetch('/api/v1/profile', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            }).then(response => {
+                fbLoginButton.style.display = 'none';
+                statusDiv.style.display = 'none';
+
+                return response.json();
+            }).then(user => {
+                localStorage.setItem('userData', JSON.stringify(user));
+
+                let userData = JSON.parse(localStorage.getItem('userData'));
+                usernameDiv.innerHTML = "Id: " + userData.id;
+            }).catch(err => {
+                console.log("error get profile user: ", err);
+            })
+        }
+    }
+
+    function sendApi(accessToken) {
+        FB.api(
+            '/me',
+            'GET',
+            {"fields": "id,email,first_name,last_name"},
+            function () {
+                fetch('/api/v1/auths/facebook', {
+                    method: 'POST',
+                    body: JSON.stringify({accessToken: accessToken}),
+                    headers: {'Content-Type': 'application/json'}
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        localStorage.setItem('jwtToken', data.token);
+                        showProfileUser();
+                    })
+                    .catch(error => {
+                        console.error("error", error);
+                    });
+            }
+        );
+    }
+
+    showProfileUser();
+
+    (function (d, s, id) {
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+</body>
+</html>

@@ -36,4 +36,21 @@ class RoleStoreTest {
 
         verify(roleRepository).findById(role.getId());
     }
+
+    @Test
+    void shouldFindByName_OK() {
+        final var role = buildRoleEntity();
+        final var expected = Optional.of(role);
+
+        when(roleRepository.findByName(role.getName()))
+                .thenReturn(expected);
+
+        final var actual = roleStore.findByName(role.getName());
+
+
+        assertEquals(expected.get().getId(), actual.getId());
+        assertEquals(expected.get().getName(), actual.getName());
+
+        verify(roleRepository).findByName(role.getName());
+    }
 }
