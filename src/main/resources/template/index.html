@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Facebook Login</title>
+    <script src="https://apis.google.com/js/api.js?onload=onLibraryLoaded" async defer></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <title>Social Login</title>
 </head>
 <body>
-<h1>Facebook Login</h1>
-<button id="fb-login-button">Login with Facebook</button>
+<h1>Social Login</h1>
+<button class="google-btn" onclick="signInGoogle()">Sign in with Google</button>
+<button class="facebook-btn" onclick="signInFacebook()">Sign in with Facebook</button>
 <div id="status"></div>
-<div id="id"></div>
+<div id="username"></div>
 <script>
-    const fbLoginButton = document.getElementById('fb-login-button');
-    const statusDiv = document.getElementById('status');
-    const usernameDiv = document.getElementById('id');
+    const usernameDiv = document.getElementById('username');
     const jwtToken = localStorage.getItem('jwtToken');
+
+    function onLibraryLoaded() {
+        gapi.load('auth2', function () {
+            auth2 = gapi.auth2.init({
+                client_id: '132277928500-pm0g7afpdgbrbahl6thd0luicsdj11ar.apps.googleusercontent.com',
+                scope: 'profile',
+                plugin_name: 'book-api',
+                response_type: 'id_token'
+            })
+        })
+    }
 
     window.fbAsyncInit = function () {
         FB.init({
@@ -21,50 +33,70 @@
             xfbml: true,
             version: 'v16.0'
         });
-
-        fbLoginButton.addEventListener('click', () => {
-            FB.login((response) => {
-                statusChangeCallback(response);
-            }, {scope: 'email,public_profile'});
-        });
     };
+
+    function signInGoogle() {
+        auth2.signIn().then(function (result) {
+            callApiGoogle(result.zc.id_token);
+        }, function (err) {
+            console.log(err);
+        })
+    }
+
+    function signInFacebook() {
+        FB.login((response) => {
+            statusChangeCallback(response);
+        }, {scope: 'email,public_profile'});
+    }
 
     function statusChangeCallback(response) {
         if (response.status === 'connected') {
-            sendApi(response.authResponse.accessToken);
+            callApiFacebook(response.authResponse.accessToken);
         } else {
             statusDiv.innerHTML = 'Please log into this app with Facebook.';
         }
     }
 
     function showProfileUser() {
+        console.log("top", jwtToken);
         if (jwtToken) {
+            console.log("bot", jwtToken);
             fetch('/api/v1/profile', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
                 }
             }).then(response => {
-                fbLoginButton.style.display = 'none';
-                statusDiv.style.display = 'none';
-
                 return response.json();
             }).then(user => {
                 localStorage.setItem('userData', JSON.stringify(user));
 
                 let userData = JSON.parse(localStorage.getItem('userData'));
-                usernameDiv.innerHTML = "Id: " + userData.id;
+                usernameDiv.innerHTML = "Username: " + userData.username;
             }).catch(err => {
                 console.log("error get profile user: ", err);
             })
         }
     }
 
-    function sendApi(accessToken) {
+    function callApiGoogle(token) {
+        fetch('/api/v1/auths/google', {
+            method: 'POST',
+            body: JSON.stringify({accessToken: token}),
+            headers: {'Content-Type': 'application/json'}
+        })
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('jwtToken', data.token);
+                showProfileUser();
+            })
+    }
+
+    function callApiFacebook(accessToken) {
         FB.api(
             '/me',
             'GET',
-            {"fields": "id,email,first_name,last_name"},
+            {"fields": "id,first_name,last_name"},
             function () {
                 fetch('/api/v1/auths/facebook', {
                     method: 'POST',
@@ -96,6 +128,5 @@
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 </script>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 </body>
 </html>

@@ -1,11 +1,9 @@
 package com.bathanh.apibook.domain.user;
 
 import com.bathanh.apibook.domain.auths.AuthsProvider;
-import com.bathanh.apibook.domain.auths.JwtUserDetails;
 import com.bathanh.apibook.error.BadRequestException;
 import com.bathanh.apibook.error.ForbiddenException;
 import com.bathanh.apibook.error.NotFoundException;
-import com.bathanh.apibook.persistence.role.RoleStore;
 import com.bathanh.apibook.persistence.user.UserStore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,20 +11,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.bathanh.apibook.domain.auths.UserDetailsMapper.toUserDetails;
-import static com.bathanh.apibook.fakes.RoleFakes.buildRole;
-import static com.bathanh.apibook.fakes.SocialUserFakes.buildSocialUser;
 import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildAdmin;
 import static com.bathanh.apibook.fakes.UserAuthenticationTokenFakes.buildContributor;
 import static com.bathanh.apibook.fakes.UserFakes.buildUser;
 import static com.bathanh.apibook.fakes.UserFakes.buildUsers;
-import static java.util.Collections.singleton;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,57 +37,6 @@ class UserServiceTest {
     private AuthsProvider authsProvider;
     @Spy
     private PasswordEncoder passwordEncoder;
-    @Mock
-    private RoleStore roleStore;
-    @Mock
-    private FacebookService facebookService;
-
-    @Test
-    public void shouldLoginWithFacebook_UserExisted_OK() {
-        final var facebookToken = randomAlphabetic(6, 10);
-        final var socialUser = buildSocialUser();
-        final var user = buildUser();
-
-        when(facebookService.parseToken(facebookToken)).thenReturn(socialUser);
-        when(userStore.findByUsername(socialUser.getId())).thenReturn(Optional.of(user));
-
-        final var userDetails = toUserDetails(user, "CONTRIBUTOR");
-        final var actual = userService.loginWithFacebook(facebookToken);
-
-        assertEquals(userDetails, actual);
-    }
-
-    @Test
-    public void shouldLoginWithFacebook_CreateNewUser_OK() {
-        final String facebookToken = randomAlphabetic(6, 10);
-        final var socialUser = buildSocialUser();
-        final var role = buildRole();
-        final var user = buildUser();
-        final String roleName = "CONTRIBUTOR";
-
-        when(facebookService.parseToken(facebookToken)).thenReturn(socialUser);
-        when(userStore.findByUsername(socialUser.getId())).thenReturn(Optional.empty());
-        when(roleStore.findByName(roleName)).thenReturn(role);
-        when(userStore.create(any(User.class))).thenReturn(user);
-
-        final var userDetails = userService.loginWithFacebook(facebookToken);
-
-        final var actual = userStore.create(user);
-        final var expected = new JwtUserDetails(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                singleton(new SimpleGrantedAuthority(roleName))
-        );
-
-        assertEquals(expected.getUserId(), actual.getId());
-        assertEquals(expected.getUsername(), actual.getUsername());
-        assertEquals(expected.getPassword(), actual.getPassword());
-
-        verify(facebookService).parseToken(facebookToken);
-        verify(userStore).findByUsername(socialUser.getId());
-        verify(roleStore).findByName(roleName);
-    }
 
     @Test
     void shouldFindByUsername_OK() {
