@@ -351,6 +351,7 @@ class BookServiceTest {
         bookService.uploadImage(bookUpdate.getId(), bytes);
 
         verify(bookStore).findById(book.getId());
+        verify(authsProvider).getCurrentUserRole();
     }
 
     @Test
@@ -365,6 +366,8 @@ class BookServiceTest {
         assertThrows(ForbiddenException.class, () -> bookService.uploadImage(book.getId(), bytes));
 
         verify(bookStore).findById(book.getId());
+        verify(authsProvider).getCurrentUserRole();
+        verify(authsProvider).getCurrentUserId();
         verify(bookStore, never()).save(book);
     }
 
