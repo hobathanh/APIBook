@@ -60,7 +60,7 @@ public class BookController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'CONTRIBUTOR')")
-    @Operation(summary = "Upload Image a specific book")
+    @Operation(summary = "Upload image a specific book")
     @PostMapping("{id}/image")
     public void upload(final @PathVariable UUID id, @RequestParam("file") final MultipartFile file) throws IOException {
         bookService.uploadImage(id, file.getBytes());
