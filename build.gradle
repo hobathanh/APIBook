@@ -64,6 +64,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation group: 'org.springframework.social', name: 'spring-social-facebook', version: '2.0.3.RELEASE'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.7.5'
+    implementation 'com.cloudinary:cloudinary-http44:1.31.0'
 }
 
 tasks.named('test') {

@@ -5,11 +5,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
@@ -26,10 +28,17 @@ public abstract class AbstractControllerTest {
         return perform(MockMvcRequestBuilders.get(url));
     }
 
-    protected ResultActions post(final String url, final Object object) throws Exception {
-        final String requestBody = mapper.writeValueAsString(object);
+    protected ResultActions post(final String url, final Object requestBody) throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder;
 
-        return perform(MockMvcRequestBuilders.post(url).content(requestBody).with(csrf()));
+        if (requestBody instanceof MultipartFile) {
+            requestBuilder = MockMvcRequestBuilders.multipart(url).file((MockMultipartFile) requestBody);
+        } else {
+            final String jsonBody = mapper.writeValueAsString(requestBody);
+            requestBuilder = MockMvcRequestBuilders.post(url).content(jsonBody);
+        }
+
+        return perform(requestBuilder.with(csrf()));
     }
 
     protected ResultActions put(final String url, final Object object) throws Exception {
