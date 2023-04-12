@@ -34,10 +34,10 @@ public abstract class AbstractControllerTest {
         if (requestBody instanceof MultipartFile) {
             requestBuilder = MockMvcRequestBuilders.multipart(url).file((MockMultipartFile) requestBody);
         } else {
-            String jsonBody = mapper.writeValueAsString(requestBody);
+            final String jsonBody = mapper.writeValueAsString(requestBody);
             requestBuilder = MockMvcRequestBuilders.post(url).content(jsonBody);
         }
-        
+
         return perform(requestBuilder.with(csrf()));
     }
 
