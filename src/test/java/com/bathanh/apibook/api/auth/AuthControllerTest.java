@@ -3,7 +3,7 @@ package com.bathanh.apibook.api.auth;
 import com.bathanh.apibook.api.AbstractControllerTest;
 import com.bathanh.apibook.domain.auths.JwtTokenService;
 import com.bathanh.apibook.domain.auths.JwtUserDetails;
-import com.bathanh.apibook.domain.user.UserService;
+import com.bathanh.apibook.domain.auths.SocialLoginService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +17,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,7 +35,7 @@ class AuthControllerTest extends AbstractControllerTest {
     private AuthenticationManager authenticationManager;
 
     @MockBean
-    private UserService userService;
+    private SocialLoginService socialLoginService;
 
     @Test
     void shouldLogin_OK() throws Exception {
@@ -55,7 +56,7 @@ class AuthControllerTest extends AbstractControllerTest {
         final TokenRequestDTO tokenRequestDTO = TokenRequestDTO.builder().accessToken(randomAlphabetic(3, 10)).build();
         final String jwtToken = randomAlphabetic(3, 10);
 
-        when(userService.loginWithFacebook(tokenRequestDTO.getAccessToken())).thenReturn(userDetails);
+        when(socialLoginService.loginWithFacebook(tokenRequestDTO.getAccessToken())).thenReturn(userDetails);
         when(jwtTokenService.generateToken(userDetails)).thenReturn(jwtToken);
 
         final var jwtTokenActual = jwtTokenService.generateToken(userDetails);
@@ -69,8 +70,25 @@ class AuthControllerTest extends AbstractControllerTest {
         final JwtUserDetails userDetails = buildJwtUserDetails();
         final TokenRequestDTO tokenRequestDTO = TokenRequestDTO.builder().accessToken(randomAlphabetic(3, 10)).build();
 
-        when(userService.loginWithFacebook(tokenRequestDTO.getAccessToken())).thenReturn(userDetails);
+        when(socialLoginService.loginWithFacebook(tokenRequestDTO.getAccessToken())).thenReturn(userDetails);
 
         post(BASE_URL + "/facebook", null).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldLoginGoogle_OK() throws Exception {
+        final var tokenRequest = new TokenRequestDTO(randomAlphabetic(3, 10));
+        final var token = randomAlphabetic(3, 10);
+        final JwtUserDetails userDetails = buildJwtUserDetails();
+
+        when(socialLoginService.loginWithGoogle(tokenRequest.getAccessToken()))
+                .thenReturn(userDetails);
+        when(jwtTokenService.generateToken(userDetails)).thenReturn(token);
+
+        post(BASE_URL + "/google", tokenRequest)
+                .andExpect(jsonPath("$.token").value(token));
+
+        verify(socialLoginService).loginWithGoogle(tokenRequest.getAccessToken());
+        verify(jwtTokenService).generateToken(userDetails);
     }
 }
